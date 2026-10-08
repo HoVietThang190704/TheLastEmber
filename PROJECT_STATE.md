@@ -50,6 +50,7 @@ Cập nhật lần cuối: 2026-10-08 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - **Crash do PowerShell:** Đã index lại thư mục an toàn, không tạo hàng loạt file khi Unity đang chạy.
 - **Lỗi New Input System:** Đã chuyển `Active Input Handling` trong Project Settings sang `Both`.
 - **Cảnh báo Unity 6 CS0618:** Đã chuyển toàn bộ `FindObjectsByType` sang cú pháp chuẩn `(FindObjectsInactive.Exclude)`.
+- **Git/GitHub:** Đã thêm `.gitignore` chuẩn Unity, tạo commit đầu tiên và push nhánh `main` lên `https://github.com/HoVietThang190704/TheLastEmber.git`.
 
 ---
 
