@@ -12,8 +12,9 @@ Cập nhật lần cuối: 2026-10-08 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Cảnh báo vùng an toàn sương mù (`MistZoneDetector.cs`)
 - [x] Chu kỳ Ngày/Đêm: Đổi màu trời, xoay Sun Light, co giãn bán kính Hỏa Lò (`DayNightManager.cs`)
 - [x] Economy MVP: ví tài nguyên (`Wood`, `Stone`, `SilverEmber`), vật phẩm nhặt được, nạp củi kéo dài năng lượng Hỏa Lò
-- [ ] [ĐANG LÀM]: Kết nối Economy MVP vào scene bằng prefab/inspector (`ResourceWallet`, `FurnaceFuelInteractor`, `CollectibleResource`)
-- [ ] [CHƯA LÀM]: Hệ thống Xây dựng theo lưới (Building Grid System)
+- [x] Kết nối Economy MVP vào scene bằng prefab/inspector (`ResourceWallet`, `FurnaceFuelInteractor`, `CollectibleResource`) và play test thành công
+- [x] Building Grid MVP scripts: grid snap, preview hợp lệ/không hợp lệ, kiểm tra vùng sáng, tiêu tài nguyên khi đặt
+- [ ] [ĐANG LÀM]: Kết nối Building Grid MVP vào scene bằng prefab/inspector (`GridManager`, `BuildingPlacer`, `BuildableDefinition`)
 - [ ] [CHƯA LÀM]: Máy trạng thái chiến đấu (Combat FSM - Tấn công, Thể lực)
 - [ ] [CHƯA LÀM]: Hệ thống Chợ Đêm & Đợt quái sương mù (Night Wave Spawner)
 
@@ -43,6 +44,10 @@ Cập nhật lần cuối: 2026-10-08 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 7. `Assets/_Project/Features/Economy/Scripts/ResourceWallet.cs`
 8. `Assets/_Project/Features/Economy/Scripts/CollectibleResource.cs`
 9. `Assets/_Project/Features/DayNightCycle/Scripts/FurnaceFuelInteractor.cs`
+10. `Assets/_Project/Features/BuildingSystem/Scripts/BuildingCost.cs`
+11. `Assets/_Project/Features/BuildingSystem/Scripts/BuildableDefinition.cs`
+12. `Assets/_Project/Features/BuildingSystem/Scripts/GridManager.cs`
+13. `Assets/_Project/Features/BuildingSystem/Scripts/BuildingPlacer.cs`
 
 ---
 
@@ -55,7 +60,7 @@ Cập nhật lần cuối: 2026-10-08 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. Gắn `ResourceWallet` và `FurnaceFuelInteractor` lên `Player`.
-2. Tạo vài object củi test: Cube/Capsule nhỏ + Collider bật `Is Trigger` + `CollectibleResource(resourceType = Wood, amount = 1)`.
-3. Play test loop: nhặt củi -> quay về gần Hỏa Lò -> bấm `E` để nạp -> kiểm tra `GreatFurnace.CurrentFuelSeconds` và bán kính ban đêm giữ tối thiểu 85%.
-4. Sau khi loop tài nguyên ổn, triển khai **Building Grid System**: `GridManager`, preview snap-to-grid, giới hạn đặt công trình trong vùng sáng Hỏa Lò.
+1. Tạo prefab công trình test `TorchPost` hoặc Cube placeholder trong `Assets/_Project/Features/BuildingSystem/Prefabs`.
+2. Tạo `BuildableDefinition` trong `Assets/_Project/Features/BuildingSystem/Data`, gán prefab, footprint `(1,1)`, cost `Wood = 2`.
+3. Tạo object `BuildingSystem` trong scene, gắn `GridManager`; gắn `BuildingPlacer` lên `Player` hoặc `BuildingSystem` và nối `GridManager`, `ResourceWallet`, `BuildableDefinition`.
+4. Play test: nhặt đủ củi -> rê chuột trên Ground -> preview xanh/đỏ -> click trái để đặt công trình trong vùng sáng.

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6543cd7e8d0c8a4aaee78308876ff71, type: 3}
+  m_Name: TorchPostDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.BuildingSystem.BuildableDefinition
+  displayName: Torch Post
+  prefab: {fileID: 1515544087061501112, guid: ee022202cfe5bd542b59ec77f4f9dca1, type: 3}
+  footprint: {x: 1, y: 1}
+  yOffset: 0
+  costs:
+  - resourceType: 0
+    amount: 2
