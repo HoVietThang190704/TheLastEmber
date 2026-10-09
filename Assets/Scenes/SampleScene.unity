@@ -1863,6 +1863,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.Combat.TrainingDummy
   maxHealth: 100
   resetHealthOnDepleted: 1
+  hitFlashColor: {r: 1, g: 0, b: 0, a: 1}
+  hitFlashDuration: 0.1
+--- !u!1 &2000000101
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2000000102}
+  - component: {fileID: 2000000103}
+  m_Layer: 0
+  m_Name: CombatHUD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2000000102
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000000101}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2000000103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000000101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c77c2e246444f38ac75c9fb1f6ab391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.UI.HUD.StaminaBarUI
+  stamina: {fileID: 65158416}
+  position: {x: 24, y: 24}
+  size: {x: 220, y: 18}
+  backgroundColor: {r: 0.08, g: 0.08, b: 0.08, a: 0.75}
+  fillColor: {r: 0.95, g: 0.78, b: 0.24, a: 0.95}
+  borderColor: {r: 0.95, g: 0.95, b: 0.95, a: 0.8}
 --- !u!1001 &8428357427481709359
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1938,3 +1990,4 @@ SceneRoots:
   - {fileID: 8428357427481709359}
   - {fileID: 350809798}
   - {fileID: 2000000002}
+  - {fileID: 2000000102}

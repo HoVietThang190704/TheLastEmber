@@ -17,7 +17,8 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Kết nối Building Grid MVP vào scene bằng prefab/inspector (`GridManager`, `BuildingPlacer`, `BuildableDefinition`) và play test thành công
 - [x] Combat FSM MVP scripts: trạng thái `Idle/Move/Attack/Recover`, attack input, cooldown, stamina tiêu hao/hồi phục, hit detection, dummy nhận sát thương
 - [x] Play test Combat FSM MVP trong scene: `Mouse1` đánh trúng `TrainingDummy`, Console có log damage
-- [ ] [ĐANG LÀM]: Combat feedback MVP (UI stamina, nháy màu dummy khi trúng đòn)
+- [x] Combat feedback MVP scripts: `TrainingDummy` nháy màu khi trúng đòn, HUD stamina hiển thị tiêu hao/hồi phục
+- [ ] [ĐANG LÀM]: Play test Combat Feedback MVP trong scene
 - [ ] [CHƯA LÀM]: Hệ thống Chợ Đêm & Đợt quái sương mù (Night Wave Spawner)
 
 ---
@@ -36,7 +37,8 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 | **BuildingSystem** | `GridManager` | `furnace` -> `GreatFurnace` | Cell Size = 2, kiểm tra vùng sáng và ô đã chiếm |
 | **TorchPostDefinition** | `BuildableDefinition` asset | `prefab` -> `TorchPost` | Footprint `(1,1)`, `YOffset = 0.5`, cost `Wood = 2` |
 | **TorchPost** | Prefab placeholder | Mesh Renderer, Box Collider | Đặt được bằng `BuildingPlacer` trong vùng sáng |
-| **TrainingDummy** | `TrainingDummy`, Box Collider | N/A | Đặt trước Player để test `Mouse1` attack, nhận damage rồi tự hồi HP khi bị hạ |
+| **TrainingDummy** | `TrainingDummy`, Box Collider | N/A | Đặt trước Player để test `Mouse1` attack, nhận damage, nháy đỏ khi trúng đòn rồi tự hồi HP khi bị hạ |
+| **CombatHUD** | `StaminaBarUI` | `stamina` -> `Player.CombatStamina` | Hiển thị thanh stamina góc trên trái bằng OnGUI |
 
 ---
 
@@ -59,6 +61,7 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 16. `Assets/_Project/Features/Combat/Scripts/IDamageable.cs`
 17. `Assets/_Project/Features/Combat/Scripts/PlayerCombat.cs`
 18. `Assets/_Project/Features/Combat/Scripts/TrainingDummy.cs`
+19. `Assets/_Project/UI/HUD/StaminaBarUI.cs`
 
 ---
 
@@ -70,10 +73,11 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - **Building Grid MVP:** Đã tạo `TorchPost.prefab`, `TorchPostDefinition.asset`, nối `GridManager`/`BuildingPlacer` vào scene; play test pass preview xanh/đỏ, click đặt công trình, trừ `Wood`, giới hạn trong vùng sáng.
 - **Combat FSM MVP:** Đã thêm `CombatStamina`, `PlayerCombat`, `IDamageable`, `TrainingDummy`; nối `CombatStamina`/`PlayerCombat` vào Player, thêm `TrainingDummy` trong scene; `dotnet build Assembly-CSharp.csproj` pass 0 errors.
 - **Combat Play Test:** Player dùng `Mouse1` đánh trúng `TrainingDummy`; Console xác nhận dummy nhận damage.
+- **Combat Feedback MVP:** Đã thêm nháy màu đỏ cho `TrainingDummy` khi nhận damage và `CombatHUD` hiển thị stamina.
 
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. Thêm feedback combat tối thiểu: `TrainingDummy` nháy màu khi nhận damage, log rõ khi thiếu stamina/cooldown.
-2. Thêm UI stamina đơn giản trong `Assets/_Project/UI/HUD` để thấy stamina tiêu hao/hồi phục khi đánh.
+1. Play test Combat Feedback MVP: bấm Play, dùng `Mouse1` đánh `TrainingDummy`, kiểm tra dummy nháy đỏ và thanh stamina góc trên trái tụt/hồi.
+2. Nếu pass: commit mốc combat feedback.
 3. Sau đó chuyển sang Night Wave Spawner MVP: spawn enemy sương mù theo phase `Night`, tiến về Hỏa Lò/Player.
