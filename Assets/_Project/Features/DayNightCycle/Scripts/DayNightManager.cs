@@ -28,8 +28,10 @@ namespace TheLastEmber.Features.DayNightCycle
 
         private float timeOfDay = 0f; // Chạy từ 0.0 đến 1.0
         private DayPhase currentPhase = DayPhase.Day;
+        private int nightCount = 0;
 
         public DayPhase CurrentPhase => currentPhase;
+        public int NightCount => nightCount;
 
         private void Start()
         {
@@ -73,10 +75,19 @@ namespace TheLastEmber.Features.DayNightCycle
             float normalizedFactor = (sunFactor + 1f) / 2f;         // Đưa về dải 0.0 -> 1.0
 
             // Cập nhật Phase
-            if (timeOfDay < 0.4f) currentPhase = DayPhase.Day;
-            else if (timeOfDay < 0.5f) currentPhase = DayPhase.Dusk;
-            else if (timeOfDay < 0.9f) currentPhase = DayPhase.Night;
-            else currentPhase = DayPhase.Dawn;
+            DayPhase newPhase;
+            if (timeOfDay < 0.4f) newPhase = DayPhase.Day;
+            else if (timeOfDay < 0.5f) newPhase = DayPhase.Dusk;
+            else if (timeOfDay < 0.9f) newPhase = DayPhase.Night;
+            else newPhase = DayPhase.Dawn;
+
+            if (newPhase == DayPhase.Night && currentPhase != DayPhase.Night)
+            {
+                nightCount++;
+                Debug.Log($"<color=#9bd0ff>[Day/Night]</color> Đêm thứ {nightCount} bắt đầu.");
+            }
+
+            currentPhase = newPhase;
 
             // Đổi màu và cường độ ánh sáng mặt trời
             if (sunLight != null)

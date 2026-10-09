@@ -141,6 +141,7 @@ GameObject:
   - component: {fileID: 65158417}
   - component: {fileID: 65158418}
   - component: {fileID: 65158419}
+  - component: {fileID: 65158420}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -429,6 +430,22 @@ MonoBehaviour:
   flashDuration: 0.12
   knockbackDistance: 0.75
   knockbackDuration: 0.12
+--- !u!114 &65158420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65158405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f98dde86784af464293a541403d1f1a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.DayNightCycle.FurnaceUpgradeInteractor
+  furnace: {fileID: 0}
+  wallet: {fileID: 0}
+  upgradeKey: 117
+  interactionRange: 3
 --- !u!1 &123741061
 GameObject:
   m_ObjectHideFlags: 0
@@ -1364,6 +1381,7 @@ GameObject:
   - component: {fileID: 1255679987}
   - component: {fileID: 1255679986}
   - component: {fileID: 1255679985}
+  - component: {fileID: 1255679988}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -1380,8 +1398,8 @@ Transform:
   m_GameObject: {fileID: 1255679983}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1606474848}
@@ -1434,7 +1452,12 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1465,7 +1488,21 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1255679983}
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 0}
+--- !u!114 &1255679988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255679983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2a74e93c57e49f7ae55fd4f33899baf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.DayNightCycle.FurnaceModelVisual
+  resourcePath: Furnace/base_colored_mesh
+  rebuildOnEnable: 1
 --- !u!1 &1606474847
 GameObject:
   m_ObjectHideFlags: 0
@@ -1513,8 +1550,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.DayNightCycle.GreatFurnace
   furnaceLevel: 1
+  maxLevel: 5
   baseRadius: 15
   maxHealth: 2000
+  upgradeCosts: 050000000a0000001400000028000000i
   secondsPerWood: 15
   maxFuelSeconds: 180
   minimumFueledTimeMultiplier: 0.85
@@ -1804,7 +1843,7 @@ Transform:
   m_GameObject: {fileID: 2000000001}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 2}
+  m_LocalPosition: {x: 0, y: 1, z: 6}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1915,6 +1954,8 @@ GameObject:
   - component: {fileID: 2000000102}
   - component: {fileID: 2000000103}
   - component: {fileID: 2000000104}
+  - component: {fileID: 2000000105}
+  - component: {fileID: 2000000106}
   m_Layer: 0
   m_Name: CombatHUD
   m_TagString: Untagged
@@ -1973,6 +2014,42 @@ MonoBehaviour:
   backgroundColor: {r: 0.08, g: 0.08, b: 0.08, a: 0.75}
   fillColor: {r: 0.9, g: 0.2, b: 0.16, a: 0.95}
   borderColor: {r: 0.95, g: 0.95, b: 0.95, a: 0.8}
+--- !u!114 &2000000105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000000101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9bf1c0df3a4f7c4f9b830c2066dae8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.UI.HUD.SilverEmberUI
+  wallet: {fileID: 0}
+  position: {x: 24, y: 74}
+  badgeSize: {x: 140, y: 22}
+  backgroundColor: {r: 0.08, g: 0.08, b: 0.08, a: 0.75}
+  borderColor: {r: 0.95, g: 0.95, b: 0.95, a: 0.8}
+  textColor: {r: 1, g: 0.88, b: 0.35, a: 1}
+--- !u!114 &2000000106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000000101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58e0321a529ad5647b27dd38b416e1f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.UI.HUD.FurnaceLevelUI
+  furnace: {fileID: 0}
+  position: {x: 24, y: 100}
+  badgeSize: {x: 140, y: 22}
+  backgroundColor: {r: 0.08, g: 0.08, b: 0.08, a: 0.75}
+  borderColor: {r: 0.95, g: 0.95, b: 0.95, a: 0.8}
+  textColor: {r: 1, g: 0.6, b: 0.26, a: 1}
 --- !u!1 &2000000201
 GameObject:
   m_ObjectHideFlags: 0
@@ -2020,12 +2097,16 @@ MonoBehaviour:
   dayNightManager: {fileID: 497697691}
   furnace: {fileID: 1606474849}
   target: {fileID: 65158410}
+  playerWallet: {fileID: 0}
   enemyPrefab: {fileID: 0}
   spawnInterval: 4
   maxAliveEnemies: 4
   minimumSpawnRadius: 12
   spawnRadiusOffset: 4
   despawnEnemiesAtDawn: 1
+  enemiesPerNight: 1
+  intervalReductionPerNight: 0.3
+  statScalePerNight: 0.15
   enemyScale: {x: 0.8, y: 1.4, z: 0.8}
   enemyColor: {r: 0.24, g: 0.55, b: 0.62, a: 1}
 --- !u!1001 &8428357427481709359

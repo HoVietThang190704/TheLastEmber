@@ -61,12 +61,21 @@ namespace TheLastEmber.Features.NightMarket
             TickContactAttack();
         }
 
-        public void Initialize(Transform chaseTarget, Action<MistEnemy> onDied, ResourceWallet resourceWallet = null)
+        public void Initialize(Transform chaseTarget, Action<MistEnemy> onDied, ResourceWallet resourceWallet = null, float statMultiplier = 1f)
         {
             target = chaseTarget;
             diedCallback = onDied;
             wallet = resourceWallet;
             targetDamageable = target != null ? target.GetComponentInParent<IDamageable>() : null;
+
+            // Scale stats theo đầu vào của Wave
+            if (statMultiplier > 1f)
+            {
+                maxHealth = Mathf.Round(maxHealth * statMultiplier);
+                currentHealth = maxHealth;
+                contactDamage = Mathf.Round(contactDamage * statMultiplier);
+                moveSpeed *= Mathf.Sqrt(statMultiplier); // Tốc độ tăng chậm hơn để không quá khó
+            }
         }
 
         public void TakeDamage(DamageInfo damageInfo)

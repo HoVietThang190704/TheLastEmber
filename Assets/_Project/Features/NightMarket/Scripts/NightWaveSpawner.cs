@@ -22,6 +22,14 @@ namespace TheLastEmber.Features.NightMarket
         [SerializeField] private float spawnRadiusOffset = 4f;
         [SerializeField] private bool despawnEnemiesAtDawn = true;
 
+        [Header("Wave Scaling (per Night)")]
+        [Tooltip("Mỗi đêm, maxAliveEnemies tăng thêm bao nhiêu")]
+        [SerializeField] private int enemiesPerNight = 1;
+        [Tooltip("Mỗi đêm, spawnInterval giảm bao nhiêu giây (min 1s)")]
+        [SerializeField] private float intervalReductionPerNight = 0.3f;
+        [Tooltip("Mỗi đêm, chỉ số stats (HP/damage/speed) tăng thêm bao nhiêu %")]
+        [SerializeField] private float statScalePerNight = 0.15f;
+
         [Header("Placeholder Enemy")]
         [SerializeField] private Vector3 enemyScale = new Vector3(0.8f, 1.4f, 0.8f);
         [SerializeField] private Color enemyColor = new Color(0.24f, 0.55f, 0.62f, 1f);
@@ -29,10 +37,15 @@ namespace TheLastEmber.Features.NightMarket
         private readonly List<MistEnemy> aliveEnemies = new List<MistEnemy>();
         private float spawnTimer;
         private bool waveActive;
+        private float currentStatMultiplier = 1f;
+        private int currentMaxEnemies;
+        private float currentSpawnInterval;
 
         private void Start()
         {
             ResolveReferences();
+            currentMaxEnemies = maxAliveEnemies;
+            currentSpawnInterval = spawnInterval;
             spawnTimer = 1f;
         }
 
@@ -85,17 +98,18 @@ namespace TheLastEmber.Features.NightMarket
             {
                 waveActive = true;
                 spawnTimer = 0f;
-                Debug.Log("<color=#9bd0ff>[Night Wave]</color> Night wave started.");
+                ApplyWaveScaling();
+                Debug.Log($"<color=#9bd0ff>[Night Wave]</color> Đêm thứ {(dayNightManager != null ? dayNightManager.NightCount : 1)} bắt đầu. Quái: {currentMaxEnemies}, Interval: {currentSpawnInterval:F1}s, Stat x{currentStatMultiplier:F2}");
             }
 
             if (target == null) return;
-            if (aliveEnemies.Count >= maxAliveEnemies) return;
+            if (aliveEnemies.Count >= currentMaxEnemies) return;
 
             spawnTimer -= Time.deltaTime;
             if (spawnTimer > 0f) return;
 
             SpawnEnemy();
-            spawnTimer = spawnInterval;
+            spawnTimer = currentSpawnInterval;
         }
 
         private void StopNightWaveIfNeeded()
@@ -125,7 +139,7 @@ namespace TheLastEmber.Features.NightMarket
                 enemy = enemyObject.AddComponent<MistEnemy>();
             }
 
-            enemy.Initialize(target, HandleEnemyDied, playerWallet);
+            enemy.Initialize(target, HandleEnemyDied, playerWallet, currentStatMultiplier);
             aliveEnemies.Add(enemy);
 
             Debug.Log($"<color=#9bd0ff>[Night Wave]</color> Spawned {enemy.name}. Alive: {aliveEnemies.Count}/{maxAliveEnemies}");
@@ -173,6 +187,16 @@ namespace TheLastEmber.Features.NightMarket
         private void HandleEnemyDied(MistEnemy enemy)
         {
             aliveEnemies.Remove(enemy);
+        }
+
+        private void ApplyWaveScaling()
+        {
+            int night = dayNightManager != null ? dayNightManager.NightCount : 1;
+            int extraNights = Mathf.Max(0, night - 1); // Đêm 1 không scale
+
+            currentMaxEnemies = maxAliveEnemies + extraNights * enemiesPerNight;
+            currentSpawnInterval = Mathf.Max(1f, spawnInterval - extraNights * intervalReductionPerNight);
+            currentStatMultiplier = 1f + extraNights * statScalePerNight;
         }
 
         private void RemoveDestroyedEnemies()

@@ -36,8 +36,11 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Play test HUD SilverEmber trong scene: gắn `SilverEmberUI` vào `CombatHUD`, xác nhận badge hiển thị đúng số sau khi quái chết
 - [x] Commit mốc HUD SilverEmber MVP
 - [x] Furnace Upgrade MVP scripts: `GreatFurnace` có `Upgrade()`, `GetUpgradeCost()`, event `LevelChanged`, max level 5; `FurnaceUpgradeInteractor` nhấn `U` gần lò tiêu `SilverEmber`; `FurnaceLevelUI` hiển thị level trên HUD
-- [ ] Play test Furnace Upgrade MVP: gắn `FurnaceUpgradeInteractor` vào Player, `FurnaceLevelUI` vào `CombatHUD`, đứng gần lò nhấn `U` khi có ≥ 5 SilverEmber → Level 2, bán kính tăng
-- [ ] Commit mốc Furnace Upgrade MVP
+- [x] Play test Furnace Upgrade MVP: gắn `FurnaceUpgradeInteractor` vào Player, `FurnaceLevelUI` vào `CombatHUD`, đứng gần lò nhấn `U` khi có ≥ 5 SilverEmber → Level 2, bán kính tăng
+- [x] Commit mốc Furnace Upgrade MVP
+- [x] Enemy Wave Scaling MVP scripts: `DayNightManager` đếm `NightCount`; `NightWaveSpawner` tính scaling theo đêm (max quái, interval, stat multiplier); `MistEnemy.Initialize()` nhận `statMultiplier` scale HP/damage/speed
+- [ ] Play test Enemy Wave Scaling: chạy qua 2-3 đêm, xác nhận Console log đêm thứ N với quái căng hơn
+- [ ] Commit mốc Enemy Wave Scaling MVP
 
 ---
 
@@ -92,6 +95,9 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
   *(đã chỉnh sửa)* `Assets/_Project/Features/DayNightCycle/Scripts/GreatFurnace.cs` — thêm `maxLevel`, `upgradeCosts[]`, `Upgrade()`, `GetUpgradeCost()`, event `LevelChanged`
 26. `Assets/_Project/Features/DayNightCycle/Scripts/FurnaceUpgradeInteractor.cs`
 27. `Assets/_Project/UI/HUD/FurnaceLevelUI.cs`
+  *(đã chỉnh sửa)* `Assets/_Project/Features/DayNightCycle/Scripts/DayNightManager.cs` — thêm `NightCount`, log đêm mới
+  *(đã chỉnh sửa)* `Assets/_Project/Features/NightMarket/Scripts/MistEnemy.cs` — thêm `statMultiplier` vào `Initialize()`
+  *(đã chỉnh sửa)* `Assets/_Project/Features/NightMarket/Scripts/NightWaveSpawner.cs` — thêm Wave Scaling config, `ApplyWaveScaling()`
 
 ---
 
@@ -107,14 +113,13 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - **Night Wave Spawner MVP:** Đã thêm `MistEnemy` và `NightWaveSpawner`; nối `NightWaveSystem` vào scene để spawn quái khi phase là `Night`; play test pass: wave started/spawned, `MistEnemy` đuổi Player, nhận damage qua `Mouse1`, nháy màu và bị destroy khi hết HP.
 - **Player Health MVP:** Đã thêm `PlayerHealth`, `HealthBarUI`; cập nhật `MistEnemy` để gây contact damage qua `IDamageable` theo cooldown, không trừ máu mỗi frame; play test pass: HUD máu giảm khi bị chạm, HP về 0 reset full cho MVP test.
 - **Player Hurt Feedback MVP:** Đã thêm `PlayerHurtFeedback`; `PlayerHealth` có trạng thái `IsDead`, delay respawn 1.5s, event damage/death/respawn; `PlayerMovement` và `PlayerCombat` tạm khóa input khi Player chết; play test pass: Player nháy đỏ, knockback nhẹ, down state khóa input, respawn đúng nhịp.
-- **Night Wave Reward/Drop MVP (scripts done):** Cập nhật `MistEnemy` — thêm `silverEmberDrop = 3` (Inspector), khi `Die()` gọi `wallet.Add(SilverEmber, amount)`; cập nhật `NightWaveSpawner` — resolve `ResourceWallet` tự động qua `FindAnyObjectByType`, truyền vào `Initialize()`; `dotnet build Assembly-CSharp.csproj` pass 0 errors.
+- **Night Wave Reward/Drop MVP:** Commit `4c10812f`— quái rơi SilverEmber khi chết, play test pass.
+- **HUD SilverEmber MVP:** Commit `5b74df05` — badge gold hiển thị số dư, cập nhật real-time, play test pass.
+- **Furnace Upgrade MVP:** Commit `08b25722` — nhấn `U` tiêu SilverEmber nâng lên Level 2-5, bán kính tăng, HUD cập nhật, play test pass.
 
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Setup Furnace Upgrade trong Unity:**
-   - Chọn `Player` → Add Component → `FurnaceUpgradeInteractor` (wallet/furnace tự resolve)
-   - Chọn `CombatHUD` → Add Component → `FurnaceLevelUI` (furnace tự resolve)
-2. **Play test:** đánh quái để có ≥ 5 SilverEmber → đứng gần lò → nhấn `U` → Level 2, bán kính tăng, HUD cập nhật.
-3. Commit mốc Furnace Upgrade MVP.
-4. Mốc tiếp theo: **Night Market Shop** hoặc **Enemy Wave Scaling**.
+1. **Play test Enemy Wave Scaling**: chạy qua 2-3 đêm trong Unity, xác nhận Console log `Đêm thứ N bắt đầu. Quái: X, Interval: Ys, Stat x1.XX`.
+2. Commit mốc Enemy Wave Scaling MVP.
+3. Mốc tiếp theo: **Save/Load đơn giản** hoặc **Night Market Shop**.
