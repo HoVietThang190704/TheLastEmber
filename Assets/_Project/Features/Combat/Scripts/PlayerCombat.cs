@@ -8,6 +8,7 @@ namespace TheLastEmber.Features.Combat
     {
         [Header("References")]
         [SerializeField] private CombatStamina stamina;
+        [SerializeField] private PlayerHealth health;
 
         [Header("Input")]
         [SerializeField] private KeyCode attackKey = KeyCode.Mouse1;
@@ -43,10 +44,17 @@ namespace TheLastEmber.Features.Combat
             {
                 stamina = GetComponent<CombatStamina>();
             }
+
+            if (health == null)
+            {
+                health = GetComponent<PlayerHealth>();
+            }
         }
 
         private void Update()
         {
+            if (health != null && health.IsDead) return;
+
             UpdateCooldown();
             UpdateState();
             HandleInput();

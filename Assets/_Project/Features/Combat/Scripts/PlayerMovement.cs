@@ -10,17 +10,28 @@ namespace TheLastEmber.Features.Combat
         [SerializeField] private float rotationSpeed = 15f;
         [SerializeField] private float gravity = -9.81f;
 
+        [Header("State")]
+        [SerializeField] private PlayerHealth health;
+
         private CharacterController characterController;
         private Vector3 velocity;
 
         private void Awake()
         {
             characterController = GetComponent<CharacterController>();
+            if (health == null)
+            {
+                health = GetComponent<PlayerHealth>();
+            }
         }
 
         private void Update()
         {
-            HandleMovement();
+            if (health == null || !health.IsDead)
+            {
+                HandleMovement();
+            }
+
             ApplyGravity();
         }
 
