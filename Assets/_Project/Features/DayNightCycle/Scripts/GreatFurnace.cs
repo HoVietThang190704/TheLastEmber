@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace TheLastEmber.Features.DayNightCycle
@@ -6,9 +7,14 @@ namespace TheLastEmber.Features.DayNightCycle
     {
         [Header("Furnace Stats")]
         [SerializeField] private int furnaceLevel = 1;
+        [SerializeField] private int maxLevel = 5;
         [SerializeField] private float baseRadius = 15f;
         [SerializeField] private float maxHealth = 2000f;
         private float currentHealth;
+
+        [Header("Upgrade Cost")]
+        [Tooltip("SilverEmber cost to upgrade. Index 0 = Lv1→Lv2, index 1 = Lv2→Lv3, ...")]
+        [SerializeField] private int[] upgradeCosts = { 5, 10, 20, 40 };
 
         [Header("Fuel")]
         [SerializeField] private float secondsPerWood = 15f;
@@ -28,6 +34,12 @@ namespace TheLastEmber.Features.DayNightCycle
         public bool HasFuel => currentFuelSeconds > 0f;
         public bool CanAcceptFuel => currentFuelSeconds < maxFuelSeconds;
         public Vector3 Position => transform.position;
+        public int FurnaceLevel => furnaceLevel;
+        public int MaxLevel => maxLevel;
+        public bool IsMaxLevel => furnaceLevel >= maxLevel;
+
+        /// <summary>Fired when furnace is successfully upgraded. Passes new level.</summary>
+        public event Action<int> LevelChanged;
 
         private void Awake()
         {
@@ -73,6 +85,32 @@ namespace TheLastEmber.Features.DayNightCycle
             {
                 furnaceLight.range = currentRadius;
             }
+        }
+
+        /// <summary>
+        /// Nâng cấp Hỏa Lò lên level tiếp theo.
+        /// Trả về cost cần trả, hoặc -1 nếu không thể nâng cấp.
+        /// </summary>
+        public int GetUpgradeCost()
+        {
+            int costIndex = furnaceLevel - 1;
+            if (IsMaxLevel || costIndex >= upgradeCosts.Length) return -1;
+            return upgradeCosts[costIndex];
+        }
+
+        /// <summary>
+        /// Thực hiện nâng cấp: tăng level, cập nhật radius, fire event.
+        /// Gọi sau khi đã trừ tài nguyên thành công.
+        /// </summary>
+        public void Upgrade()
+        {
+            if (IsMaxLevel) return;
+
+            furnaceLevel++;
+            UpdateRadius(lastTimeMultiplier);
+            LevelChanged?.Invoke(furnaceLevel);
+
+            Debug.Log($"<color=#ff9944>[Hỏa Lò]</color> Nâng cấp thành công! Hỏa Lò Level {furnaceLevel}. Bán kính: {currentRadius:F1}m");
         }
 
         /// <summary>

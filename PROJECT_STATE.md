@@ -33,8 +33,11 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Play test Night Wave Reward/Drop MVP trong scene: đánh chết quái → Console log vàng drop + log xanh tài nguyên tăng
 - [x] Commit mốc Night Wave Reward/Drop MVP
 - [x] HUD SilverEmber MVP script: hiển thị số dư Silver Ember dưới thanh Health, cập nhật real-time qua event `ResourceChanged` (`SilverEmberUI.cs`)
-- [ ] Play test HUD SilverEmber trong scene: gắn `SilverEmberUI` vào `CombatHUD`, xác nhận badge hiển thị đúng số sau khi quái chết
-- [ ] Commit mốc HUD SilverEmber MVP
+- [x] Play test HUD SilverEmber trong scene: gắn `SilverEmberUI` vào `CombatHUD`, xác nhận badge hiển thị đúng số sau khi quái chết
+- [x] Commit mốc HUD SilverEmber MVP
+- [x] Furnace Upgrade MVP scripts: `GreatFurnace` có `Upgrade()`, `GetUpgradeCost()`, event `LevelChanged`, max level 5; `FurnaceUpgradeInteractor` nhấn `U` gần lò tiêu `SilverEmber`; `FurnaceLevelUI` hiển thị level trên HUD
+- [ ] Play test Furnace Upgrade MVP: gắn `FurnaceUpgradeInteractor` vào Player, `FurnaceLevelUI` vào `CombatHUD`, đứng gần lò nhấn `U` khi có ≥ 5 SilverEmber → Level 2, bán kính tăng
+- [ ] Commit mốc Furnace Upgrade MVP
 
 ---
 
@@ -86,6 +89,9 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
   *(đã chỉnh sửa)* `Assets/_Project/Features/NightMarket/Scripts/MistEnemy.cs` — thêm drop SilverEmber khi chết
   *(đã chỉnh sửa)* `Assets/_Project/Features/NightMarket/Scripts/NightWaveSpawner.cs` — thêm ResourceWallet reference, truyền vào Initialize()
 25. `Assets/_Project/UI/HUD/SilverEmberUI.cs`
+  *(đã chỉnh sửa)* `Assets/_Project/Features/DayNightCycle/Scripts/GreatFurnace.cs` — thêm `maxLevel`, `upgradeCosts[]`, `Upgrade()`, `GetUpgradeCost()`, event `LevelChanged`
+26. `Assets/_Project/Features/DayNightCycle/Scripts/FurnaceUpgradeInteractor.cs`
+27. `Assets/_Project/UI/HUD/FurnaceLevelUI.cs`
 
 ---
 
@@ -106,6 +112,9 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test HUD SilverEmber**: trong Unity, chọn `CombatHUD` → Add Component → `SilverEmberUI` → Play Mode → xác nhận badge `◆ 0 Silver Ember` hiển thị góc trên trái; đánh chết quái → số tăng đúng.
-2. Commit mốc HUD SilverEmber MVP.
-3. Mốc tiếp theo: **Furnace Upgrade MVP** — dùng SilverEmber mua nâng cấp Hỏa Lò, hoặc **Night Market Shop** mua buff.
+1. **Setup Furnace Upgrade trong Unity:**
+   - Chọn `Player` → Add Component → `FurnaceUpgradeInteractor` (wallet/furnace tự resolve)
+   - Chọn `CombatHUD` → Add Component → `FurnaceLevelUI` (furnace tự resolve)
+2. **Play test:** đánh quái để có ≥ 5 SilverEmber → đứng gần lò → nhấn `U` → Level 2, bán kính tăng, HUD cập nhật.
+3. Commit mốc Furnace Upgrade MVP.
+4. Mốc tiếp theo: **Night Market Shop** hoặc **Enemy Wave Scaling**.
