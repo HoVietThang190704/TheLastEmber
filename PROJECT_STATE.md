@@ -6,6 +6,7 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ## 1. TIẾN ĐỘ TỔNG THỂ
 - [x] Khởi tạo cấu trúc thư mục chuẩn Feature-driven (`Assets/_Project/...`)
 - [x] Dựng Graybox cơ bản (`Ground`, `Player` Capsule, `Main Camera`)
+- [x] Thay `Ground` plane bằng model `dat.glb` đã convert mesh-data và tự đổ màu đất/cỏ/đá qua `GroundModelVisual.cs`
 - [x] Di chuyển nhân vật 8 hướng mượt mà (`PlayerMovement.cs`)
 - [x] Camera Isometric góc nhìn 50 độ bám theo nhân vật (`IsometricCameraFollow.cs`)
 - [x] Đại Hỏa Lò (Great Furnace): Cylinder model + Point Light bán kính co giãn (`GreatFurnace.cs`)
@@ -47,7 +48,7 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ## 2. CHI TIẾT CÁC COMPONENT ĐANG HOẠT ĐỘNG TRONG SCENE
 | Đối tượng (Hierarchy) | Script / Component đính kèm | Tham chiếu (References) đã nối | Ghi chú trạng thái |
 | :--- | :--- | :--- | :--- |
-| **Ground** | Mesh Renderer, Box/Mesh Collider | N/A | Scale: (5, 1, 5) |
+| **Ground** | `GroundModelVisual`, Mesh Renderer, Mesh Collider | `resourcePath` -> `Resources/Ground/dat_colored_mesh` | Dùng source `Assets/_Project/Resources/Ground/dat.glb`; script dựng mesh runtime, gán 5 material đất/cỏ/đá, Scale: (25, 0.18, 25) |
 | **Player** | `CharacterController`, `PlayerMovement`, `MistZoneDetector`, `CombatStamina`, `PlayerCombat`, `PlayerHealth`, `PlayerHurtFeedback` | `MistZoneDetector.furnace` -> `GreatFurnace`; `PlayerCombat.stamina` -> `CombatStamina`; `PlayerMovement.health`/`PlayerCombat.health` -> `PlayerHealth`; `PlayerHurtFeedback.health` -> `PlayerHealth` | Di chuyển WASD mượt mà, nhận diện ra/vào sương; `Mouse1` để đánh cận chiến; nhận damage từ quái; nháy màu/knockback khi bị đánh |
 | **Main Camera** | `Camera`, `IsometricCameraFollow` | `Target` -> `Player` | Offset: (0, 12, -8), SmoothSpeed: 5 |
 | **GreatFurnace** | `GreatFurnace` | `furnaceLight` -> con `FurnaceLight` | Level 1, BaseRadius = 15m, Gizmos vàng hiển thị tốt |
@@ -98,6 +99,9 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
   *(đã chỉnh sửa)* `Assets/_Project/Features/DayNightCycle/Scripts/DayNightManager.cs` — thêm `NightCount`, log đêm mới
   *(đã chỉnh sửa)* `Assets/_Project/Features/NightMarket/Scripts/MistEnemy.cs` — thêm `statMultiplier` vào `Initialize()`
   *(đã chỉnh sửa)* `Assets/_Project/Features/NightMarket/Scripts/NightWaveSpawner.cs` — thêm Wave Scaling config, `ApplyWaveScaling()`
+28. `Assets/_Project/Features/Environment/Scripts/GroundModelVisual.cs`
+  *(đã thêm)* `Assets/_Project/Resources/Ground/dat.glb` — source model mặt đất
+  *(đã thêm)* `Assets/_Project/Resources/Ground/dat_colored_mesh.bytes` — mesh-data convert từ `dat.glb`, chia submesh để đổ màu đất/cỏ/đá
 
 ---
 
@@ -116,6 +120,7 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - **Night Wave Reward/Drop MVP:** Commit `4c10812f`— quái rơi SilverEmber khi chết, play test pass.
 - **HUD SilverEmber MVP:** Commit `5b74df05` — badge gold hiển thị số dư, cập nhật real-time, play test pass.
 - **Furnace Upgrade MVP:** Commit `08b25722` — nhấn `U` tiêu SilverEmber nâng lên Level 2-5, bán kính tăng, HUD cập nhật, play test pass.
+- **Ground model/color pass:** Đã đưa `dat.glb` vào `Resources/Ground`, convert sang mesh-data runtime, thêm `GroundModelVisual` tự tạo material URP đất/cỏ/sỏi/đá và gắn vào `Ground` trong `SampleScene`.
 
 ---
 
