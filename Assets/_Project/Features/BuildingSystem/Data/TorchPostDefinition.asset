@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Torch Post
   prefab: {fileID: 1515544087061501112, guid: ee022202cfe5bd542b59ec77f4f9dca1, type: 3}
   footprint: {x: 1, y: 1}
-  yOffset: 0
+  yOffset: 0.5
   costs:
   - resourceType: 0
     amount: 2

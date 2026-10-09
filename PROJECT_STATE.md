@@ -1,5 +1,5 @@
 # TRẠNG THÁI DỰ ÁN: NGỌN LỬA TÀN (THE LAST EMBER)
-Cập nhật lần cuối: 2026-10-08 | Engine: Unity 6 (6000.0.41f1) URP | Input: Both (New + Legacy)
+Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Input: Both (New + Legacy)
 
 ---
 
@@ -14,8 +14,10 @@ Cập nhật lần cuối: 2026-10-08 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Economy MVP: ví tài nguyên (`Wood`, `Stone`, `SilverEmber`), vật phẩm nhặt được, nạp củi kéo dài năng lượng Hỏa Lò
 - [x] Kết nối Economy MVP vào scene bằng prefab/inspector (`ResourceWallet`, `FurnaceFuelInteractor`, `CollectibleResource`) và play test thành công
 - [x] Building Grid MVP scripts: grid snap, preview hợp lệ/không hợp lệ, kiểm tra vùng sáng, tiêu tài nguyên khi đặt
-- [ ] [ĐANG LÀM]: Kết nối Building Grid MVP vào scene bằng prefab/inspector (`GridManager`, `BuildingPlacer`, `BuildableDefinition`)
-- [ ] [CHƯA LÀM]: Máy trạng thái chiến đấu (Combat FSM - Tấn công, Thể lực)
+- [x] Kết nối Building Grid MVP vào scene bằng prefab/inspector (`GridManager`, `BuildingPlacer`, `BuildableDefinition`) và play test thành công
+- [x] Combat FSM MVP scripts: trạng thái `Idle/Move/Attack/Recover`, attack input, cooldown, stamina tiêu hao/hồi phục, hit detection, dummy nhận sát thương
+- [x] Play test Combat FSM MVP trong scene: `Mouse1` đánh trúng `TrainingDummy`, Console có log damage
+- [ ] [ĐANG LÀM]: Combat feedback MVP (UI stamina, nháy màu dummy khi trúng đòn)
 - [ ] [CHƯA LÀM]: Hệ thống Chợ Đêm & Đợt quái sương mù (Night Wave Spawner)
 
 ---
@@ -24,13 +26,17 @@ Cập nhật lần cuối: 2026-10-08 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 | Đối tượng (Hierarchy) | Script / Component đính kèm | Tham chiếu (References) đã nối | Ghi chú trạng thái |
 | :--- | :--- | :--- | :--- |
 | **Ground** | Mesh Renderer, Box/Mesh Collider | N/A | Scale: (5, 1, 5) |
-| **Player** | `CharacterController`, `PlayerMovement`, `MistZoneDetector` | `MistZoneDetector.furnace` -> `GreatFurnace` | Di chuyển WASD mượt mà, nhận diện ra/vào sương |
+| **Player** | `CharacterController`, `PlayerMovement`, `MistZoneDetector`, `CombatStamina`, `PlayerCombat` | `MistZoneDetector.furnace` -> `GreatFurnace`; `PlayerCombat.stamina` -> `CombatStamina` | Di chuyển WASD mượt mà, nhận diện ra/vào sương; `Mouse1` để đánh cận chiến |
 | **Main Camera** | `Camera`, `IsometricCameraFollow` | `Target` -> `Player` | Offset: (0, 12, -8), SmoothSpeed: 5 |
 | **GreatFurnace** | `GreatFurnace` | `furnaceLight` -> con `FurnaceLight` | Level 1, BaseRadius = 15m, Gizmos vàng hiển thị tốt |
 | ↳ **FurnaceLight** | `Light` (Point Light) | Màu cam vàng, Intensity: 15, Range: 20 | Con trực tiếp của GreatFurnace |
 | **DayNightManager** | `DayNightManager` | `sunLight` -> `Directional Light`, `furnace` -> `GreatFurnace` | Chu kỳ 60s test, ban đêm co bán kính lò về 60% |
-| **Player** | `ResourceWallet`, `FurnaceFuelInteractor` | `FurnaceFuelInteractor.furnace` -> `GreatFurnace` hoặc auto-find | Cần gắn thêm trong Inspector; bấm `E` gần Hỏa Lò để nạp củi |
+| **Player** | `ResourceWallet`, `FurnaceFuelInteractor`, `BuildingPlacer` | `FurnaceFuelInteractor.furnace` -> `GreatFurnace`; `BuildingPlacer.gridManager` -> `BuildingSystem`; `BuildingPlacer.wallet` -> `ResourceWallet`; `selectedBuildable` -> `TorchPostDefinition` | Bấm `E` gần Hỏa Lò để nạp củi; rê chuột và click trái để đặt `TorchPost` |
 | **Wood Pickup prefab/object** | `CollectibleResource` + Collider Trigger | N/A | Cần tạo vài object test quanh rìa vùng sáng |
+| **BuildingSystem** | `GridManager` | `furnace` -> `GreatFurnace` | Cell Size = 2, kiểm tra vùng sáng và ô đã chiếm |
+| **TorchPostDefinition** | `BuildableDefinition` asset | `prefab` -> `TorchPost` | Footprint `(1,1)`, `YOffset = 0.5`, cost `Wood = 2` |
+| **TorchPost** | Prefab placeholder | Mesh Renderer, Box Collider | Đặt được bằng `BuildingPlacer` trong vùng sáng |
+| **TrainingDummy** | `TrainingDummy`, Box Collider | N/A | Đặt trước Player để test `Mouse1` attack, nhận damage rồi tự hồi HP khi bị hạ |
 
 ---
 
@@ -48,6 +54,11 @@ Cập nhật lần cuối: 2026-10-08 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 11. `Assets/_Project/Features/BuildingSystem/Scripts/BuildableDefinition.cs`
 12. `Assets/_Project/Features/BuildingSystem/Scripts/GridManager.cs`
 13. `Assets/_Project/Features/BuildingSystem/Scripts/BuildingPlacer.cs`
+14. `Assets/_Project/Features/Combat/Scripts/CombatState.cs`
+15. `Assets/_Project/Features/Combat/Scripts/CombatStamina.cs`
+16. `Assets/_Project/Features/Combat/Scripts/IDamageable.cs`
+17. `Assets/_Project/Features/Combat/Scripts/PlayerCombat.cs`
+18. `Assets/_Project/Features/Combat/Scripts/TrainingDummy.cs`
 
 ---
 
@@ -56,11 +67,13 @@ Cập nhật lần cuối: 2026-10-08 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - **Lỗi New Input System:** Đã chuyển `Active Input Handling` trong Project Settings sang `Both`.
 - **Cảnh báo Unity 6 CS0618:** Đã chuyển toàn bộ `FindObjectsByType` sang cú pháp chuẩn `(FindObjectsInactive.Exclude)`.
 - **Git/GitHub:** Đã thêm `.gitignore` chuẩn Unity, tạo commit đầu tiên và push nhánh `main` lên `https://github.com/HoVietThang190704/TheLastEmber.git`.
+- **Building Grid MVP:** Đã tạo `TorchPost.prefab`, `TorchPostDefinition.asset`, nối `GridManager`/`BuildingPlacer` vào scene; play test pass preview xanh/đỏ, click đặt công trình, trừ `Wood`, giới hạn trong vùng sáng.
+- **Combat FSM MVP:** Đã thêm `CombatStamina`, `PlayerCombat`, `IDamageable`, `TrainingDummy`; nối `CombatStamina`/`PlayerCombat` vào Player, thêm `TrainingDummy` trong scene; `dotnet build Assembly-CSharp.csproj` pass 0 errors.
+- **Combat Play Test:** Player dùng `Mouse1` đánh trúng `TrainingDummy`; Console xác nhận dummy nhận damage.
 
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. Tạo prefab công trình test `TorchPost` hoặc Cube placeholder trong `Assets/_Project/Features/BuildingSystem/Prefabs`.
-2. Tạo `BuildableDefinition` trong `Assets/_Project/Features/BuildingSystem/Data`, gán prefab, footprint `(1,1)`, cost `Wood = 2`.
-3. Tạo object `BuildingSystem` trong scene, gắn `GridManager`; gắn `BuildingPlacer` lên `Player` hoặc `BuildingSystem` và nối `GridManager`, `ResourceWallet`, `BuildableDefinition`.
-4. Play test: nhặt đủ củi -> rê chuột trên Ground -> preview xanh/đỏ -> click trái để đặt công trình trong vùng sáng.
+1. Thêm feedback combat tối thiểu: `TrainingDummy` nháy màu khi nhận damage, log rõ khi thiếu stamina/cooldown.
+2. Thêm UI stamina đơn giản trong `Assets/_Project/UI/HUD` để thấy stamina tiêu hao/hồi phục khi đánh.
+3. Sau đó chuyển sang Night Wave Spawner MVP: spawn enemy sương mù theo phase `Night`, tiến về Hỏa Lò/Player.
