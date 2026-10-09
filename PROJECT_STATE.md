@@ -18,7 +18,8 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Combat FSM MVP scripts: trạng thái `Idle/Move/Attack/Recover`, attack input, cooldown, stamina tiêu hao/hồi phục, hit detection, dummy nhận sát thương
 - [x] Play test Combat FSM MVP trong scene: `Mouse1` đánh trúng `TrainingDummy`, Console có log damage
 - [x] Combat feedback MVP scripts: `TrainingDummy` nháy màu khi trúng đòn, HUD stamina hiển thị tiêu hao/hồi phục
-- [ ] [ĐANG LÀM]: Play test Combat Feedback MVP trong scene
+- [x] Play test Combat Feedback MVP trong scene: dummy nháy đỏ, stamina tụt/hồi, Console có log damage
+- [ ] [ĐANG LÀM]: Chuẩn bị commit mốc Combat Feedback MVP
 - [ ] [CHƯA LÀM]: Hệ thống Chợ Đêm & Đợt quái sương mù (Night Wave Spawner)
 
 ---
@@ -73,11 +74,11 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - **Building Grid MVP:** Đã tạo `TorchPost.prefab`, `TorchPostDefinition.asset`, nối `GridManager`/`BuildingPlacer` vào scene; play test pass preview xanh/đỏ, click đặt công trình, trừ `Wood`, giới hạn trong vùng sáng.
 - **Combat FSM MVP:** Đã thêm `CombatStamina`, `PlayerCombat`, `IDamageable`, `TrainingDummy`; nối `CombatStamina`/`PlayerCombat` vào Player, thêm `TrainingDummy` trong scene; `dotnet build Assembly-CSharp.csproj` pass 0 errors.
 - **Combat Play Test:** Player dùng `Mouse1` đánh trúng `TrainingDummy`; Console xác nhận dummy nhận damage.
-- **Combat Feedback MVP:** Đã thêm nháy màu đỏ cho `TrainingDummy` khi nhận damage và `CombatHUD` hiển thị stamina.
+- **Combat Feedback MVP:** Đã thêm nháy màu đỏ cho `TrainingDummy` khi nhận damage và `CombatHUD` hiển thị stamina; play test pass.
 
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. Play test Combat Feedback MVP: bấm Play, dùng `Mouse1` đánh `TrainingDummy`, kiểm tra dummy nháy đỏ và thanh stamina góc trên trái tụt/hồi.
-2. Nếu pass: commit mốc combat feedback.
-3. Sau đó chuyển sang Night Wave Spawner MVP: spawn enemy sương mù theo phase `Night`, tiến về Hỏa Lò/Player.
+1. Commit mốc combat feedback: `git add .` rồi `git commit -m "Add combat feedback MVP"`.
+2. Chuyển sang Night Wave Spawner MVP: spawn enemy sương mù theo phase `Night`, tiến về Hỏa Lò/Player.
+3. Dùng lại `IDamageable` để Player đánh quái bằng hệ combat hiện có.
