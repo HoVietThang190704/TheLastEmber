@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TheLastEmber.Features.Combat;
 using TheLastEmber.Features.DayNightCycle;
+using TheLastEmber.Features.Economy;
 using UnityEngine;
 
 namespace TheLastEmber.Features.NightMarket
@@ -11,6 +12,7 @@ namespace TheLastEmber.Features.NightMarket
         [SerializeField] private DayNightManager dayNightManager;
         [SerializeField] private GreatFurnace furnace;
         [SerializeField] private Transform target;
+        [SerializeField] private ResourceWallet playerWallet;
 
         [Header("Spawn")]
         [SerializeField] private GameObject enemyPrefab;
@@ -70,6 +72,11 @@ namespace TheLastEmber.Features.NightMarket
                     target = player.transform;
                 }
             }
+
+            if (playerWallet == null)
+            {
+                playerWallet = FindAnyObjectByType<ResourceWallet>();
+            }
         }
 
         private void TickNightWave()
@@ -118,7 +125,7 @@ namespace TheLastEmber.Features.NightMarket
                 enemy = enemyObject.AddComponent<MistEnemy>();
             }
 
-            enemy.Initialize(target, HandleEnemyDied);
+            enemy.Initialize(target, HandleEnemyDied, playerWallet);
             aliveEnemies.Add(enemy);
 
             Debug.Log($"<color=#9bd0ff>[Night Wave]</color> Spawned {enemy.name}. Alive: {aliveEnemies.Count}/{maxAliveEnemies}");

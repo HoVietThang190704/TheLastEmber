@@ -29,6 +29,9 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Player hurt feedback + death/fail state MVP scripts: Player nháy màu khi bị đánh, knockback nhẹ, tạm khóa di chuyển/đánh khi HP về 0 rồi respawn
 - [x] Play test Player hurt feedback + death/fail state MVP trong scene: Player nháy đỏ, knockback nhẹ, down state khóa input, respawn sau 1.5s
 - [x] Commit mốc Player hurt feedback MVP
+- [x] Night Wave Reward/Drop MVP scripts: `MistEnemy` rơi `SilverEmber` khi chết, `NightWaveSpawner` truyền `ResourceWallet` vào enemy khi spawn, drop amount chỉnh được qua Inspector
+- [ ] Play test Night Wave Reward/Drop MVP trong scene: đánh chết quái → Console log vàng drop + log xanh tài nguyên tăng
+- [ ] Commit mốc Night Wave Reward/Drop MVP
 
 ---
 
@@ -77,6 +80,8 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 22. `Assets/_Project/Features/Combat/Scripts/PlayerHealth.cs`
 23. `Assets/_Project/UI/HUD/HealthBarUI.cs`
 24. `Assets/_Project/Features/Combat/Scripts/PlayerHurtFeedback.cs`
+  *(đã chỉnh sửa)* `Assets/_Project/Features/NightMarket/Scripts/MistEnemy.cs` — thêm drop SilverEmber khi chết
+  *(đã chỉnh sửa)* `Assets/_Project/Features/NightMarket/Scripts/NightWaveSpawner.cs` — thêm ResourceWallet reference, truyền vào Initialize()
 
 ---
 
@@ -92,10 +97,12 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - **Night Wave Spawner MVP:** Đã thêm `MistEnemy` và `NightWaveSpawner`; nối `NightWaveSystem` vào scene để spawn quái khi phase là `Night`; play test pass: wave started/spawned, `MistEnemy` đuổi Player, nhận damage qua `Mouse1`, nháy màu và bị destroy khi hết HP.
 - **Player Health MVP:** Đã thêm `PlayerHealth`, `HealthBarUI`; cập nhật `MistEnemy` để gây contact damage qua `IDamageable` theo cooldown, không trừ máu mỗi frame; play test pass: HUD máu giảm khi bị chạm, HP về 0 reset full cho MVP test.
 - **Player Hurt Feedback MVP:** Đã thêm `PlayerHurtFeedback`; `PlayerHealth` có trạng thái `IsDead`, delay respawn 1.5s, event damage/death/respawn; `PlayerMovement` và `PlayerCombat` tạm khóa input khi Player chết; play test pass: Player nháy đỏ, knockback nhẹ, down state khóa input, respawn đúng nhịp.
+- **Night Wave Reward/Drop MVP (scripts done):** Cập nhật `MistEnemy` — thêm `silverEmberDrop = 3` (Inspector), khi `Die()` gọi `wallet.Add(SilverEmber, amount)`; cập nhật `NightWaveSpawner` — resolve `ResourceWallet` tự động qua `FindAnyObjectByType`, truyền vào `Initialize()`; `dotnet build Assembly-CSharp.csproj` pass 0 errors.
 
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. Bắt đầu mốc tiếp theo: Night Wave reward/drop MVP để quái chết có phần thưởng rõ ràng.
-2. Cho `MistEnemy` rơi `SilverEmber` hoặc cộng trực tiếp vào `ResourceWallet` khi bị hạ.
-3. Play test vòng đêm: đánh chết quái, nhận reward, HUD/log xác nhận tài nguyên tăng.
+1. **Play test Night Wave Reward/Drop MVP**: mở Unity, đợi ban đêm, đánh chết quái → xác nhận Console log vàng `[Night Wave] dropped X SilverEmber` và log xanh `[Tài nguyên] +X SilverEmber`.
+2. Nếu `NightWaveSystem` chưa có `playerWallet` trong Inspector → kéo `Player` (có `ResourceWallet`) vào field hoặc để auto-find.
+3. Commit mốc Night Wave Reward/Drop MVP.
+4. Mốc tiếp theo (chọn 1): **HUD SilverEmber** hiển thị số dư trên màn hình, hoặc **Night Market Shop** mua upgrade bằng SilverEmber.

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using TheLastEmber.Features.Combat;
+using TheLastEmber.Features.Economy;
 using UnityEngine;
 
 namespace TheLastEmber.Features.NightMarket
@@ -16,6 +17,9 @@ namespace TheLastEmber.Features.NightMarket
         [SerializeField] private float contactDamage = 12f;
         [SerializeField] private float attackCooldown = 1.2f;
 
+        [Header("Drop on Death")]
+        [SerializeField] private int silverEmberDrop = 3;
+
         [Header("Hit Feedback")]
         [SerializeField] private Color idleColor = new Color(0.24f, 0.55f, 0.62f, 1f);
         [SerializeField] private Color hitColor = Color.white;
@@ -28,6 +32,7 @@ namespace TheLastEmber.Features.NightMarket
         private float attackTimer;
         private Coroutine flashRoutine;
         private Action<MistEnemy> diedCallback;
+        private ResourceWallet wallet;
 
         public float CurrentHealth => currentHealth;
         public float MaxHealth => maxHealth;
@@ -56,10 +61,11 @@ namespace TheLastEmber.Features.NightMarket
             TickContactAttack();
         }
 
-        public void Initialize(Transform chaseTarget, Action<MistEnemy> onDied)
+        public void Initialize(Transform chaseTarget, Action<MistEnemy> onDied, ResourceWallet resourceWallet = null)
         {
             target = chaseTarget;
             diedCallback = onDied;
+            wallet = resourceWallet;
             targetDamageable = target != null ? target.GetComponentInParent<IDamageable>() : null;
         }
 
@@ -117,6 +123,12 @@ namespace TheLastEmber.Features.NightMarket
 
         private void Die()
         {
+            if (wallet != null && silverEmberDrop > 0)
+            {
+                wallet.Add(ResourceType.SilverEmber, silverEmberDrop);
+                Debug.Log($"<color=#ffd700>[Night Wave]</color> {name} dropped {silverEmberDrop} SilverEmber!");
+            }
+
             diedCallback?.Invoke(this);
             Destroy(gameObject);
         }
