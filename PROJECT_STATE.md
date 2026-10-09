@@ -19,8 +19,11 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Play test Combat FSM MVP trong scene: `Mouse1` đánh trúng `TrainingDummy`, Console có log damage
 - [x] Combat feedback MVP scripts: `TrainingDummy` nháy màu khi trúng đòn, HUD stamina hiển thị tiêu hao/hồi phục
 - [x] Play test Combat Feedback MVP trong scene: dummy nháy đỏ, stamina tụt/hồi, Console có log damage
-- [ ] [ĐANG LÀM]: Chuẩn bị commit mốc Combat Feedback MVP
-- [ ] [CHƯA LÀM]: Hệ thống Chợ Đêm & Đợt quái sương mù (Night Wave Spawner)
+- [x] Commit mốc Combat Feedback MVP
+- [x] Night Wave Spawner MVP scripts: spawn quái sương mù vào ban đêm, quái đuổi Player, nhận damage qua `IDamageable`
+- [x] Play test Night Wave Spawner MVP trong scene: ban đêm spawn quái, quái đuổi Player, nhận damage, nháy màu và bị destroy khi hết HP
+- [x] Commit mốc Night Wave Spawner MVP
+- [ ] [ĐANG LÀM]: Player Health + enemy contact damage MVP
 
 ---
 
@@ -40,6 +43,7 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 | **TorchPost** | Prefab placeholder | Mesh Renderer, Box Collider | Đặt được bằng `BuildingPlacer` trong vùng sáng |
 | **TrainingDummy** | `TrainingDummy`, Box Collider | N/A | Đặt trước Player để test `Mouse1` attack, nhận damage, nháy đỏ khi trúng đòn rồi tự hồi HP khi bị hạ |
 | **CombatHUD** | `StaminaBarUI` | `stamina` -> `Player.CombatStamina` | Hiển thị thanh stamina góc trên trái bằng OnGUI |
+| **NightWaveSystem** | `NightWaveSpawner` | `dayNightManager` -> `DayNightManager`; `furnace` -> `GreatFurnace`; `target` -> `Player` | Ban đêm spawn `MistEnemy` placeholder quanh vùng sáng; hết đêm despawn |
 
 ---
 
@@ -63,6 +67,8 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 17. `Assets/_Project/Features/Combat/Scripts/PlayerCombat.cs`
 18. `Assets/_Project/Features/Combat/Scripts/TrainingDummy.cs`
 19. `Assets/_Project/UI/HUD/StaminaBarUI.cs`
+20. `Assets/_Project/Features/NightMarket/Scripts/MistEnemy.cs`
+21. `Assets/_Project/Features/NightMarket/Scripts/NightWaveSpawner.cs`
 
 ---
 
@@ -75,10 +81,11 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - **Combat FSM MVP:** Đã thêm `CombatStamina`, `PlayerCombat`, `IDamageable`, `TrainingDummy`; nối `CombatStamina`/`PlayerCombat` vào Player, thêm `TrainingDummy` trong scene; `dotnet build Assembly-CSharp.csproj` pass 0 errors.
 - **Combat Play Test:** Player dùng `Mouse1` đánh trúng `TrainingDummy`; Console xác nhận dummy nhận damage.
 - **Combat Feedback MVP:** Đã thêm nháy màu đỏ cho `TrainingDummy` khi nhận damage và `CombatHUD` hiển thị stamina; play test pass.
+- **Night Wave Spawner MVP:** Đã thêm `MistEnemy` và `NightWaveSpawner`; nối `NightWaveSystem` vào scene để spawn quái khi phase là `Night`; play test pass: wave started/spawned, `MistEnemy` đuổi Player, nhận damage qua `Mouse1`, nháy màu và bị destroy khi hết HP.
 
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. Commit mốc combat feedback: `git add .` rồi `git commit -m "Add combat feedback MVP"`.
-2. Chuyển sang Night Wave Spawner MVP: spawn enemy sương mù theo phase `Night`, tiến về Hỏa Lò/Player.
-3. Dùng lại `IDamageable` để Player đánh quái bằng hệ combat hiện có.
+1. Bắt đầu MVP tiếp theo: Player Health + enemy contact damage để Night Wave có áp lực thật thay vì chỉ log khi chạm Player.
+2. Thêm HUD máu tối giản cho Player để nhìn rõ sát thương khi bị quái chạm.
+3. Play test vòng đêm: quái spawn, đuổi Player, gây damage theo cooldown, Player không bị trừ máu liên tục mỗi frame.

@@ -1915,6 +1915,61 @@ MonoBehaviour:
   backgroundColor: {r: 0.08, g: 0.08, b: 0.08, a: 0.75}
   fillColor: {r: 0.95, g: 0.78, b: 0.24, a: 0.95}
   borderColor: {r: 0.95, g: 0.95, b: 0.95, a: 0.8}
+--- !u!1 &2000000201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2000000202}
+  - component: {fileID: 2000000203}
+  m_Layer: 0
+  m_Name: NightWaveSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2000000202
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000000201}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2000000203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000000201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55fa0449ac6443d1b7c2b9424c8c16f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.NightMarket.NightWaveSpawner
+  dayNightManager: {fileID: 497697691}
+  furnace: {fileID: 1606474849}
+  target: {fileID: 65158410}
+  enemyPrefab: {fileID: 0}
+  spawnInterval: 4
+  maxAliveEnemies: 4
+  minimumSpawnRadius: 12
+  spawnRadiusOffset: 4
+  despawnEnemiesAtDawn: 1
+  enemyScale: {x: 0.8, y: 1.4, z: 0.8}
+  enemyColor: {r: 0.24, g: 0.55, b: 0.62, a: 1}
 --- !u!1001 &8428357427481709359
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1991,3 +2046,4 @@ SceneRoots:
   - {fileID: 350809798}
   - {fileID: 2000000002}
   - {fileID: 2000000102}
+  - {fileID: 2000000202}
