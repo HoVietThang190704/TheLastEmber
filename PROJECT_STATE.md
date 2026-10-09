@@ -30,8 +30,11 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Play test Player hurt feedback + death/fail state MVP trong scene: Player nháy đỏ, knockback nhẹ, down state khóa input, respawn sau 1.5s
 - [x] Commit mốc Player hurt feedback MVP
 - [x] Night Wave Reward/Drop MVP scripts: `MistEnemy` rơi `SilverEmber` khi chết, `NightWaveSpawner` truyền `ResourceWallet` vào enemy khi spawn, drop amount chỉnh được qua Inspector
-- [ ] Play test Night Wave Reward/Drop MVP trong scene: đánh chết quái → Console log vàng drop + log xanh tài nguyên tăng
-- [ ] Commit mốc Night Wave Reward/Drop MVP
+- [x] Play test Night Wave Reward/Drop MVP trong scene: đánh chết quái → Console log vàng drop + log xanh tài nguyên tăng
+- [x] Commit mốc Night Wave Reward/Drop MVP
+- [x] HUD SilverEmber MVP script: hiển thị số dư Silver Ember dưới thanh Health, cập nhật real-time qua event `ResourceChanged` (`SilverEmberUI.cs`)
+- [ ] Play test HUD SilverEmber trong scene: gắn `SilverEmberUI` vào `CombatHUD`, xác nhận badge hiển thị đúng số sau khi quái chết
+- [ ] Commit mốc HUD SilverEmber MVP
 
 ---
 
@@ -82,6 +85,7 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 24. `Assets/_Project/Features/Combat/Scripts/PlayerHurtFeedback.cs`
   *(đã chỉnh sửa)* `Assets/_Project/Features/NightMarket/Scripts/MistEnemy.cs` — thêm drop SilverEmber khi chết
   *(đã chỉnh sửa)* `Assets/_Project/Features/NightMarket/Scripts/NightWaveSpawner.cs` — thêm ResourceWallet reference, truyền vào Initialize()
+25. `Assets/_Project/UI/HUD/SilverEmberUI.cs`
 
 ---
 
@@ -102,7 +106,6 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test Night Wave Reward/Drop MVP**: mở Unity, đợi ban đêm, đánh chết quái → xác nhận Console log vàng `[Night Wave] dropped X SilverEmber` và log xanh `[Tài nguyên] +X SilverEmber`.
-2. Nếu `NightWaveSystem` chưa có `playerWallet` trong Inspector → kéo `Player` (có `ResourceWallet`) vào field hoặc để auto-find.
-3. Commit mốc Night Wave Reward/Drop MVP.
-4. Mốc tiếp theo (chọn 1): **HUD SilverEmber** hiển thị số dư trên màn hình, hoặc **Night Market Shop** mua upgrade bằng SilverEmber.
+1. **Play test HUD SilverEmber**: trong Unity, chọn `CombatHUD` → Add Component → `SilverEmberUI` → Play Mode → xác nhận badge `◆ 0 Silver Ember` hiển thị góc trên trái; đánh chết quái → số tăng đúng.
+2. Commit mốc HUD SilverEmber MVP.
+3. Mốc tiếp theo: **Furnace Upgrade MVP** — dùng SilverEmber mua nâng cấp Hỏa Lò, hoặc **Night Market Shop** mua buff.
