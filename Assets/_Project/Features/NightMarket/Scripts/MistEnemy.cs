@@ -13,6 +13,7 @@ namespace TheLastEmber.Features.NightMarket
 
         [Header("Contact Pressure")]
         [SerializeField] private float attackRange = 1.3f;
+        [SerializeField] private float contactDamage = 12f;
         [SerializeField] private float attackCooldown = 1.2f;
 
         [Header("Hit Feedback")]
@@ -21,6 +22,7 @@ namespace TheLastEmber.Features.NightMarket
         [SerializeField] private float hitFlashDuration = 0.08f;
 
         private Transform target;
+        private IDamageable targetDamageable;
         private Renderer cachedRenderer;
         private float currentHealth;
         private float attackTimer;
@@ -58,6 +60,7 @@ namespace TheLastEmber.Features.NightMarket
         {
             target = chaseTarget;
             diedCallback = onDied;
+            targetDamageable = target != null ? target.GetComponentInParent<IDamageable>() : null;
         }
 
         public void TakeDamage(DamageInfo damageInfo)
@@ -90,7 +93,26 @@ namespace TheLastEmber.Features.NightMarket
             if (attackTimer > 0f) return;
 
             attackTimer = attackCooldown;
-            Debug.Log("<color=#9bd0ff>[Night Wave]</color> Mist enemy reached the target.");
+
+            if (targetDamageable == null)
+            {
+                Debug.Log("<color=#9bd0ff>[Night Wave]</color> Mist enemy reached the target.");
+                return;
+            }
+
+            Vector3 hitDirection = target.position - transform.position;
+            hitDirection.y = 0f;
+            if (hitDirection.sqrMagnitude > 0.001f)
+            {
+                hitDirection.Normalize();
+            }
+            else
+            {
+                hitDirection = transform.forward;
+            }
+
+            Vector3 hitPoint = target.position + Vector3.up * 0.75f;
+            targetDamageable.TakeDamage(new DamageInfo(contactDamage, gameObject, hitPoint, hitDirection));
         }
 
         private void Die()

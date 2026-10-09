@@ -23,7 +23,9 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Night Wave Spawner MVP scripts: spawn quái sương mù vào ban đêm, quái đuổi Player, nhận damage qua `IDamageable`
 - [x] Play test Night Wave Spawner MVP trong scene: ban đêm spawn quái, quái đuổi Player, nhận damage, nháy màu và bị destroy khi hết HP
 - [x] Commit mốc Night Wave Spawner MVP
-- [ ] [ĐANG LÀM]: Player Health + enemy contact damage MVP
+- [x] Player Health + enemy contact damage MVP scripts: Player có máu, HUD máu, quái gây sát thương theo cooldown khi chạm Player
+- [x] Play test Player Health + enemy contact damage MVP trong scene: quái gây damage theo cooldown, HUD máu giảm, HP về 0 thì reset full cho MVP test
+- [x] Commit mốc Player Health + enemy contact damage MVP
 
 ---
 
@@ -31,7 +33,7 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 | Đối tượng (Hierarchy) | Script / Component đính kèm | Tham chiếu (References) đã nối | Ghi chú trạng thái |
 | :--- | :--- | :--- | :--- |
 | **Ground** | Mesh Renderer, Box/Mesh Collider | N/A | Scale: (5, 1, 5) |
-| **Player** | `CharacterController`, `PlayerMovement`, `MistZoneDetector`, `CombatStamina`, `PlayerCombat` | `MistZoneDetector.furnace` -> `GreatFurnace`; `PlayerCombat.stamina` -> `CombatStamina` | Di chuyển WASD mượt mà, nhận diện ra/vào sương; `Mouse1` để đánh cận chiến |
+| **Player** | `CharacterController`, `PlayerMovement`, `MistZoneDetector`, `CombatStamina`, `PlayerCombat`, `PlayerHealth` | `MistZoneDetector.furnace` -> `GreatFurnace`; `PlayerCombat.stamina` -> `CombatStamina` | Di chuyển WASD mượt mà, nhận diện ra/vào sương; `Mouse1` để đánh cận chiến; nhận damage từ quái |
 | **Main Camera** | `Camera`, `IsometricCameraFollow` | `Target` -> `Player` | Offset: (0, 12, -8), SmoothSpeed: 5 |
 | **GreatFurnace** | `GreatFurnace` | `furnaceLight` -> con `FurnaceLight` | Level 1, BaseRadius = 15m, Gizmos vàng hiển thị tốt |
 | ↳ **FurnaceLight** | `Light` (Point Light) | Màu cam vàng, Intensity: 15, Range: 20 | Con trực tiếp của GreatFurnace |
@@ -42,7 +44,7 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 | **TorchPostDefinition** | `BuildableDefinition` asset | `prefab` -> `TorchPost` | Footprint `(1,1)`, `YOffset = 0.5`, cost `Wood = 2` |
 | **TorchPost** | Prefab placeholder | Mesh Renderer, Box Collider | Đặt được bằng `BuildingPlacer` trong vùng sáng |
 | **TrainingDummy** | `TrainingDummy`, Box Collider | N/A | Đặt trước Player để test `Mouse1` attack, nhận damage, nháy đỏ khi trúng đòn rồi tự hồi HP khi bị hạ |
-| **CombatHUD** | `StaminaBarUI` | `stamina` -> `Player.CombatStamina` | Hiển thị thanh stamina góc trên trái bằng OnGUI |
+| **CombatHUD** | `StaminaBarUI`, `HealthBarUI` | `stamina` -> `Player.CombatStamina`; `health` -> `Player.PlayerHealth` | Hiển thị thanh stamina và health góc trên trái bằng OnGUI |
 | **NightWaveSystem** | `NightWaveSpawner` | `dayNightManager` -> `DayNightManager`; `furnace` -> `GreatFurnace`; `target` -> `Player` | Ban đêm spawn `MistEnemy` placeholder quanh vùng sáng; hết đêm despawn |
 
 ---
@@ -69,6 +71,8 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 19. `Assets/_Project/UI/HUD/StaminaBarUI.cs`
 20. `Assets/_Project/Features/NightMarket/Scripts/MistEnemy.cs`
 21. `Assets/_Project/Features/NightMarket/Scripts/NightWaveSpawner.cs`
+22. `Assets/_Project/Features/Combat/Scripts/PlayerHealth.cs`
+23. `Assets/_Project/UI/HUD/HealthBarUI.cs`
 
 ---
 
@@ -82,10 +86,11 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - **Combat Play Test:** Player dùng `Mouse1` đánh trúng `TrainingDummy`; Console xác nhận dummy nhận damage.
 - **Combat Feedback MVP:** Đã thêm nháy màu đỏ cho `TrainingDummy` khi nhận damage và `CombatHUD` hiển thị stamina; play test pass.
 - **Night Wave Spawner MVP:** Đã thêm `MistEnemy` và `NightWaveSpawner`; nối `NightWaveSystem` vào scene để spawn quái khi phase là `Night`; play test pass: wave started/spawned, `MistEnemy` đuổi Player, nhận damage qua `Mouse1`, nháy màu và bị destroy khi hết HP.
+- **Player Health MVP:** Đã thêm `PlayerHealth`, `HealthBarUI`; cập nhật `MistEnemy` để gây contact damage qua `IDamageable` theo cooldown, không trừ máu mỗi frame; play test pass: HUD máu giảm khi bị chạm, HP về 0 reset full cho MVP test.
 
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. Bắt đầu MVP tiếp theo: Player Health + enemy contact damage để Night Wave có áp lực thật thay vì chỉ log khi chạm Player.
-2. Thêm HUD máu tối giản cho Player để nhìn rõ sát thương khi bị quái chạm.
-3. Play test vòng đêm: quái spawn, đuổi Player, gây damage theo cooldown, Player không bị trừ máu liên tục mỗi frame.
+1. Bắt đầu mốc tiếp theo: Player hurt feedback + death/fail state MVP để khi bị đánh có phản hồi rõ hơn reset máu im lặng.
+2. Thêm hit flash/knockback nhẹ cho Player khi nhận damage.
+3. Sau đó play test lại vòng đêm với áp lực quái + phản hồi bị thương.

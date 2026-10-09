@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 65158415}
   - component: {fileID: 65158416}
   - component: {fileID: 65158417}
+  - component: {fileID: 65158418}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -390,6 +391,20 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &65158418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65158405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99efe3aa86244530881e2529d082a68a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.Combat.PlayerHealth
+  maxHealth: 100
+  resetHealthOnDeath: 1
 --- !u!1 &123741061
 GameObject:
   m_ObjectHideFlags: 0
@@ -1875,6 +1890,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2000000102}
   - component: {fileID: 2000000103}
+  - component: {fileID: 2000000104}
   m_Layer: 0
   m_Name: CombatHUD
   m_TagString: Untagged
@@ -1914,6 +1930,24 @@ MonoBehaviour:
   size: {x: 220, y: 18}
   backgroundColor: {r: 0.08, g: 0.08, b: 0.08, a: 0.75}
   fillColor: {r: 0.95, g: 0.78, b: 0.24, a: 0.95}
+  borderColor: {r: 0.95, g: 0.95, b: 0.95, a: 0.8}
+--- !u!114 &2000000104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000000101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dda882d8739494098e63a51dae5919a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.UI.HUD.HealthBarUI
+  health: {fileID: 65158418}
+  position: {x: 24, y: 48}
+  size: {x: 220, y: 18}
+  backgroundColor: {r: 0.08, g: 0.08, b: 0.08, a: 0.75}
+  fillColor: {r: 0.9, g: 0.2, b: 0.16, a: 0.95}
   borderColor: {r: 0.95, g: 0.95, b: 0.95, a: 0.8}
 --- !u!1 &2000000201
 GameObject:
