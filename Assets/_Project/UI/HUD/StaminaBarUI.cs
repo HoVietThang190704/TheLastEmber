@@ -13,9 +13,9 @@ namespace TheLastEmber.UI.HUD
         [SerializeField] private Vector2 size = new Vector2(220f, 18f);
 
         [Header("Colors")]
-        [SerializeField] private Color backgroundColor = new Color(0.08f, 0.08f, 0.08f, 0.75f);
-        [SerializeField] private Color fillColor = new Color(0.95f, 0.78f, 0.24f, 0.95f);
-        [SerializeField] private Color borderColor = new Color(0.95f, 0.95f, 0.95f, 0.8f);
+        [SerializeField] private Color backgroundColor = new Color(0.06f, 0.055f, 0.05f, 0.72f);
+        [SerializeField] private Color fillColor = new Color(0.9f, 0.68f, 0.18f, 0.96f);
+        [SerializeField] private Color borderColor = new Color(0.72f, 0.62f, 0.48f, 0.82f);
 
         private Texture2D whiteTexture;
         private float normalizedStamina = 1f;
@@ -49,11 +49,14 @@ namespace TheLastEmber.UI.HUD
         private void OnGUI()
         {
             Rect backgroundRect = new Rect(position.x, position.y, size.x, size.y);
-            Rect fillRect = new Rect(position.x + 2f, position.y + 2f, (size.x - 4f) * normalizedStamina, size.y - 4f);
+            Rect fillRect = new Rect(position.x + 3f, position.y + 3f, (size.x - 6f) * normalizedStamina, size.y - 6f);
+            Rect shadowRect = new Rect(backgroundRect.x + 3f, backgroundRect.y + 3f, backgroundRect.width, backgroundRect.height);
 
+            DrawRect(shadowRect, new Color(0f, 0f, 0f, 0.28f));
             DrawRect(backgroundRect, backgroundColor);
             DrawRect(fillRect, fillColor);
-            DrawBorder(backgroundRect, 2f, borderColor);
+            DrawRect(new Rect(fillRect.x, fillRect.y, fillRect.width, 2f), new Color(1f, 0.9f, 0.42f, 0.32f));
+            DrawBorder(backgroundRect, 1f, borderColor);
         }
 
         private void HandleStaminaChanged(float currentStamina, float maxStamina)

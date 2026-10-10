@@ -1019,6 +1019,15 @@ MonoBehaviour:
   resourcePath: Ground/dat_colored_mesh
   rebuildOnEnable: 1
   updateCollider: 1
+  generateDecorations: 1
+  treeCount: 54
+  rockCount: 30
+  logCount: 12
+  innerClearRadius: 8
+  outerRadius: 23
+  decorationSeed: 190704
+  logsAreCollectible: 1
+  woodPerLog: 1
 --- !u!4 &411114890
 Transform:
   m_ObjectHideFlags: 0
@@ -2013,9 +2022,9 @@ MonoBehaviour:
   stamina: {fileID: 65158416}
   position: {x: 24, y: 24}
   size: {x: 220, y: 18}
-  backgroundColor: {r: 0.08, g: 0.08, b: 0.08, a: 0.75}
-  fillColor: {r: 0.95, g: 0.78, b: 0.24, a: 0.95}
-  borderColor: {r: 0.95, g: 0.95, b: 0.95, a: 0.8}
+  backgroundColor: {r: 0.06, g: 0.055, b: 0.05, a: 0.72}
+  fillColor: {r: 0.9, g: 0.68, b: 0.18, a: 0.96}
+  borderColor: {r: 0.72, g: 0.62, b: 0.48, a: 0.82}
 --- !u!114 &2000000104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2031,9 +2040,9 @@ MonoBehaviour:
   health: {fileID: 65158418}
   position: {x: 24, y: 48}
   size: {x: 220, y: 18}
-  backgroundColor: {r: 0.08, g: 0.08, b: 0.08, a: 0.75}
-  fillColor: {r: 0.9, g: 0.2, b: 0.16, a: 0.95}
-  borderColor: {r: 0.95, g: 0.95, b: 0.95, a: 0.8}
+  backgroundColor: {r: 0.06, g: 0.055, b: 0.05, a: 0.72}
+  fillColor: {r: 0.82, g: 0.16, b: 0.12, a: 0.96}
+  borderColor: {r: 0.72, g: 0.62, b: 0.48, a: 0.82}
 --- !u!114 &2000000105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2049,8 +2058,8 @@ MonoBehaviour:
   wallet: {fileID: 0}
   position: {x: 24, y: 74}
   badgeSize: {x: 140, y: 22}
-  backgroundColor: {r: 0.08, g: 0.08, b: 0.08, a: 0.75}
-  borderColor: {r: 0.95, g: 0.95, b: 0.95, a: 0.8}
+  backgroundColor: {r: 0.06, g: 0.055, b: 0.05, a: 0.72}
+  borderColor: {r: 0.72, g: 0.62, b: 0.48, a: 0.82}
   textColor: {r: 1, g: 0.88, b: 0.35, a: 1}
 --- !u!114 &2000000106
 MonoBehaviour:
@@ -2067,8 +2076,8 @@ MonoBehaviour:
   furnace: {fileID: 0}
   position: {x: 24, y: 100}
   badgeSize: {x: 140, y: 22}
-  backgroundColor: {r: 0.08, g: 0.08, b: 0.08, a: 0.75}
-  borderColor: {r: 0.95, g: 0.95, b: 0.95, a: 0.8}
+  backgroundColor: {r: 0.06, g: 0.055, b: 0.05, a: 0.72}
+  borderColor: {r: 0.72, g: 0.62, b: 0.48, a: 0.82}
   textColor: {r: 1, g: 0.6, b: 0.26, a: 1}
 --- !u!1 &2000000201
 GameObject:

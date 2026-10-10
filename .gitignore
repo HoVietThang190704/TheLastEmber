@@ -37,4 +37,7 @@ sysinfo.txt
 .DS_Store
 Thumbs.db
 
+# Local asset source archives
+*.zip
+
 # Keep project source, settings, packages, docs, and assets tracked.

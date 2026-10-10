@@ -17,8 +17,8 @@ namespace TheLastEmber.UI.HUD
         [SerializeField] private Vector2 badgeSize = new Vector2(140f, 22f);
 
         [Header("Colors")]
-        [SerializeField] private Color backgroundColor = new Color(0.08f, 0.08f, 0.08f, 0.75f);
-        [SerializeField] private Color borderColor = new Color(0.95f, 0.95f, 0.95f, 0.8f);
+        [SerializeField] private Color backgroundColor = new Color(0.06f, 0.055f, 0.05f, 0.72f);
+        [SerializeField] private Color borderColor = new Color(0.72f, 0.62f, 0.48f, 0.82f);
         [SerializeField] private Color textColor = new Color(1f, 0.88f, 0.35f, 1f);
 
         private Texture2D whiteTexture;
@@ -62,8 +62,10 @@ namespace TheLastEmber.UI.HUD
             EnsureLabelStyle();
 
             Rect backgroundRect = new Rect(position.x, position.y, badgeSize.x, badgeSize.y);
+            Rect shadowRect = new Rect(backgroundRect.x + 3f, backgroundRect.y + 3f, backgroundRect.width, backgroundRect.height);
+            DrawRect(shadowRect, new Color(0f, 0f, 0f, 0.28f));
             DrawRect(backgroundRect, backgroundColor);
-            DrawBorder(backgroundRect, 2f, borderColor);
+            DrawBorder(backgroundRect, 1f, borderColor);
 
             // Label: icon + amount, vertically centered in badge
             Rect labelRect = new Rect(position.x + 6f, position.y + 2f, badgeSize.x - 8f, badgeSize.y - 4f);

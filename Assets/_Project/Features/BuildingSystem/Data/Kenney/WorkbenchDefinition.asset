@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6543cd7e8d0c8a4aaee78308876ff71, type: 3}
+  m_Name: WorkbenchDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.BuildingSystem.BuildableDefinition
+  displayName: Workbench
+  prefab: {fileID: 4255312055903440564, guid: 01c7c6131b6bb67429460772d79f07fb, type: 3}
+  footprint: {x: 2, y: 1}
+  yOffset: 0
+  costs:
+  - resourceType: 0
+    amount: 5
+  - resourceType: 1
+    amount: 3

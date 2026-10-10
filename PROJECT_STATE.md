@@ -1,5 +1,5 @@
 # TRẠNG THÁI DỰ ÁN: NGỌN LỬA TÀN (THE LAST EMBER)
-Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Input: Both (New + Legacy)
+Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Input: Both (New + Legacy)
 
 ---
 
@@ -40,6 +40,9 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Play test Furnace Upgrade MVP: gắn `FurnaceUpgradeInteractor` vào Player, `FurnaceLevelUI` vào `CombatHUD`, đứng gần lò nhấn `U` khi có ≥ 5 SilverEmber → Level 2, bán kính tăng
 - [x] Commit mốc Furnace Upgrade MVP
 - [x] Enemy Wave Scaling MVP scripts: `DayNightManager` đếm `NightCount`; `NightWaveSpawner` tính scaling theo đêm (max quái, interval, stat multiplier); `MistEnemy.Initialize()` nhận `statMultiplier` scale HP/damage/speed
+- [x] Kenney asset selection/import pass: chọn lọc import FBX hợp game từ `kenney_survival-kit.zip` và `kenney_nature-kit.zip` vào `Assets/ThirdParty/Kenney/...`; thêm Editor bootstrapper sinh prefab gameplay từ model Kenney.
+- [ ] Kenney prefab generation/import validation trong Unity Editor: mở Unity để import FBX đầy đủ và để `KenneyAssetBootstrapper` tự tạo/refresh `WoodPickup`, `StonePickup`, `TorchPost`, buildable definitions và environment prop prefabs.
+- [x] Terrain/HUD visual polish pass: dịu palette mặt đất, thêm decor cây/đá/log tự sinh quanh vùng chơi qua `GroundModelVisual`, làm HUD OnGUI bớt gắt bằng shadow/viền mờ/highlight.
 - [ ] Play test Enemy Wave Scaling: chạy qua 2-3 đêm, xác nhận Console log đêm thứ N với quái căng hơn
 - [ ] Commit mốc Enemy Wave Scaling MVP
 
@@ -102,6 +105,12 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 28. `Assets/_Project/Features/Environment/Scripts/GroundModelVisual.cs`
   *(đã thêm)* `Assets/_Project/Resources/Ground/dat.glb` — source model mặt đất
   *(đã thêm)* `Assets/_Project/Resources/Ground/dat_colored_mesh.bytes` — mesh-data convert từ `dat.glb`, chia submesh để đổ màu đất/cỏ/đá
+29. `Assets/_Project/Editor/KenneyAssetBootstrapper.cs`
+  *(đã thêm)* `Assets/ThirdParty/Kenney/SurvivalKit/...` — FBX chọn lọc: resource wood/stone, campfire, fence, chest, barrel, tools, workbench
+  *(đã thêm)* `Assets/ThirdParty/Kenney/NatureKit/...` — FBX chọn lọc: cây, log, stump, rock/stone, mushroom, bush, grass, stone path
+  *(đã chỉnh sửa)* `Assets/_Project/Features/Environment/Scripts/GroundModelVisual.cs` — palette terrain mới + decor cây/đá/log procedural
+  *(đã chỉnh sửa)* `Assets/_Project/UI/HUD/StaminaBarUI.cs`, `HealthBarUI.cs`, `SilverEmberUI.cs`, `FurnaceLevelUI.cs` — HUD shadow/viền/fill polish
+  *(đã chỉnh sửa)* `Assets/Scenes/SampleScene.unity` — bật terrain decorations và cập nhật màu HUD serialize
 
 ---
 
@@ -121,10 +130,17 @@ Cập nhật lần cuối: 2026-10-09 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - **HUD SilverEmber MVP:** Commit `5b74df05` — badge gold hiển thị số dư, cập nhật real-time, play test pass.
 - **Furnace Upgrade MVP:** Commit `08b25722` — nhấn `U` tiêu SilverEmber nâng lên Level 2-5, bán kính tăng, HUD cập nhật, play test pass.
 - **Ground model/color pass:** Đã đưa `dat.glb` vào `Resources/Ground`, convert sang mesh-data runtime, thêm `GroundModelVisual` tự tạo material URP đất/cỏ/sỏi/đá và gắn vào `Ground` trong `SampleScene`.
+- **Kenney asset application pass:** Đã import chọn lọc asset hợp gameplay từ `SurvivalKit` và `NatureKit`; thêm `KenneyAssetBootstrapper` chạy sau import hoặc qua menu `The Last Ember/Kenney/Rebuild Applied Asset Prefabs` để tạo prefab `WoodPickup`, `StonePickup`, `TorchPost`, `Campfire`, `FortifiedFence`, `Workbench`, decor môi trường.
+- **Unity batchmode limitation:** Thử chạy Unity batchmode để generate prefab ngay nhưng bị kẹt Unity Licensing Client/headless package; đã dừng tiến trình batchmode. `dotnet build Assembly-CSharp-Editor.csproj` pass 0 errors, prefab generation sẽ chạy khi mở Unity Editor có license bình thường.
+- **Terrain/HUD polish:** `GroundModelVisual` đổi bảng màu đất/cỏ/đá sang tông dịu hơn và tự sinh cây/đá/log ở vành ngoài vùng Hỏa Lò; HUD OnGUI có shadow nhẹ, viền màu đồng mờ, fill highlight. `dotnet build Assembly-CSharp.csproj` pass 0 warnings/0 errors.
+- **Fix terrain decor bị bẹt/xa:** Decor procedural ban đầu parent trực tiếp vào `Ground` nên bị nhân scale `(25, 0.18, 25)`, làm cây/đá/log bị ép dẹt và văng xa. Đã sửa `GroundModelVisual` để root decor dùng inverse local scale của `Ground`; `dotnet build Assembly-CSharp.csproj` pass 0 errors.
+- **Procedural log pickup:** Các khúc gỗ procedural trong `GroundModelVisual` giờ có trigger collider + `CollectibleResource(Wood)`, nhặt được `woodPerLog` Wood rồi biến mất; cây đứng/đá vẫn là decor. `CollectibleResource` có thêm `Configure()` để runtime setup resource.
+- **Wood pickup visual:** Các `WoodPickup_01` cũ trong scene vốn đã là `CollectibleResource(Wood)` nhưng còn dùng cube placeholder. Đã cho `CollectibleResource` tự tạo visual tài nguyên trong Editor/Play Mode: Wood thành cụm khúc gỗ, Stone thành đá, SilverEmber thành lõi phát sáng; prefab Kenney có model sẵn thì giữ nguyên model, log procedural không bị nhân đôi visual. `dotnet build Assembly-CSharp.csproj` và `Assembly-CSharp-Editor.csproj` pass 0 errors.
 
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test Enemy Wave Scaling**: chạy qua 2-3 đêm trong Unity, xác nhận Console log `Đêm thứ N bắt đầu. Quái: X, Interval: Ys, Stat x1.XX`.
-2. Commit mốc Enemy Wave Scaling MVP.
-3. Mốc tiếp theo: **Save/Load đơn giản** hoặc **Night Market Shop**.
+1. **Open Unity / visual validation**: mở Unity Editor, kiểm tra Ground tự có cây/đá/log quanh vùng chơi, HUD bớt gắt, các `WoodPickup_01` hiện thành khúc gỗ và nhặt được Wood.
+2. Nếu cây quá dày/thưa, chỉnh ngay trên `GroundModelVisual`: `treeCount`, `rockCount`, `logCount`, `innerClearRadius`, `outerRadius`.
+3. **Play test Enemy Wave Scaling**: chạy qua 2-3 đêm trong Unity, xác nhận Console log `Đêm thứ N bắt đầu. Quái: X, Interval: Ys, Stat x1.XX`.
+4. Commit mốc Enemy Wave Scaling MVP + Kenney/visual polish pass.
