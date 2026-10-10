@@ -14,6 +14,13 @@ namespace TheLastEmber.Features.DayNightCycle
         [SerializeField] private float interactionRange = 3f;
         [SerializeField] private int woodPerFuelAction = 1;
 
+        public KeyCode FuelKey => fuelKey;
+        public int WoodPerFuelAction => woodPerFuelAction;
+        public int CurrentWood => wallet != null ? wallet.GetAmount(ResourceType.Wood) : 0;
+        public bool FurnaceCanAcceptFuel => furnace != null && furnace.CanAcceptFuel;
+        public bool IsInInteractionRange => furnace != null && Vector3.Distance(transform.position, furnace.Position) <= interactionRange;
+        public bool CanFuelNow => wallet != null && IsInInteractionRange && FurnaceCanAcceptFuel && CurrentWood >= woodPerFuelAction;
+
         private void Start()
         {
             if (wallet == null)

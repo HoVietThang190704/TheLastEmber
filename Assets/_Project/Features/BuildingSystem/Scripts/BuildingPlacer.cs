@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using TheLastEmber.Features.Economy;
 using UnityEngine;
 
@@ -12,6 +14,7 @@ namespace TheLastEmber.Features.BuildingSystem
 
         [Header("Building")]
         [SerializeField] private BuildableDefinition selectedBuildable;
+        [SerializeField] private BuildHotkeySlot[] hotkeySlots = Array.Empty<BuildHotkeySlot>();
 
         [Header("Input")]
         [SerializeField] private LayerMask groundMask = ~0;
@@ -25,6 +28,10 @@ namespace TheLastEmber.Features.BuildingSystem
         private Vector2Int currentCell;
         private bool hasValidPointerPosition;
         private bool canPlaceAtCurrentCell;
+
+        public BuildableDefinition SelectedBuildable => selectedBuildable;
+        public IReadOnlyList<BuildHotkeySlot> HotkeySlots => hotkeySlots ?? Array.Empty<BuildHotkeySlot>();
+        public KeyCode CancelKey => cancelKey;
 
         private void Start()
         {
@@ -48,6 +55,8 @@ namespace TheLastEmber.Features.BuildingSystem
 
         private void Update()
         {
+            HandleHotkeySelection();
+
             if (selectedBuildable == null || gridManager == null) return;
 
             UpdatePointerPosition();
@@ -67,8 +76,40 @@ namespace TheLastEmber.Features.BuildingSystem
 
         public void SetSelectedBuildable(BuildableDefinition buildableDefinition)
         {
+            if (selectedBuildable == buildableDefinition) return;
+
             selectedBuildable = buildableDefinition;
             RefreshPreview();
+        }
+
+        public bool CanAfford(BuildableDefinition buildableDefinition)
+        {
+            if (buildableDefinition == null) return false;
+            if (wallet == null) return true;
+
+            foreach (BuildingCost cost in buildableDefinition.Costs)
+            {
+                if (wallet.GetAmount(cost.ResourceType) < cost.Amount)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void HandleHotkeySelection()
+        {
+            if (hotkeySlots == null) return;
+
+            foreach (BuildHotkeySlot slot in hotkeySlots)
+            {
+                if (slot.Buildable == null) continue;
+                if (!Input.GetKeyDown(slot.Hotkey)) continue;
+
+                SetSelectedBuildable(slot.Buildable);
+                return;
+            }
         }
 
         private void UpdatePointerPosition()
@@ -117,18 +158,7 @@ namespace TheLastEmber.Features.BuildingSystem
 
         private bool CanAffordSelectedBuildable()
         {
-            if (selectedBuildable == null) return false;
-            if (wallet == null) return true;
-
-            foreach (BuildingCost cost in selectedBuildable.Costs)
-            {
-                if (wallet.GetAmount(cost.ResourceType) < cost.Amount)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return CanAfford(selectedBuildable);
         }
 
         private void SpendSelectedBuildableCost()
@@ -182,6 +212,16 @@ namespace TheLastEmber.Features.BuildingSystem
                     }
                 }
             }
+        }
+
+        [Serializable]
+        public struct BuildHotkeySlot
+        {
+            [SerializeField] private KeyCode hotkey;
+            [SerializeField] private BuildableDefinition buildable;
+
+            public KeyCode Hotkey => hotkey;
+            public BuildableDefinition Buildable => buildable;
         }
     }
 }

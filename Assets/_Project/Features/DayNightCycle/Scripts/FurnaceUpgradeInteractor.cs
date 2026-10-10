@@ -16,6 +16,20 @@ namespace TheLastEmber.Features.DayNightCycle
         [SerializeField] private KeyCode upgradeKey = KeyCode.U;
         [SerializeField] private float interactionRange = 3f;
 
+        public KeyCode UpgradeKey => upgradeKey;
+        public bool IsInInteractionRange => furnace != null && Vector3.Distance(transform.position, furnace.Position) <= interactionRange;
+        public bool IsFurnaceMaxLevel => furnace != null && furnace.IsMaxLevel;
+        public int CurrentUpgradeCost => furnace != null ? furnace.GetUpgradeCost() : -1;
+        public int CurrentSilverEmber => wallet != null ? wallet.GetAmount(ResourceType.SilverEmber) : 0;
+        public bool CanUpgradeNow
+        {
+            get
+            {
+                int cost = CurrentUpgradeCost;
+                return wallet != null && IsInInteractionRange && !IsFurnaceMaxLevel && cost >= 0 && CurrentSilverEmber >= cost;
+            }
+        }
+
         private void Start()
         {
             if (wallet == null)

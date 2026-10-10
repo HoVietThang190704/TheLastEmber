@@ -43,6 +43,12 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Kenney asset selection/import pass: chọn lọc import FBX hợp game từ `kenney_survival-kit.zip` và `kenney_nature-kit.zip` vào `Assets/ThirdParty/Kenney/...`; thêm Editor bootstrapper sinh prefab gameplay từ model Kenney.
 - [ ] Kenney prefab generation/import validation trong Unity Editor: mở Unity để import FBX đầy đủ và để `KenneyAssetBootstrapper` tự tạo/refresh `WoodPickup`, `StonePickup`, `TorchPost`, buildable definitions và environment prop prefabs.
 - [x] Terrain/HUD visual polish pass: dịu palette mặt đất, thêm decor cây/đá/log tự sinh quanh vùng chơi qua `GroundModelVisual`, làm HUD OnGUI bớt gắt bằng shadow/viền mờ/highlight.
+- [x] Resource HUD MVP: HUD hiển thị Wood/Stone/SilverEmber trực tiếp từ `ResourceWallet`, cập nhật real-time khi nhặt/tiêu tài nguyên.
+- [x] Play test Resource HUD MVP: nhặt tài nguyên trong Play Mode, HUD cập nhật số Wood/Stone/SilverEmber đúng.
+- [x] Interaction Prompt MVP scripts/scene hookup: thêm prompt HUD chỉ hiện khi đứng gần Hỏa Lò, báo `E` nạp củi và `U` nâng cấp theo trạng thái tài nguyên.
+- [x] Play test Interaction Prompt MVP: đứng gần Hỏa Lò, prompt hiển thị đúng trạng thái nạp củi/nâng cấp.
+- [x] Build Hotkey MVP scripts/scene hookup: phím `1/2/3` chọn Torch Post/Campfire/Fortified Fence, HUD hiển thị lựa chọn và cost.
+- [x] Play test Build Hotkey MVP: hotkey `1/2/3`, preview, cost HUD và trừ tài nguyên khi đặt đều pass.
 - [ ] Play test Enemy Wave Scaling: chạy qua 2-3 đêm, xác nhận Console log đêm thứ N với quái căng hơn
 - [ ] Commit mốc Enemy Wave Scaling MVP
 
@@ -57,13 +63,13 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 | **GreatFurnace** | `GreatFurnace` | `furnaceLight` -> con `FurnaceLight` | Level 1, BaseRadius = 15m, Gizmos vàng hiển thị tốt |
 | ↳ **FurnaceLight** | `Light` (Point Light) | Màu cam vàng, Intensity: 15, Range: 20 | Con trực tiếp của GreatFurnace |
 | **DayNightManager** | `DayNightManager` | `sunLight` -> `Directional Light`, `furnace` -> `GreatFurnace` | Chu kỳ 60s test, ban đêm co bán kính lò về 60% |
-| **Player** | `ResourceWallet`, `FurnaceFuelInteractor`, `BuildingPlacer` | `FurnaceFuelInteractor.furnace` -> `GreatFurnace`; `BuildingPlacer.gridManager` -> `BuildingSystem`; `BuildingPlacer.wallet` -> `ResourceWallet`; `selectedBuildable` -> `TorchPostDefinition` | Bấm `E` gần Hỏa Lò để nạp củi; rê chuột và click trái để đặt `TorchPost` |
+| **Player** | `ResourceWallet`, `FurnaceFuelInteractor`, `BuildingPlacer` | `FurnaceFuelInteractor.furnace` -> `GreatFurnace`; `BuildingPlacer.gridManager` -> `BuildingSystem`; `BuildingPlacer.wallet` -> `ResourceWallet`; hotkeys `1/2/3` -> TorchPost/Campfire/FortifiedFence | Bấm `E` gần Hỏa Lò để nạp củi; phím `1/2/3` chọn công trình, rê chuột và click trái để đặt |
 | **Wood Pickup prefab/object** | `CollectibleResource` + Collider Trigger | N/A | Cần tạo vài object test quanh rìa vùng sáng |
 | **BuildingSystem** | `GridManager` | `furnace` -> `GreatFurnace` | Cell Size = 2, kiểm tra vùng sáng và ô đã chiếm |
 | **TorchPostDefinition** | `BuildableDefinition` asset | `prefab` -> `TorchPost` | Footprint `(1,1)`, `YOffset = 0.5`, cost `Wood = 2` |
 | **TorchPost** | Prefab placeholder | Mesh Renderer, Box Collider | Đặt được bằng `BuildingPlacer` trong vùng sáng |
 | **TrainingDummy** | `TrainingDummy`, Box Collider | N/A | Đặt trước Player để test `Mouse1` attack, nhận damage, nháy đỏ khi trúng đòn rồi tự hồi HP khi bị hạ |
-| **CombatHUD** | `StaminaBarUI`, `HealthBarUI` | `stamina` -> `Player.CombatStamina`; `health` -> `Player.PlayerHealth` | Hiển thị thanh stamina và health góc trên trái bằng OnGUI |
+| **CombatHUD** | `StaminaBarUI`, `HealthBarUI`, `SilverEmberUI`, `FurnaceLevelUI`, `FurnaceInteractionPromptUI`, `BuildSelectionUI` | `stamina` -> `Player.CombatStamina`; `health` -> `Player.PlayerHealth`; resource/furnace/interactor/build placer auto-find nếu chưa nối | Hiển thị health, stamina, Wood/Stone/SilverEmber, Furnace level, prompt Hỏa Lò và panel chọn xây dựng bằng OnGUI |
 | **NightWaveSystem** | `NightWaveSpawner` | `dayNightManager` -> `DayNightManager`; `furnace` -> `GreatFurnace`; `target` -> `Player` | Ban đêm spawn `MistEnemy` placeholder quanh vùng sáng; hết đêm despawn |
 
 ---
@@ -111,6 +117,8 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
   *(đã chỉnh sửa)* `Assets/_Project/Features/Environment/Scripts/GroundModelVisual.cs` — palette terrain mới + decor cây/đá/log procedural
   *(đã chỉnh sửa)* `Assets/_Project/UI/HUD/StaminaBarUI.cs`, `HealthBarUI.cs`, `SilverEmberUI.cs`, `FurnaceLevelUI.cs` — HUD shadow/viền/fill polish
   *(đã chỉnh sửa)* `Assets/Scenes/SampleScene.unity` — bật terrain decorations và cập nhật màu HUD serialize
+30. `Assets/_Project/UI/HUD/FurnaceInteractionPromptUI.cs`
+31. `Assets/_Project/UI/HUD/BuildSelectionUI.cs`
 
 ---
 
@@ -136,11 +144,16 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - **Fix terrain decor bị bẹt/xa:** Decor procedural ban đầu parent trực tiếp vào `Ground` nên bị nhân scale `(25, 0.18, 25)`, làm cây/đá/log bị ép dẹt và văng xa. Đã sửa `GroundModelVisual` để root decor dùng inverse local scale của `Ground`; `dotnet build Assembly-CSharp.csproj` pass 0 errors.
 - **Procedural log pickup:** Các khúc gỗ procedural trong `GroundModelVisual` giờ có trigger collider + `CollectibleResource(Wood)`, nhặt được `woodPerLog` Wood rồi biến mất; cây đứng/đá vẫn là decor. `CollectibleResource` có thêm `Configure()` để runtime setup resource.
 - **Wood pickup visual:** Các `WoodPickup_01` cũ trong scene vốn đã là `CollectibleResource(Wood)` nhưng còn dùng cube placeholder. Đã cho `CollectibleResource` tự tạo visual tài nguyên trong Editor/Play Mode: Wood thành cụm khúc gỗ, Stone thành đá, SilverEmber thành lõi phát sáng; prefab Kenney có model sẵn thì giữ nguyên model, log procedural không bị nhân đôi visual. `dotnet build Assembly-CSharp.csproj` và `Assembly-CSharp-Editor.csproj` pass 0 errors.
+- **Resource HUD MVP:** `SilverEmberUI` hiện đã vẽ panel tài nguyên đầy đủ `Wood / Stone / Ember` trên `CombatHUD`, đọc từ `ResourceWallet` và cập nhật qua event `ResourceChanged`. `SampleScene` đã tăng badge width lên 316px để hiển thị đủ 3 loại; `dotnet build Assembly-CSharp.csproj` pass 0 errors.
+- **Resource HUD play test:** Người dùng xác nhận Resource HUD đã pass trong Play Mode.
+- **Interaction Prompt MVP:** Thêm `FurnaceInteractionPromptUI` vào `CombatHUD`. Prompt chỉ hiện khi Player đứng trong tầm tương tác Hỏa Lò, dùng trạng thái từ `FurnaceFuelInteractor`/`FurnaceUpgradeInteractor` để hiển thị nạp củi, thiếu Wood, nhiên liệu đầy, nâng cấp, thiếu Ember hoặc max level. `FurnaceLevelUI` giờ chỉ hiển thị level để tránh trùng prompt. `dotnet build Assembly-CSharp.csproj` pass 0 errors.
+- **Interaction Prompt play test:** Người dùng xác nhận prompt tương tác Hỏa Lò đã pass trong Play Mode.
+- **Build Hotkey MVP:** `BuildingPlacer` có hotkey slots và public state cho HUD. `SampleScene` gắn `1` -> Torch Post, `2` -> Campfire, `3` -> Fortified Fence; mặc định không chọn công trình để người chơi chủ động chọn. Thêm `BuildSelectionUI` vào `CombatHUD` để hiển thị công trình đang chọn và cost. `dotnet build Assembly-CSharp.csproj` pass 0 errors.
+- **Build Hotkey play test:** Người dùng xác nhận chọn công trình bằng hotkey, preview/cost HUD và đặt công trình đã pass trong Play Mode.
 
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Open Unity / visual validation**: mở Unity Editor, kiểm tra Ground tự có cây/đá/log quanh vùng chơi, HUD bớt gắt, các `WoodPickup_01` hiện thành khúc gỗ và nhặt được Wood.
+1. Commit mốc **Resource HUD + Interaction Prompt + Build Hotkey**.
 2. Nếu cây quá dày/thưa, chỉnh ngay trên `GroundModelVisual`: `treeCount`, `rockCount`, `logCount`, `innerClearRadius`, `outerRadius`.
 3. **Play test Enemy Wave Scaling**: chạy qua 2-3 đêm trong Unity, xác nhận Console log `Đêm thứ N bắt đầu. Quái: X, Interval: Ys, Stat x1.XX`.
-4. Commit mốc Enemy Wave Scaling MVP + Kenney/visual polish pass.

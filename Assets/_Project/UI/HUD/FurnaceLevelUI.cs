@@ -71,7 +71,7 @@ namespace TheLastEmber.UI.HUD
 
             string levelText = currentLevel >= maxLevel
                 ? $"\u25cf Lv.{currentLevel} MAX"
-                : $"\u25cf Lv.{currentLevel}/{maxLevel}  [U] N\u00e2ng c\u1ea5p";
+                : $"\u25cf Lv.{currentLevel}/{maxLevel}";
 
             Rect labelRect = new Rect(position.x + 6f, position.y + 2f, badgeSize.x - 8f, badgeSize.y - 4f);
             GUI.Label(labelRect, levelText, labelStyle);
