@@ -75,6 +75,9 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Character Visual Overhaul MVP: Gắn mô hình 3D character-archer (Kenney) cho Player qua PlayerVisualSetup, tắt Capsule nhưng giữ CharacterController vật lý; MistEnemy tự nạp model quái vật sừng một mắt character-oozi (Kenney) màu bóng ma sương mù.
 - [x] Play test Character Visual Overhaul trong Play Mode: chiêm ngưỡng chiến binh Player 3D và quái vật sương mù 3D trong game.
 - [x] Commit mốc Character Visual Overhaul MVP
+- [x] Procedural SFX Audio System MVP: Tự sinh AudioClip qua thuật toán toán học (sine/noise/frequency modulation) dung lượng 0KB; tích hợp tiếng vung chém (Swing), trúng đòn (Hit), đốn cây (ChopWood), khai thác đá (MineStone), nhặt đồ (Pickup), nạp củi (Fuel), đặt công trình (Build) và tiếng chuông đêm (NightBell).
+- [x] Play test Procedural SFX Audio System trong Play Mode: bật loa nghe âm thanh tương tác sống động trong game.
+- [x] Commit mốc Procedural SFX Audio System MVP
 
 ---
 
@@ -187,8 +190,14 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test Character Visual Overhaul trong Unity Play Mode**:
-   - Nhân vật Player đã có hình hài chiến binh 3D thay vì viên thuốc Capsule.
-   - Khi đêm xuống, quái sương mù xuất hiện dưới hình dạng quái vật 3D hung hãn thay vì khối hình trụ.
-   - Thử nghiệm di chuyển, tấn công quái, đốn cây, khai thác đá mượt mà.
-2. Commit mốc Character Visual Overhaul sau khi xác nhận!
+1. **Play test Procedural SFX Audio System trong Unity Play Mode**:
+   - Bật loa/tai nghe trong máy.
+   - Bấm chuột chém: Nghe tiếng vung kiếm út (Swing).
+   - Chém trúng quái: Nghe tiếng đánh chắc nịch ịch (Hit).
+   - Chém cây: Nghe tiếng gõ gỗ cốp (ChopWood).
+   - Chém đá: Nghe tiếng đục đá đanh thép keng (MineStone).
+   - Nhặt gỗ/đá: Nghe tiếng nốt nhạc thăng hoa 	ing (Pickup).
+   - Đến Hỏa Lò nạp củi: Nghe tiếng lửa bùng cháy phù (Fuel).
+   - Đặt hàng rào/đuốc: Nghe tiếng đóng cọc 	hình (Build).
+   - Khi ban đêm buông xuống: Nghe tiếng chuông trầm ngân vang cảnh báo sương mù (NightBell).
+2. Xác nhận kết quả test âm thanh để commit mốc!

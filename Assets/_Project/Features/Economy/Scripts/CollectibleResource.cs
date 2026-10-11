@@ -1,3 +1,4 @@
+using TheLastEmber.Core.Audio;
 using UnityEngine;
 
 namespace TheLastEmber.Features.Economy
@@ -135,6 +136,7 @@ namespace TheLastEmber.Features.Economy
 
             hasBeenCollected = true;
             wallet.Add(resourceType, amount);
+            AudioManager.PlayPickup();
 
             if (destroyOnPickup)
             {

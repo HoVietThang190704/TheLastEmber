@@ -1,3 +1,4 @@
+using TheLastEmber.Core.Audio;
 using TheLastEmber.Features.Economy;
 using UnityEngine;
 
@@ -60,6 +61,7 @@ namespace TheLastEmber.Features.DayNightCycle
             if (!wallet.TrySpend(ResourceType.Wood, woodPerFuelAction)) return;
 
             float secondsAdded = furnace.AddWoodFuel(woodPerFuelAction);
+            AudioManager.PlayFuel();
             Debug.Log($"<color=orange>[Hỏa Lò]</color> Đã nạp {woodPerFuelAction} củi, thêm {secondsAdded:F0}s nhiên liệu.");
         }
     }

@@ -1,4 +1,5 @@
 using System.Collections;
+using TheLastEmber.Core.Audio;
 using TheLastEmber.Features.Combat;
 using UnityEngine;
 
@@ -59,6 +60,7 @@ namespace TheLastEmber.Features.Economy
             if (currentHealth <= 0f) return;
 
             currentHealth = Mathf.Max(0f, currentHealth - damageInfo.Amount);
+            AudioManager.PlayMineStone();
             PlayHitFeedback();
 
             // Nhận tài nguyên mỗi nhát cuốc/chém trúng

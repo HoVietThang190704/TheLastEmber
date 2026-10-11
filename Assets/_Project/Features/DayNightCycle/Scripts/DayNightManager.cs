@@ -1,3 +1,4 @@
+using TheLastEmber.Core.Audio;
 using UnityEngine;
 
 namespace TheLastEmber.Features.DayNightCycle
@@ -84,6 +85,7 @@ namespace TheLastEmber.Features.DayNightCycle
             if (newPhase == DayPhase.Night && currentPhase != DayPhase.Night)
             {
                 nightCount++;
+                AudioManager.PlayNightBell();
                 Debug.Log($"<color=#9bd0ff>[Day/Night]</color> Đêm thứ {nightCount} bắt đầu.");
             }
 

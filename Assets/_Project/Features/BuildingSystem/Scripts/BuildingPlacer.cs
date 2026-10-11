@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TheLastEmber.Core.Audio;
 using TheLastEmber.Features.Economy;
 using UnityEngine;
 
@@ -153,6 +154,7 @@ namespace TheLastEmber.Features.BuildingSystem
             Instantiate(selectedBuildable.Prefab, buildPosition, Quaternion.identity);
             gridManager.Occupy(currentCell, selectedBuildable.Footprint);
 
+            AudioManager.PlayBuild();
             Debug.Log($"<color=cyan>[Xây dựng]</color> Đã đặt {selectedBuildable.DisplayName} tại ô {currentCell}.");
         }
 

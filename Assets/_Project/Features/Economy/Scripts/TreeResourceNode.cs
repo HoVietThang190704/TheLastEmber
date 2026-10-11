@@ -1,4 +1,5 @@
 using System.Collections;
+using TheLastEmber.Core.Audio;
 using TheLastEmber.Features.Combat;
 using UnityEngine;
 
@@ -54,6 +55,7 @@ namespace TheLastEmber.Features.Economy
 
             currentHealth = Mathf.Max(0f, currentHealth - damageInfo.Amount);
 
+            AudioManager.PlayChopWood();
             PlayShakeFeedback();
             AwardWood(woodPerHit);
 

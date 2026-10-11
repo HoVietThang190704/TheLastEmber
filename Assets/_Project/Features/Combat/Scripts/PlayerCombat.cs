@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TheLastEmber.Core.Audio;
 using UnityEngine;
 
 namespace TheLastEmber.Features.Combat
@@ -120,6 +121,7 @@ namespace TheLastEmber.Features.Combat
             cooldownTimer = cooldown;
             ChangeState(CombatState.Attack);
 
+            AudioManager.PlaySwing();
             Debug.Log("<color=cyan>[Combat]</color> Player bắt đầu tấn công.");
         }
 
@@ -156,6 +158,7 @@ namespace TheLastEmber.Features.Combat
                 Vector3 closestPoint = targetCollider.ClosestPoint(hitCenter);
                 Vector3 hitDirection = (targetCollider.transform.position - transform.position).normalized;
                 damageable.TakeDamage(new DamageInfo(damage, gameObject, closestPoint, hitDirection));
+                AudioManager.PlayHit();
             }
         }
 
