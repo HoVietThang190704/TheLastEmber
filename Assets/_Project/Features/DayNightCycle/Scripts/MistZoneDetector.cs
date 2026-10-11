@@ -1,3 +1,4 @@
+using TheLastEmber.Features.BuildingSystem;
 using UnityEngine;
 
 namespace TheLastEmber.Features.DayNightCycle
@@ -26,8 +27,8 @@ namespace TheLastEmber.Features.DayNightCycle
         {
             if (furnace == null) return;
 
-            // Kiểm tra xem vị trí của nhân vật có nằm trong vùng an toàn không
-            bool insideSafeZone = furnace.IsInsideSafeZone(transform.position);
+            // Kiểm tra xem vị trí của nhân vật có nằm trong vùng an toàn không (Hỏa Lò hoặc Đuốc)
+            bool insideSafeZone = furnace.IsInsideSafeZone(transform.position) || TorchPost.IsInAnyTorchLight(transform.position);
 
             if (!insideSafeZone && !isInMist)
             {

@@ -107,6 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1839783337953355632}
   - component: {fileID: 4168646704564384590}
+  - component: {fileID: 6511223344556677889}
   m_Layer: 0
   m_Name: CampfirePit
   m_TagString: Untagged
@@ -214,3 +215,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d69ecf7067d28b143912014ae1f542e6, type: 3}
   m_PrefabInstance: {fileID: 3045969145267283946}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6511223344556677889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8268926207795554157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5f23f2f298711ef884200155d020202, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healPerSecond: 3
+  staminaRegenMultiplier: 2
+  auraRadius: 3.5
+  lightRange: 5
+  fireLight: {fileID: 4049904713882031623}

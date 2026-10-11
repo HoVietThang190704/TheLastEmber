@@ -84,7 +84,7 @@ namespace TheLastEmber.EditorTools
                 new Vector3(1.2f, 1.2f, 1.2f),
                 0.65f);
 
-            CreateStaticPrefab(
+            GameObject torchPrefab = CreateStaticPrefab(
                 "TorchPost",
                 SurvivalFbxRoot + "campfire-stand.fbx",
                 BuildingPrefabRoot + "TorchPost.prefab",
@@ -93,7 +93,8 @@ namespace TheLastEmber.EditorTools
                 true,
                 new Vector3(0f, 1.75f, 0f),
                 7f,
-                2.4f);
+                2.4f,
+                typeof(TorchPost));
 
             GameObject campfire = CreateStaticPrefab(
                 "CampfirePit",
@@ -104,7 +105,8 @@ namespace TheLastEmber.EditorTools
                 true,
                 new Vector3(0f, 0.8f, 0f),
                 5f,
-                1.5f);
+                1.5f,
+                typeof(CampfireZone));
 
             GameObject fence = CreateStaticPrefab(
                 "FortifiedFence",
@@ -115,7 +117,8 @@ namespace TheLastEmber.EditorTools
                 false,
                 Vector3.zero,
                 0f,
-                0f);
+                0f,
+                typeof(FortifiedFence));
 
             GameObject workbench = CreateStaticPrefab(
                 "Workbench",
@@ -225,10 +228,16 @@ namespace TheLastEmber.EditorTools
             bool addLight,
             Vector3 lightLocalPosition,
             float lightRange,
-            float lightIntensity)
+            float lightIntensity,
+            Type extraComponentType = null)
         {
             GameObject root = CreateRootWithModel(name, modelPath, modelLocalPosition, modelLocalScale);
             AddFittedBoxCollider(root);
+
+            if (extraComponentType != null)
+            {
+                root.AddComponent(extraComponentType);
+            }
 
             if (addLight)
             {

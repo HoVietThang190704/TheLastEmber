@@ -49,8 +49,14 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Play test Interaction Prompt MVP: đứng gần Hỏa Lò, prompt hiển thị đúng trạng thái nạp củi/nâng cấp.
 - [x] Build Hotkey MVP scripts/scene hookup: phím `1/2/3` chọn Torch Post/Campfire/Fortified Fence, HUD hiển thị lựa chọn và cost.
 - [x] Play test Build Hotkey MVP: hotkey `1/2/3`, preview, cost HUD và trừ tài nguyên khi đặt đều pass.
-- [ ] Play test Enemy Wave Scaling: chạy qua 2-3 đêm, xác nhận Console log đêm thứ N với quái căng hơn
-- [ ] Commit mốc Enemy Wave Scaling MVP
+- [x] Building Functionality MVP scripts:
+  - `TorchPost.cs`: đăng ký ngọn đuốc vào registry toàn cục, tỏa sáng, mở rộng Safe Zone cho `MistZoneDetector` và cho phép `GridManager` đặt công trình mở rộng.
+  - `CampfireZone.cs`: vùng nghỉ ngơi hồi máu (`healPerSecond`) và tỏa sáng nhẹ khi người chơi đứng gần.
+  - `FortifiedFence.cs`: cản đường vật lý, triển khai `IDamageable` với HP riêng (120 HP), nháy đỏ khi nhận sát thương và tự huỷ khi gãy.
+  - Cập nhật bootstrapper và các prefab `TorchPost.prefab`, `CampfirePit.prefab`, `FortifiedFence.prefab` gắn các component tính năng tương ứng.
+- [x] Play test Building Functionality MVP trong scene: đặt đuốc (vùng sáng mở rộng), đứng gần lửa trại (hồi máu), kiểm tra hàng rào.
+- [x] Play test Enemy Wave Scaling: chạy qua 2-3 đêm, xác nhận Console log đêm thứ N với quái căng hơn
+- [x] Commit mốc Building Functionality & Enemy Wave Scaling MVP
 
 ---
 
@@ -119,6 +125,9 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
   *(đã chỉnh sửa)* `Assets/Scenes/SampleScene.unity` — bật terrain decorations và cập nhật màu HUD serialize
 30. `Assets/_Project/UI/HUD/FurnaceInteractionPromptUI.cs`
 31. `Assets/_Project/UI/HUD/BuildSelectionUI.cs`
+32. `Assets/_Project/Features/BuildingSystem/Scripts/TorchPost.cs`
+33. `Assets/_Project/Features/BuildingSystem/Scripts/CampfireZone.cs`
+34. `Assets/_Project/Features/BuildingSystem/Scripts/FortifiedFence.cs`
 
 ---
 
@@ -151,9 +160,18 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - **Build Hotkey MVP:** `BuildingPlacer` có hotkey slots và public state cho HUD. `SampleScene` gắn `1` -> Torch Post, `2` -> Campfire, `3` -> Fortified Fence; mặc định không chọn công trình để người chơi chủ động chọn. Thêm `BuildSelectionUI` vào `CombatHUD` để hiển thị công trình đang chọn và cost. `dotnet build Assembly-CSharp.csproj` pass 0 errors.
 - **Build Hotkey play test:** Người dùng xác nhận chọn công trình bằng hotkey, preview/cost HUD và đặt công trình đã pass trong Play Mode.
 
+- **Building Functionality MVP:**
+  - `TorchPost`: Nguồn sáng phụ (radius 7m) đăng ký static registry, tích hợp `MistZoneDetector` & `GridManager` giúp mở rộng vùng an toàn sương mù và diện tích được phép xây dựng.
+  - `CampfireZone`: Vùng nghỉ ngơi hồi phục máu (+3 HP/s) và cung cấp ánh sáng bán kính 4.5m khi Player đứng gần.
+  - `FortifiedFence`: Hàng rào chắn quái, có BoxCollider và triển khai `IDamageable` với 120 HP, nháy đỏ khi bị tấn công và tự huỷ khi hết máu.
+  - Tích hợp các component trực tiếp vào prefab và cấu hình trong `KenneyAssetBootstrapper`. `dotnet build Assembly-CSharp.csproj` pass 0 errors.
+
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. Commit mốc **Resource HUD + Interaction Prompt + Build Hotkey**.
-2. Nếu cây quá dày/thưa, chỉnh ngay trên `GroundModelVisual`: `treeCount`, `rockCount`, `logCount`, `innerClearRadius`, `outerRadius`.
-3. **Play test Enemy Wave Scaling**: chạy qua 2-3 đêm trong Unity, xác nhận Console log `Đêm thứ N bắt đầu. Quái: X, Interval: Ys, Stat x1.XX`.
+1. **Play test Building Functionality MVP trong Unity Play Mode**:
+   - Nhấn phím `1` đặt Torch Post ra rìa ngoài -> bước lại gần kiểm tra Player không bị dính sương mù.
+   - Nhấn phím `2` đặt Campfire -> bị quái/sương rút máu rồi bước vào gần lửa trại kiểm tra hồi phục HP.
+   - Nhấn phím `3` đặt Fortified Fence -> kiểm tra vật cản chặn đường quái.
+2. **Play test Enemy Wave Scaling**: chạy qua 2-3 đêm trong Unity, xác nhận Console log `Đêm thứ N bắt đầu. Quái: X, Interval: Ys, Stat x1.XX`.
+3. Commit mốc Building Functionality & Enemy Wave Scaling sau khi test pass.

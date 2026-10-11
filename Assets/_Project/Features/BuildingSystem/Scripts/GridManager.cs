@@ -75,8 +75,13 @@ namespace TheLastEmber.Features.BuildingSystem
 
         private bool IsCellInsideSafeZone(Vector2Int cell)
         {
-            if (furnace == null) return true;
-            return furnace.IsInsideSafeZone(CellToWorldCenter(cell));
+            Vector3 worldPos = CellToWorldCenter(cell);
+            if (furnace != null && furnace.IsInsideSafeZone(worldPos))
+            {
+                return true;
+            }
+
+            return TorchPost.IsInAnyTorchLight(worldPos);
         }
 
         private IEnumerable<Vector2Int> GetFootprintCells(Vector2Int anchorCell, Vector2Int footprint)

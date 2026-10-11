@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1032119164187470847}
   - component: {fileID: 6130640938201302791}
+  - component: {fileID: 7511223344556677889}
   m_Layer: 0
   m_Name: TorchPost
   m_TagString: Untagged
@@ -214,3 +215,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 18ee744d762099b4e87ebbb4a6bee58c, type: 3}
   m_PrefabInstance: {fileID: 8657358776495747721}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7511223344556677889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515544087061501112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4e12e1f298711ef884200155d010101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightRadius: 7
+  attachedLight: {fileID: 8828720493145793937}

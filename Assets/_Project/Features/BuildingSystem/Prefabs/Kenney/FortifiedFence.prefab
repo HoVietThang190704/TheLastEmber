@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 798825956127871686}
   - component: {fileID: 4831551926711835551}
+  - component: {fileID: 5511223344556677889}
   m_Layer: 0
   m_Name: FortifiedFence
   m_TagString: Untagged
@@ -116,3 +117,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ec0cf98fa8359a841b55e5f810d3f601, type: 3}
   m_PrefabInstance: {fileID: 7631199074218493843}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5511223344556677889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4426720309948123503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a34a3f298711ef884200155d030303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 120
+  currentHealth: 120
+  hitColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+  flashDuration: 0.08
