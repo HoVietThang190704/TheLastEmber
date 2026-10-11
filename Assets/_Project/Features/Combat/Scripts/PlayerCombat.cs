@@ -38,6 +38,14 @@ namespace TheLastEmber.Features.Combat
 
         public CombatState CurrentState => currentState;
         public bool IsAttacking => currentState == CombatState.Attack || currentState == CombatState.Recover;
+        public float Damage => damage;
+
+        public void UpgradeDamage(float newDamage)
+        {
+            if (newDamage <= damage) return;
+            damage = newDamage;
+            Debug.Log($"<color=#32cd32>[Trang Bị]</color> Vũ khí nâng cấp thành công! Sát thương đòn đánh: {damage:0}");
+        }
 
         private void Awake()
         {

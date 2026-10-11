@@ -59,6 +59,17 @@ namespace TheLastEmber.Features.Combat
             HealthChanged?.Invoke(currentHealth, maxHealth);
         }
 
+        public void UpgradeMaxHealth(float newMaxHealth)
+        {
+            if (newMaxHealth <= maxHealth) return;
+
+            float diff = newMaxHealth - maxHealth;
+            maxHealth = newMaxHealth;
+            currentHealth = Mathf.Min(maxHealth, currentHealth + diff);
+            HealthChanged?.Invoke(currentHealth, maxHealth);
+            Debug.Log($"<color=#32cd32>[Trang Bị]</color> Giáp nâng cấp thành công! Máu tối đa: {maxHealth:0}");
+        }
+
         private void HandleDeath()
         {
             if (isDead) return;

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4504719421332069358}
   - component: {fileID: 984850999531430315}
+  - component: {fileID: 4255312055903440565}
   m_Layer: 0
   m_Name: Workbench
   m_TagString: Untagged
@@ -116,3 +117,21 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e0a945543ee94df4a940474d60529c3c, type: 3}
   m_PrefabInstance: {fileID: 3180663167574554010}
   m_PrefabAsset: {fileID: 0}
+
+--- !u!114 &4255312055903440565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4255312055903440564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 925959bd6f914e38b314eb374b0f7cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.BuildingSystem.WorkbenchInteractable
+  interactionDistance: 2.8
+  weaponUpgradeKey: 102
+  armorUpgradeKey: 103
+  weaponLevel: 1
+  armorLevel: 1

@@ -81,6 +81,9 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Floating Overhead HP Bar & Damage Numbers MVP: Script FloatingCombatFeedbackUI tự động hiển thị số sát thương nảy (-25 màu vàng cam khi đánh trúng quái/dummy, -12 màu đỏ khi Player nhận đòn) bay lên và mờ dần trong 0.75s; vẽ thanh máu nổi phía trên đầu quái sương mù (MistEnemy) và hàng rào (FortifiedFence) khi bị mất máu.
 - [x] Play test Floating Overhead HP Bar & Damage Numbers trong Play Mode: chém quái/dummy thấy số damage bay lên và thanh máu nổi co ngắn lại.
 - [x] Commit mốc Floating Overhead HP Bar & Damage Numbers MVP
+- [x] Workbench & Equipment Crafting MVP: Mở khóa công trình số 4 Bàn Chế Tạo (Workbench) tốn 5 Wood, 3 Stone; gắn script WorkbenchInteractable vào prefab Workbench. Khi đứng gần (2.8m) hiện UI nâng cấp: phím F rèn Rìu/Vũ khí tăng Damage (25 -> 40 -> 65), phím G rèn Giáp tăng Max HP (100 -> 150 -> 220), trừ tài nguyên và phát âm thanh rèn đập.
+- [x] Play test Workbench & Equipment Crafting trong Play Mode: nhấn phím 4 đặt bàn chế tạo, bước lại gần nhấn F/G để nâng cấp chỉ số.
+- [x] Commit mốc Workbench & Equipment Crafting MVP
 
 ---
 
@@ -193,8 +196,9 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test Floating Overhead HP Bar & Damage Numbers trong Unity Play Mode**:
-   - Chạy lại chém TrainingDummy: Nhìn thấy số -25 màu vàng cam nảy lên trên đầu và bay từ từ lên trời rồi mờ dần.
-   - Khi ban đêm quái sương mù xuất hiện: Chém quái, quan sát số sát thương nhảy lên và thanh máu nhỏ màu đỏ xuất hiện phía trên đầu quái vật co ngắn dần theo từng đòn đánh.
-   - Để quái cắn Player: Thấy số sát thương đỏ nảy trên đầu Player.
+1. **Play test Workbench & Equipment Crafting trong Unity Play Mode**:
+   - Nhấn phím 4 để chọn **Workbench** (chi phí: 5 Gỗ, 3 Đá) và click chuột trái đặt xuống đất.
+   - Di chuyển lại gần Bàn Chế Tạo: Quan sát bảng UI rèn đồ hiện lên ở phía dưới màn hình.
+   - Nhấn phím F: Nâng cấp Rìu -> Sát thương tăng lên 40 (chém dummy hiện số -40).
+   - Nhấn phím G: Nâng cấp Giáp -> Thanh máu tối đa tăng lên 150 HP.
 2. Xác nhận kết quả test để commit mốc!

@@ -11,7 +11,7 @@ namespace TheLastEmber.UI.HUD
 
         [Header("Layout")]
         [SerializeField] private Vector2 position = new Vector2(24f, 184f);
-        [SerializeField] private Vector2 panelSize = new Vector2(316f, 72f);
+        [SerializeField] private Vector2 panelSize = new Vector2(360f, 72f);
 
         [Header("Colors")]
         [SerializeField] private Color backgroundColor = new Color(0.06f, 0.055f, 0.05f, 0.74f);
