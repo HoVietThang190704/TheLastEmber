@@ -1,4 +1,5 @@
 using System;
+using TheLastEmber.Core.Visual;
 using UnityEngine;
 
 namespace TheLastEmber.Features.DayNightCycle
@@ -29,6 +30,7 @@ namespace TheLastEmber.Features.DayNightCycle
         private float currentRadius;
         private float currentFuelSeconds;
         private float lastTimeMultiplier = 1f;
+        private FireEmberParticles emberParticles;
 
         public float CurrentRadius => currentRadius;
         public float CurrentFuelSeconds => currentFuelSeconds;
@@ -47,6 +49,17 @@ namespace TheLastEmber.Features.DayNightCycle
         {
             currentHealth = maxHealth;
             currentFuelSeconds = initialFuelSeconds;
+
+            // Thêm hiệu ứng hạt than hoa nếu chưa có
+            emberParticles = GetComponentInChildren<FireEmberParticles>();
+            if (emberParticles == null)
+            {
+                GameObject emberObj = new GameObject("FurnaceEmbers");
+                emberObj.transform.SetParent(transform, false);
+                emberObj.transform.localPosition = new Vector3(0f, 1.2f, 0f);
+                emberParticles = emberObj.AddComponent<FireEmberParticles>();
+            }
+
             UpdateRadius(1.0f); // Hệ số ban ngày mặc định = 1.0
         }
 
@@ -94,6 +107,11 @@ namespace TheLastEmber.Features.DayNightCycle
                     furnaceLight.range = currentRadius * 1.5f;
                     furnaceLight.intensity = 1.0f; // Tàn lửa le lói
                 }
+
+                if (emberParticles != null)
+                {
+                    emberParticles.SetActiveEmbers(false);
+                }
                 return;
             }
 
@@ -104,6 +122,11 @@ namespace TheLastEmber.Features.DayNightCycle
             {
                 furnaceLight.range = currentRadius;
                 furnaceLight.intensity = 15f;
+            }
+
+            if (emberParticles != null)
+            {
+                emberParticles.SetActiveEmbers(true);
             }
         }
 

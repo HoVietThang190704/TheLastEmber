@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TheLastEmber.Core.Audio;
+using TheLastEmber.Core.Visual;
 using UnityEngine;
 
 namespace TheLastEmber.Features.Combat
@@ -129,6 +130,7 @@ namespace TheLastEmber.Features.Combat
             cooldownTimer = cooldown;
             ChangeState(CombatState.Attack);
 
+            SlashArcVisual.PlaySlash(transform.position, transform.forward, hitRange);
             AudioManager.PlaySwing();
             Debug.Log("<color=cyan>[Combat]</color> Player bắt đầu tấn công.");
         }

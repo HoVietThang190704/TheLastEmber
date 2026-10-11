@@ -1,3 +1,4 @@
+using TheLastEmber.Core.Visual;
 using TheLastEmber.Features.Combat;
 using UnityEngine;
 
@@ -94,6 +95,14 @@ namespace TheLastEmber.Features.BuildingSystem
                 fireLight.color = new Color(1f, 0.45f, 0.1f);
                 fireLight.intensity = 6f;
                 fireLight.range = lightRange;
+            }
+
+            if (GetComponentInChildren<FireEmberParticles>() == null)
+            {
+                GameObject emberGo = new GameObject("CampfireEmbers");
+                emberGo.transform.SetParent(transform, false);
+                emberGo.transform.localPosition = new Vector3(0f, 0.4f, 0f);
+                FireEmberParticles embers = emberGo.AddComponent<FireEmberParticles>();
             }
         }
 

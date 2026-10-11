@@ -1,3 +1,4 @@
+using TheLastEmber.Core.Visual;
 using UnityEngine;
 
 namespace TheLastEmber.Features.Combat
@@ -22,6 +23,11 @@ namespace TheLastEmber.Features.Combat
 
         private void SetupVisual()
         {
+            if (GetComponent<SlashArcVisual>() == null)
+            {
+                gameObject.AddComponent<SlashArcVisual>();
+            }
+
             // Ẩn MeshRenderer của Capsule placeholder trên Player
             MeshRenderer capsuleRenderer = GetComponent<MeshRenderer>();
             if (capsuleRenderer != null)

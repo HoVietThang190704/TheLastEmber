@@ -84,6 +84,9 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Workbench & Equipment Crafting MVP: Mở khóa công trình số 4 Bàn Chế Tạo (Workbench) tốn 5 Wood, 3 Stone; gắn script WorkbenchInteractable vào prefab Workbench. Khi đứng gần (2.8m) hiện UI nâng cấp: phím F rèn Rìu/Vũ khí tăng Damage (25 -> 40 -> 65), phím G rèn Giáp tăng Max HP (100 -> 150 -> 220), trừ tài nguyên và phát âm thanh rèn đập.
 - [x] Play test Workbench & Equipment Crafting trong Play Mode: nhấn phím 4 đặt bàn chế tạo, bước lại gần nhấn F/G để nâng cấp chỉ số.
 - [x] Commit mốc Workbench & Equipment Crafting MVP
+- [x] VFX Fire Embers & Weapon Slash Trail MVP: Tạo script FireEmberParticles phát tàn lửa than hoa phát quang (cam vàng) bốc lên từ Đại Hỏa Lò, Đuốc và Lửa Trại (kết hợp quầng sáng Bloom URP); tạo script SlashArcVisual vẽ vệt chém lưỡi liềm phát sáng vung ra phía trước Player mỗi khi tấn công Mouse1.
+- [x] Play test VFX Fire Embers & Weapon Slash Trail trong Play Mode: quan sát tàn lửa bay lên từ Hỏa Lò/đuốc và vệt chém kiếm khi tấn công.
+- [x] Commit mốc VFX Fire Embers & Weapon Slash Trail MVP
 
 ---
 
@@ -196,9 +199,8 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test Workbench & Equipment Crafting trong Unity Play Mode**:
-   - Nhấn phím 4 để chọn **Workbench** (chi phí: 5 Gỗ, 3 Đá) và click chuột trái đặt xuống đất.
-   - Di chuyển lại gần Bàn Chế Tạo: Quan sát bảng UI rèn đồ hiện lên ở phía dưới màn hình.
-   - Nhấn phím F: Nâng cấp Rìu -> Sát thương tăng lên 40 (chém dummy hiện số -40).
-   - Nhấn phím G: Nâng cấp Giáp -> Thanh máu tối đa tăng lên 150 HP.
+1. **Play test VFX Fire Embers & Weapon Slash Trail trong Unity Play Mode**:
+   - Nhìn vào Đại Hỏa Lò: Quan sát các đốm than hoa màu cam vàng lấp lánh bay nhẹ nhàng lên trời và mờ dần.
+   - Đặt thêm Đuốc (phím 1) hoặc Lửa Trại (phím 2): Cả hai đều có hiệu ứng tàn lửa than hoa bốc lên.
+   - Nhấn chuột chém (Mouse1): Quan sát vệt chém lưỡi liềm phát sáng vung ra phía trước theo hướng Player xoay người.
 2. Xác nhận kết quả test để commit mốc!

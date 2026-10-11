@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TheLastEmber.Core.Visual;
 using UnityEngine;
 
 namespace TheLastEmber.Features.BuildingSystem
@@ -50,6 +51,15 @@ namespace TheLastEmber.Features.BuildingSystem
             else
             {
                 attachedLight.range = lightRadius;
+            }
+
+            // Gắn hạt lửa than hoa nếu chưa có
+            if (GetComponentInChildren<FireEmberParticles>() == null)
+            {
+                GameObject emberGo = new GameObject("TorchEmbers");
+                emberGo.transform.SetParent(transform, false);
+                emberGo.transform.localPosition = new Vector3(0f, 1.8f, 0f);
+                FireEmberParticles embers = emberGo.AddComponent<FireEmberParticles>();
             }
         }
 
