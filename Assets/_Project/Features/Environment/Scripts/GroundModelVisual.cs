@@ -25,6 +25,7 @@ namespace TheLastEmber.Features.Environment
         [SerializeField] private bool logsAreCollectible = true;
         [SerializeField] private int woodPerLog = 1;
         [SerializeField] private bool rocksAreMineable = true;
+        [SerializeField] private bool treesAreChoppable = true;
 
         private Mesh generatedMesh;
         private Material[] generatedMaterials;
@@ -139,7 +140,6 @@ namespace TheLastEmber.Features.Environment
             };
 
             mesh.SetVertices(vertices);
-            mesh.SetNormals(normals);
             mesh.SetUVs(0, uvs);
             mesh.subMeshCount = subMeshCount;
 
@@ -157,19 +157,23 @@ namespace TheLastEmber.Features.Environment
                 mesh.SetTriangles(indices, subMesh, true);
             }
 
+            // Tự tính lại Normals chuẩn từ hình học thay vì dùng normal ngược từ file model
+            mesh.RecalculateNormals();
             mesh.RecalculateBounds();
             return true;
         }
 
         private static Material[] CreateMaterials(int count)
         {
+            // Bảng màu Dark Fantasy hài hòa: cỏ rừng rêu phong tối, đất than củi, sỏi xám tự nhiên
+            // Giảm độ bóng (smoothness thấp ~0.15) để mặt đất không bị bóng nhờn nhựa
             GroundMaterialSpec[] specs =
             {
-                new GroundMaterialSpec("Damp Loam", new Color(0.31f, 0.245f, 0.19f), 0.7f, 0f),
-                new GroundMaterialSpec("Ash Soil", new Color(0.38f, 0.31f, 0.24f), 0.74f, 0f),
-                new GroundMaterialSpec("Muted Moss", new Color(0.28f, 0.38f, 0.235f), 0.66f, 0f),
-                new GroundMaterialSpec("Charcoal Stone", new Color(0.19f, 0.185f, 0.175f), 0.58f, 0f),
-                new GroundMaterialSpec("Cold Gravel", new Color(0.42f, 0.39f, 0.335f), 0.62f, 0f)
+                new GroundMaterialSpec("Dark Forest Grass", new Color(0.18f, 0.28f, 0.16f), 0.15f, 0f),
+                new GroundMaterialSpec("Deep Moss", new Color(0.14f, 0.23f, 0.13f), 0.12f, 0f),
+                new GroundMaterialSpec("Forest Loam", new Color(0.22f, 0.18f, 0.14f), 0.15f, 0f),
+                new GroundMaterialSpec("Charcoal Soil", new Color(0.15f, 0.13f, 0.12f), 0.10f, 0f),
+                new GroundMaterialSpec("Ancient Slate", new Color(0.22f, 0.23f, 0.25f), 0.18f, 0f)
             };
 
             Material[] materials = new Material[count];
@@ -295,22 +299,47 @@ namespace TheLastEmber.Features.Environment
 
             CreateCone(tree.transform, "CrownBottom", new Vector3(0f, 1.25f, 0f), 0.92f, 1.05f, leafMaterial);
             CreateCone(tree.transform, "CrownTop", new Vector3(0f, 1.95f, 0f), 0.68f, 0.95f, leafMaterial);
+
+            if (treesAreChoppable && Application.isPlaying)
+            {
+                tree.AddComponent<TreeResourceNode>();
+            }
         }
 
         private void CreateRock(Transform parent, Vector3 localPosition, float scale, int index)
         {
-            GameObject rock = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            rock.name = $"Rock_{index:00}";
-            rock.hideFlags = HideFlags.DontSave;
-            rock.transform.SetParent(parent, false);
-            rock.transform.localPosition = localPosition + new Vector3(0f, 0.18f * scale, 0f);
-            rock.transform.localRotation = Quaternion.Euler(index * 23f, index * 61f, 0f);
-            rock.transform.localScale = new Vector3(0.75f, 0.38f, 0.58f) * scale;
-            SetRendererMaterial(rock, rockMaterial);
+            // Tải model Kenney Rock/Stone chất lượng nếu có, fallback về Primitive
+            GameObject modelPrefab = Resources.Load<GameObject>("ThirdParty/Kenney/rock_largeA");
+            GameObject rock;
+
+            if (modelPrefab != null)
+            {
+                rock = Instantiate(modelPrefab, parent);
+                rock.name = $"Rock_{index:00}";
+                rock.hideFlags = HideFlags.DontSave;
+                rock.transform.localPosition = localPosition;
+                rock.transform.localRotation = Quaternion.Euler(0f, index * 67f, 0f);
+                rock.transform.localScale = Vector3.one * (scale * 0.85f);
+            }
+            else
+            {
+                rock = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                rock.name = $"Rock_{index:00}";
+                rock.hideFlags = HideFlags.DontSave;
+                rock.transform.SetParent(parent, false);
+                rock.transform.localPosition = localPosition + new Vector3(0f, 0.18f * scale, 0f);
+                rock.transform.localRotation = Quaternion.Euler(index * 23f, index * 61f, 0f);
+                rock.transform.localScale = new Vector3(0.75f, 0.38f, 0.58f) * scale;
+                SetRendererMaterial(rock, rockMaterial);
+            }
 
             if (rocksAreMineable && Application.isPlaying)
             {
                 // Cho phép khai thác đá trong Play Mode
+                if (rock.GetComponent<Collider>() == null)
+                {
+                    rock.AddComponent<BoxCollider>();
+                }
                 rock.AddComponent<StoneNode>();
             }
             else

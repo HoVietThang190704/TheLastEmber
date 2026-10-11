@@ -14,12 +14,13 @@ namespace TheLastEmber.UI.HUD
 
         [Header("Layout")]
         [SerializeField] private Vector2 position = new Vector2(24f, 100f);
-        [SerializeField] private Vector2 badgeSize = new Vector2(140f, 22f);
+        [SerializeField] private Vector2 badgeSize = new Vector2(230f, 22f);
 
         [Header("Colors")]
         [SerializeField] private Color backgroundColor = new Color(0.06f, 0.055f, 0.05f, 0.72f);
         [SerializeField] private Color borderColor = new Color(0.72f, 0.62f, 0.48f, 0.82f);
         [SerializeField] private Color textColor = new Color(1f, 0.6f, 0.26f, 1f);
+        [SerializeField] private Color warningTextColor = new Color(1f, 0.28f, 0.28f, 1f);
 
         private Texture2D whiteTexture;
         private GUIStyle labelStyle;
@@ -73,8 +74,14 @@ namespace TheLastEmber.UI.HUD
                 ? $"\u25cf Lv.{currentLevel} MAX"
                 : $"\u25cf Lv.{currentLevel}/{maxLevel}";
 
+            float fuelSec = furnace.CurrentFuelSeconds;
+            string fuelText = furnace.HasFuel ? $" | {fuelSec:0}s cui" : " | DAP TAT!";
+            string fullBadgeText = levelText + fuelText;
+
+            labelStyle.normal.textColor = furnace.HasFuel ? (fuelSec <= 15f ? warningTextColor : textColor) : warningTextColor;
+
             Rect labelRect = new Rect(position.x + 6f, position.y + 2f, badgeSize.x - 8f, badgeSize.y - 4f);
-            GUI.Label(labelRect, levelText, labelStyle);
+            GUI.Label(labelRect, fullBadgeText, labelStyle);
         }
 
         private void HandleLevelChanged(int newLevel)

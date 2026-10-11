@@ -17,9 +17,11 @@ namespace TheLastEmber.Features.DayNightCycle
         [SerializeField] private int[] upgradeCosts = { 5, 10, 20, 40 };
 
         [Header("Fuel")]
-        [SerializeField] private float secondsPerWood = 15f;
+        [SerializeField] private float initialFuelSeconds = 60f;
+        [SerializeField] private float secondsPerWood = 25f;
         [SerializeField] private float maxFuelSeconds = 180f;
         [SerializeField] private float minimumFueledTimeMultiplier = 0.85f;
+        [SerializeField] private float unfueledRadius = 1.8f;
 
         [Header("Light Component")]
         [SerializeField] private Light furnaceLight;
@@ -44,14 +46,21 @@ namespace TheLastEmber.Features.DayNightCycle
         private void Awake()
         {
             currentHealth = maxHealth;
+            currentFuelSeconds = initialFuelSeconds;
             UpdateRadius(1.0f); // Hệ số ban ngày mặc định = 1.0
         }
 
         private void Update()
         {
-            if (currentFuelSeconds <= 0f) return;
+            if (currentFuelSeconds > 0f)
+            {
+                currentFuelSeconds = Mathf.Max(0f, currentFuelSeconds - Time.deltaTime);
+                if (currentFuelSeconds <= 0f)
+                {
+                    Debug.LogWarning("<color=#ff4d4d>[CẢNH BÁO]: Hỏa Lò đã cạn kiệt nhiên liệu và dập tắt! Sương mù tràn vào!</color>");
+                }
+            }
 
-            currentFuelSeconds = Mathf.Max(0f, currentFuelSeconds - Time.deltaTime);
             UpdateRadius(lastTimeMultiplier);
         }
 
@@ -75,15 +84,26 @@ namespace TheLastEmber.Features.DayNightCycle
         {
             lastTimeMultiplier = timeMultiplier;
 
-            float effectiveTimeMultiplier = HasFuel
-                ? Mathf.Max(timeMultiplier, minimumFueledTimeMultiplier)
-                : timeMultiplier;
+            if (!HasFuel)
+            {
+                // Khi hết củi, lò tắt lịm, chỉ còn tàn lửa yếu sát thân lò
+                currentRadius = unfueledRadius;
 
+                if (furnaceLight != null)
+                {
+                    furnaceLight.range = currentRadius * 1.5f;
+                    furnaceLight.intensity = 1.0f; // Tàn lửa le lói
+                }
+                return;
+            }
+
+            float effectiveTimeMultiplier = Mathf.Max(timeMultiplier, minimumFueledTimeMultiplier);
             currentRadius = (baseRadius + furnaceLevel * 4f) * effectiveTimeMultiplier;
 
             if (furnaceLight != null)
             {
                 furnaceLight.range = currentRadius;
+                furnaceLight.intensity = 15f;
             }
         }
 

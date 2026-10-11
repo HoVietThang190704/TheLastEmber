@@ -66,6 +66,12 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Stone Mining (StoneNode) MVP: Script StoneNode triển khai IDamageable, nhận sát thương từ PlayerCombat rơi Stone (+1/hit, +2 khi vỡ), nháy màu và co nhỏ khi vỡ; tích hợp vào đá môi trường GroundModelVisual.
 - [x] Play test Stone Mining trong Play Mode: dùng đòn đánh chém vào các tảng đá tự nhiên, nhận được Stone và quan sát mỏ đá co nhỏ dần rồi vỡ tan.
 - [x] Commit mốc Stone Mining MVP
+- [x] Dark Fantasy Visual Atmosphere MVP: Bật sương mù URP Fog (màu lam tối #141a2e, density 0.035), tăng cường quầng sáng Bloom (intensity 1.2, scatter 0.65) trên Global Volume.
+- [x] Tree Harvesting (TreeResourceNode) MVP: Script TreeResourceNode gắn vào toàn bộ cây trên bản đồ, nhận đòn đánh rơi Wood (+1/hit, +3 khi đổ cây), có hiệu ứng rung lắc trước khi đổ.
+- [x] Furnace Depletion & Extinguish Mechanism MVP: Hỏa Lò có 60s nhiên liệu khởi đầu (+25s/củi), khi cạn củi đèn co về 1.8m le lói, HUD hiển thị đếm ngược số giây củi và cảnh báo đỏ 'DAP TAT!', sương mù ùa vào rút máu Player nếu không tiếp tế kịp.
+- [x] Play test Visual Atmosphere, Tree Chopping & Furnace Depletion trong Play Mode: quan sát sương mù bao quanh ngọn lửa, chặt cây lấy củi, quan sát Hỏa Lò đếm ngược củi và dập tắt nếu không nạp.
+- [x] Fix Ground Visual Quality: Tính lại RecalculateNormals() xóa bỏ vệt đa giác loang lổ, hạ Smoothness matte đất rừng Dark Fantasy (0.12 - 0.15) xóa bỏ bóng nhờn nhựa.
+- [x] Commit mốc Visual Atmosphere, Tree Chopping, Furnace Extinguish & Ground Visual Overhaul
 
 ---
 
@@ -178,8 +184,8 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test Stone Mining trong Unity Play Mode**:
-   - Di chuyển Player lại gần các tảng đá tự nhiên (Rock_xx sinh ra trên mặt đất).
-   - Nhấn chuột phải (Mouse1) để vung vũ khí chém vào tảng đá.
-   - Quan sát: Mỏ đá nháy sáng, máu giảm, ví tài nguyên Stone tăng lên (+1 mỗi hit), tảng đá co nhỏ dần và biến mất khi vỡ kèm thưởng thêm đá.
-2. Commit mốc Stone Mining sau khi test pass.
+1. **Play test Visual Atmosphere, Tree Chopping & Furnace Depletion trong Unity Play Mode**:
+   - **Hình ảnh & Sương mù**: Quan sát sương mù URP phủ kín vùng tối, quầng sáng ngọn lửa Hỏa Lò bập bùng với hiệu ứng Bloom nổi bật.
+   - **Chặt cây**: Chạy lại gần bất kỳ cây nào xung quanh rìa, chém 2-3 nhát -> cây rung lắc, rơi ra Wood và biến mất khi đổ.
+   - **Hỏa Lò tắt**: Quan sát HUD Hỏa Lò (hiển thị số giây củi còn lại), để Lò đếm ngược về 0s -> quan sát lửa lịm dần, sương mù ập tới rút máu. Chạy vào nạp củi để Lò bùng sáng trở lại.
+2. Commit mốc Visual Atmosphere, Tree Chopping & Furnace Extinguish sau khi test pass.
