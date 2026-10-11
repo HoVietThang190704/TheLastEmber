@@ -99,6 +99,7 @@ namespace TheLastEmber.Core.Visual
             var velocity = ps.velocityOverLifetime;
             velocity.enabled = true;
             velocity.x = new ParticleSystem.MinMaxCurve(-0.35f, 0.35f);
+            velocity.y = new ParticleSystem.MinMaxCurve(0f, 0f);
             velocity.z = new ParticleSystem.MinMaxCurve(-0.35f, 0.35f);
 
             ps.Play();

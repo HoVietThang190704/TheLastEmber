@@ -87,6 +87,9 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] VFX Fire Embers & Weapon Slash Trail MVP: Tạo script FireEmberParticles phát tàn lửa than hoa phát quang (cam vàng) bốc lên từ Đại Hỏa Lò, Đuốc và Lửa Trại (kết hợp quầng sáng Bloom URP); tạo script SlashArcVisual vẽ vệt chém lưỡi liềm phát sáng vung ra phía trước Player mỗi khi tấn công Mouse1.
 - [x] Play test VFX Fire Embers & Weapon Slash Trail trong Play Mode: quan sát tàn lửa bay lên từ Hỏa Lò/đuốc và vệt chém kiếm khi tấn công.
 - [x] Commit mốc VFX Fire Embers & Weapon Slash Trail MVP
+- [x] Storage Chest (Rương chứa đồ) MVP: Script StorageChestInteractable gắn vào SupplyChest (Kenney). Đặt bằng phím 5 (tốn 4 Wood, 2 Stone). Khi đứng gần (3.5m) hiện UI Rương Tiếp Tế với số lượng Wood/Stone/Ember; hỗ trợ phím J cất 5 gỗ, K lấy 5 gỗ, L cất toàn bộ (Quick Deposit All), O lấy toàn bộ (Quick Withdraw All) kèm âm thanh nhặt đồ.
+- [x] Play test Storage Chest (Rương chứa đồ) MVP trong Play Mode: nhấn phím 5 đặt rương trong vùng sáng, lại gần kiểm tra phím tắt J/K/L/O hoặc click chuột để cất/lấy đồ.
+- [x] Commit mốc Storage Chest MVP
 
 ---
 
@@ -99,7 +102,7 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 | **GreatFurnace** | `GreatFurnace` | `furnaceLight` -> con `FurnaceLight` | Level 1, BaseRadius = 15m, Gizmos vàng hiển thị tốt |
 | ↳ **FurnaceLight** | `Light` (Point Light) | Màu cam vàng, Intensity: 15, Range: 20 | Con trực tiếp của GreatFurnace |
 | **DayNightManager** | `DayNightManager` | `sunLight` -> `Directional Light`, `furnace` -> `GreatFurnace` | Chu kỳ 60s test, ban đêm co bán kính lò về 60% |
-| **Player** | `ResourceWallet`, `FurnaceFuelInteractor`, `BuildingPlacer` | `FurnaceFuelInteractor.furnace` -> `GreatFurnace`; `BuildingPlacer.gridManager` -> `BuildingSystem`; `BuildingPlacer.wallet` -> `ResourceWallet`; hotkeys `1/2/3` -> TorchPost/Campfire/FortifiedFence | Bấm `E` gần Hỏa Lò để nạp củi; phím `1/2/3` chọn công trình, rê chuột và click trái để đặt |
+| **Player** | `ResourceWallet`, `FurnaceFuelInteractor`, `BuildingPlacer` | `FurnaceFuelInteractor.furnace` -> `GreatFurnace`; `BuildingPlacer.gridManager` -> `BuildingSystem`; `BuildingPlacer.wallet` -> `ResourceWallet`; hotkeys `1/2/3/4/5` -> TorchPost/Campfire/FortifiedFence/Workbench/SupplyChest | Bấm `E` gần Hỏa Lò để nạp củi; phím `1..5` chọn công trình, rê chuột và click trái để đặt |
 | **Wood Pickup prefab/object** | `CollectibleResource` + Collider Trigger | N/A | Cần tạo vài object test quanh rìa vùng sáng |
 | **BuildingSystem** | `GridManager` | `furnace` -> `GreatFurnace` | Cell Size = 2, kiểm tra vùng sáng và ô đã chiếm |
 | **TorchPostDefinition** | `BuildableDefinition` asset | `prefab` -> `TorchPost` | Footprint `(1,1)`, `YOffset = 0.5`, cost `Wood = 2` |
@@ -196,11 +199,17 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
   - `FortifiedFence`: Hàng rào chắn quái, có BoxCollider và triển khai `IDamageable` với 120 HP, nháy đỏ khi bị tấn công và tự huỷ khi hết máu.
   - Tích hợp các component trực tiếp vào prefab và cấu hình trong `KenneyAssetBootstrapper`. `dotnet build Assembly-CSharp.csproj` pass 0 errors.
 
+- **Storage Chest MVP:**
+  - Tạo script `StorageChestInteractable.cs` gắn vào prefab `SupplyChest.prefab`.
+  - Cấu hình definition `SupplyChestDefinition.asset` chi phí `4 Wood, 2 Stone`, footprint `1x1`.
+  - Gắn slot hotkey phím `5` (`Alpha5`) vào `BuildingPlacer` trong `SampleScene.unity`.
+  - Hỗ trợ giao diện pop-up tương tác cất giữ/lấy Wood, Stone, SilverEmber qua phím `J/K/L/O` và nút bấm trực tiếp.
+  - Tự động tìm kiếm Player theo PlayerMovement (không phụ thuộc Tag), tăng tầm tương tác lên 3.5m; đồng bộ Particle velocity mode dọn sạch cảnh báo console.
+  - Play test trong Play Mode pass hoàn toàn.
+
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test VFX Fire Embers & Weapon Slash Trail trong Unity Play Mode**:
-   - Nhìn vào Đại Hỏa Lò: Quan sát các đốm than hoa màu cam vàng lấp lánh bay nhẹ nhàng lên trời và mờ dần.
-   - Đặt thêm Đuốc (phím 1) hoặc Lửa Trại (phím 2): Cả hai đều có hiệu ứng tàn lửa than hoa bốc lên.
-   - Nhấn chuột chém (Mouse1): Quan sát vệt chém lưỡi liềm phát sáng vung ra phía trước theo hướng Player xoay người.
-2. Xác nhận kết quả test để commit mốc!
+1. **Thiết kế & Triển khai tính năng tiếp theo**:
+   - Boss Đêm (Mist Golem / Elite Monster) & Banner thông báo Day/Night chuyển giao.
+   - Hoặc Mini-map / Radar la bàn định hướng Đại Hỏa Lò.

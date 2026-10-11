@@ -131,7 +131,17 @@ namespace TheLastEmber.EditorTools
                 0f,
                 0f);
 
-            CreateStaticPrefab("SupplyChest", SurvivalFbxRoot + "chest.fbx", KenneyBuildingPrefabRoot + "SupplyChest.prefab", Vector3.zero, Vector3.one, false, Vector3.zero, 0f, 0f);
+            GameObject chest = CreateStaticPrefab(
+                "SupplyChest", 
+                SurvivalFbxRoot + "chest.fbx", 
+                KenneyBuildingPrefabRoot + "SupplyChest.prefab", 
+                Vector3.zero, 
+                Vector3.one, 
+                false, 
+                Vector3.zero, 
+                0f, 
+                0f,
+                typeof(StorageChestInteractable));
             CreateStaticPrefab("Barrel", SurvivalFbxRoot + "barrel.fbx", KenneyBuildingPrefabRoot + "Barrel.prefab", Vector3.zero, Vector3.one, false, Vector3.zero, 0f, 0f);
 
             CreateEnvironmentPrefab("PineTall", NatureFbxRoot + "tree_pineTallA.fbx", new Vector3(0f, 0f, 0f), Vector3.one);
@@ -183,12 +193,22 @@ namespace TheLastEmber.EditorTools
                 0f,
                 new[] { new CostSpec(ResourceType.Wood, 5), new CostSpec(ResourceType.Stone, 3) });
 
+            CreateBuildableDefinition(
+                "SupplyChestDefinition",
+                "Supply Chest",
+                KenneyBuildingPrefabRoot + "SupplyChest.prefab",
+                KenneyBuildingDataRoot + "SupplyChestDefinition.asset",
+                new Vector2Int(1, 1),
+                0f,
+                new[] { new CostSpec(ResourceType.Wood, 4), new CostSpec(ResourceType.Stone, 2) });
+
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
             _ = campfire;
             _ = fence;
             _ = workbench;
+            _ = chest;
         }
 
         private static void CreateCollectiblePrefab(

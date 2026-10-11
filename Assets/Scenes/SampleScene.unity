@@ -372,6 +372,8 @@ MonoBehaviour:
     buildable: {fileID: 11400000, guid: b30537286e0cba04c942252e9a1a39ae, type: 2}
   - hotkey: 52
     buildable: {fileID: 11400000, guid: cc839e04476837946908be7e99e183fe, type: 2}
+  - hotkey: 53
+    buildable: {fileID: 11400000, guid: 81ba32918e7e436798ab321de38cb811, type: 2}
   groundMask:
     serializedVersion: 2
     m_Bits: 1
