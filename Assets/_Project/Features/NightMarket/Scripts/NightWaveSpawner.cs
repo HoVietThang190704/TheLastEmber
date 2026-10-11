@@ -30,6 +30,12 @@ namespace TheLastEmber.Features.NightMarket
         [Tooltip("Mỗi đêm, chỉ số stats (HP/damage/speed) tăng thêm bao nhiêu %")]
         [SerializeField] private float statScalePerNight = 0.15f;
 
+        [Header("Boss / Elite Monster")]
+        [SerializeField] private string golemResourcePath = "Monsters/mist_golem";
+        [SerializeField] private Vector3 golemScale = new Vector3(1.4f, 1.4f, 1.4f);
+        [SerializeField] private Color golemColor = new Color(0.28f, 0.16f, 0.22f, 1f);
+        private bool hasSpawnedBossThisNight = false;
+
         [Header("Placeholder Enemy")]
         [SerializeField] private string monsterResourcePath = "Monsters/character-oozi";
         [SerializeField] private Vector3 enemyScale = new Vector3(1.1f, 1.1f, 1.1f);
@@ -99,6 +105,7 @@ namespace TheLastEmber.Features.NightMarket
             {
                 waveActive = true;
                 spawnTimer = 0f;
+                hasSpawnedBossThisNight = false;
                 ApplyWaveScaling();
                 Debug.Log($"<color=#9bd0ff>[Night Wave]</color> Đêm thứ {(dayNightManager != null ? dayNightManager.NightCount : 1)} bắt đầu. Quái: {currentMaxEnemies}, Interval: {currentSpawnInterval:F1}s, Stat x{currentStatMultiplier:F2}");
             }
@@ -130,9 +137,20 @@ namespace TheLastEmber.Features.NightMarket
         private void SpawnEnemy()
         {
             Vector3 spawnPosition = GetSpawnPosition();
-            GameObject enemyObject = enemyPrefab != null
-                ? Instantiate(enemyPrefab, spawnPosition, Quaternion.identity)
-                : CreatePlaceholderEnemy(spawnPosition);
+            bool shouldSpawnBoss = !hasSpawnedBossThisNight && dayNightManager != null && dayNightManager.NightCount >= 2;
+
+            GameObject enemyObject;
+            if (shouldSpawnBoss)
+            {
+                enemyObject = CreateGolemBoss(spawnPosition);
+                hasSpawnedBossThisNight = true;
+            }
+            else
+            {
+                enemyObject = enemyPrefab != null
+                    ? Instantiate(enemyPrefab, spawnPosition, Quaternion.identity)
+                    : CreatePlaceholderEnemy(spawnPosition);
+            }
 
             MistEnemy enemy = enemyObject.GetComponent<MistEnemy>();
             if (enemy == null)
@@ -140,10 +158,63 @@ namespace TheLastEmber.Features.NightMarket
                 enemy = enemyObject.AddComponent<MistEnemy>();
             }
 
+            if (shouldSpawnBoss)
+            {
+                enemy.ConfigureAsElite("Mist Golem");
+            }
+
             enemy.Initialize(target, HandleEnemyDied, playerWallet, currentStatMultiplier);
             aliveEnemies.Add(enemy);
 
             Debug.Log($"<color=#9bd0ff>[Night Wave]</color> Spawned {enemy.name}. Alive: {aliveEnemies.Count}/{maxAliveEnemies}");
+        }
+
+        private GameObject CreateGolemBoss(Vector3 spawnPosition)
+        {
+            GameObject modelPrefab = Resources.Load<GameObject>(golemResourcePath);
+            GameObject golemObject;
+
+            if (modelPrefab != null)
+            {
+                golemObject = Instantiate(modelPrefab);
+                golemObject.name = "MistGolem_Boss";
+                golemObject.transform.position = spawnPosition;
+                golemObject.transform.localScale = golemScale;
+            }
+            else
+            {
+                golemObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                golemObject.name = "MistGolem_Boss";
+                golemObject.transform.position = spawnPosition;
+                golemObject.transform.localScale = golemScale * 1.5f;
+            }
+
+            CapsuleCollider col = golemObject.GetComponent<CapsuleCollider>();
+            if (col == null)
+            {
+                col = golemObject.AddComponent<CapsuleCollider>();
+                col.height = 2.8f;
+                col.radius = 1.1f;
+                col.center = new Vector3(0f, 1.4f, 0f);
+            }
+
+            Renderer[] renderers = golemObject.GetComponentsInChildren<Renderer>();
+            foreach (Renderer r in renderers)
+            {
+                foreach (Material material in r.materials)
+                {
+                    if (material.HasProperty("_BaseColor"))
+                    {
+                        material.SetColor("_BaseColor", golemColor);
+                    }
+                    else if (material.HasProperty("_Color"))
+                    {
+                        material.SetColor("_Color", golemColor);
+                    }
+                }
+            }
+
+            return golemObject;
         }
 
         private GameObject CreatePlaceholderEnemy(Vector3 spawnPosition)

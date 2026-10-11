@@ -2015,6 +2015,7 @@ GameObject:
   - component: {fileID: 2000000106}
   - component: {fileID: 2000000107}
   - component: {fileID: 2000000108}
+  - component: {fileID: 2000000109}
   m_Layer: 0
   m_Name: CombatHUD
   m_TagString: Untagged
@@ -2153,6 +2154,20 @@ MonoBehaviour:
   mutedTextColor: {r: 0.72, g: 0.66, b: 0.56, a: 0.9}
   affordableColor: {r: 0.55, g: 0.95, b: 0.58, a: 1}
   blockedColor: {r: 1, g: 0.46, b: 0.36, a: 1}
+--- !u!114 &2000000109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000000101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5802d28f018e4757bc137a892701e699, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.UI.HUD.DayNightBannerUI
+  dayNightManager: {fileID: 0}
+  bannerDuration: 4
 --- !u!1 &2000000201
 GameObject:
   m_ObjectHideFlags: 0

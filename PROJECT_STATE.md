@@ -90,6 +90,13 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Storage Chest (Rương chứa đồ) MVP: Script StorageChestInteractable gắn vào SupplyChest (Kenney). Đặt bằng phím 5 (tốn 4 Wood, 2 Stone). Khi đứng gần (3.5m) hiện UI Rương Tiếp Tế với số lượng Wood/Stone/Ember; hỗ trợ phím J cất 5 gỗ, K lấy 5 gỗ, L cất toàn bộ (Quick Deposit All), O lấy toàn bộ (Quick Withdraw All) kèm âm thanh nhặt đồ.
 - [x] Play test Storage Chest (Rương chứa đồ) MVP trong Play Mode: nhấn phím 5 đặt rương trong vùng sáng, lại gần kiểm tra phím tắt J/K/L/O hoặc click chuột để cất/lấy đồ.
 - [x] Commit mốc Storage Chest MVP
+- [x] Procedural 3D Model: Mist Golem (Boss Khổng Lồ Sương Mù): Tự động tạo file 3D OBJ `mist_golem.obj` gồm 176 đỉnh, 264 tam giác với thân gù, đầu đá sừng, giáp vai đá to lớn, hai nắm đấm cự thạch và gai đá sau lưng; tích hợp vào hệ thống quái vật Resources.
+- [x] Night Boss & Day/Night Transition Banner MVP:
+  - `MistEnemy.cs`: bổ sung chế độ `ConfigureAsElite()` (200 HP, 28 Damage, rơi 15 SilverEmber, đổi màu tím sẫm).
+  - `NightWaveSpawner.cs`: Đêm thứ 2 trở đi tự động triệu hồi Mist Golem khổng lồ (scale 1.4x) làm trùm đêm.
+  - `DayNightBannerUI.cs`: Dải banner điện ảnh hiển thị giữa màn hình với fade in/out khi chuyển giao Đêm/Ngày.
+- [x] Play test Mist Golem & Day/Night Banner trong Unity Play Mode: Quan sát banner chuyển giao Đêm/Ngày và đối đầu Mist Golem khổng lồ ở Đêm thứ 2.
+- [x] Commit mốc Mist Golem & Day/Night Banner MVP
 
 ---
 
@@ -207,9 +214,17 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
   - Tự động tìm kiếm Player theo PlayerMovement (không phụ thuộc Tag), tăng tầm tương tác lên 3.5m; đồng bộ Particle velocity mode dọn sạch cảnh báo console.
   - Play test trong Play Mode pass hoàn toàn.
 
+- **Mist Golem (Boss 3D) & Day/Night Transition Banner MVP:**
+  - Tự tạo mô hình 3D `mist_golem.obj` (176 vertices, 264 faces) đặt tại `Assets/_Project/Resources/Monsters/mist_golem.obj` với cấu trúc Golem cự thạch Dark Fantasy.
+  - Cập nhật `MistEnemy.cs` hỗ trợ `ConfigureAsElite()` tăng mạnh HP (200 HP), Damage (28 dmg), rơi 15 Ember, màu sương máu.
+  - `NightWaveSpawner.cs` tự động triệu hồi Mist Golem khổng lồ từ Đêm thứ 2 trở đi.
+  - Tạo script `DayNightBannerUI.cs` gắn vào `CombatHUD` trong `SampleScene.unity` để hiện dải banner điện ảnh chuyển giao Đêm/Ngày với hiệu ứng fade mượt mà.
+  - Play test trong Play Mode pass hoàn toàn.
+
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Thiết kế & Triển khai tính năng tiếp theo**:
-   - Boss Đêm (Mist Golem / Elite Monster) & Banner thông báo Day/Night chuyển giao.
-   - Hoặc Mini-map / Radar la bàn định hướng Đại Hỏa Lò.
+1. **Tiếp tục mở rộng gameplay & trải nghiệm**:
+   - Compass / Mini-map / Radar định hướng Đại Hỏa Lò và phát hiện quái vật sương mù.
+   - Thêm vũ khí 3D cầm tay (Greatsword/Runic Battleaxe) cho Player.
+   - Hệ thống âm thanh nhạc nền Ambient u tối rùng rợn.

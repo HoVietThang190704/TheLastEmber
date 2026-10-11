@@ -22,6 +22,9 @@ namespace TheLastEmber.Features.NightMarket
         [Header("Drop on Death")]
         [SerializeField] private int silverEmberDrop = 3;
 
+        [Header("Elite / Boss")]
+        [SerializeField] private bool isElite = false;
+
         [Header("Hit Feedback")]
         [SerializeField] private Color idleColor = new Color(0.24f, 0.55f, 0.62f, 1f);
         [SerializeField] private Color hitColor = Color.white;
@@ -38,6 +41,22 @@ namespace TheLastEmber.Features.NightMarket
 
         public float CurrentHealth => currentHealth;
         public float MaxHealth => maxHealth;
+        public bool IsElite => isElite;
+
+        public void ConfigureAsElite(string eliteTitle = "Mist Golem")
+        {
+            isElite = true;
+            name = eliteTitle;
+            maxHealth = 200f;
+            currentHealth = maxHealth;
+            contactDamage = 28f;
+            moveSpeed = 1.6f;
+            attackRange = 1.8f;
+            attackCooldown = 1.6f;
+            silverEmberDrop = 15;
+            idleColor = new Color(0.65f, 0.15f, 0.22f, 1f); // Đỏ sương máu huyền bí
+            ApplyColor(idleColor);
+        }
 
         private void Awake()
         {
