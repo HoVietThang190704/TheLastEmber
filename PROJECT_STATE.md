@@ -72,6 +72,9 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Play test Visual Atmosphere, Tree Chopping & Furnace Depletion trong Play Mode: quan sát sương mù bao quanh ngọn lửa, chặt cây lấy củi, quan sát Hỏa Lò đếm ngược củi và dập tắt nếu không nạp.
 - [x] Fix Ground Visual Quality: Tính lại RecalculateNormals() xóa bỏ vệt đa giác loang lổ, hạ Smoothness matte đất rừng Dark Fantasy (0.12 - 0.15) xóa bỏ bóng nhờn nhựa.
 - [x] Commit mốc Visual Atmosphere, Tree Chopping, Furnace Extinguish & Ground Visual Overhaul
+- [x] Character Visual Overhaul MVP: Gắn mô hình 3D character-archer (Kenney) cho Player qua PlayerVisualSetup, tắt Capsule nhưng giữ CharacterController vật lý; MistEnemy tự nạp model quái vật sừng một mắt character-oozi (Kenney) màu bóng ma sương mù.
+- [x] Play test Character Visual Overhaul trong Play Mode: chiêm ngưỡng chiến binh Player 3D và quái vật sương mù 3D trong game.
+- [x] Commit mốc Character Visual Overhaul MVP
 
 ---
 
@@ -184,8 +187,8 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test Visual Atmosphere, Tree Chopping & Furnace Depletion trong Unity Play Mode**:
-   - **Hình ảnh & Sương mù**: Quan sát sương mù URP phủ kín vùng tối, quầng sáng ngọn lửa Hỏa Lò bập bùng với hiệu ứng Bloom nổi bật.
-   - **Chặt cây**: Chạy lại gần bất kỳ cây nào xung quanh rìa, chém 2-3 nhát -> cây rung lắc, rơi ra Wood và biến mất khi đổ.
-   - **Hỏa Lò tắt**: Quan sát HUD Hỏa Lò (hiển thị số giây củi còn lại), để Lò đếm ngược về 0s -> quan sát lửa lịm dần, sương mù ập tới rút máu. Chạy vào nạp củi để Lò bùng sáng trở lại.
-2. Commit mốc Visual Atmosphere, Tree Chopping & Furnace Extinguish sau khi test pass.
+1. **Play test Character Visual Overhaul trong Unity Play Mode**:
+   - Nhân vật Player đã có hình hài chiến binh 3D thay vì viên thuốc Capsule.
+   - Khi đêm xuống, quái sương mù xuất hiện dưới hình dạng quái vật 3D hung hãn thay vì khối hình trụ.
+   - Thử nghiệm di chuyển, tấn công quái, đốn cây, khai thác đá mượt mà.
+2. Commit mốc Character Visual Overhaul sau khi xác nhận!

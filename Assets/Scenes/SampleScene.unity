@@ -142,6 +142,7 @@ GameObject:
   - component: {fileID: 65158418}
   - component: {fileID: 65158419}
   - component: {fileID: 65158420}
+  - component: {fileID: 65158421}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -149,6 +150,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &65158421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65158405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afcc247e4de7a9c4fa7168036946e7b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.Combat.PlayerVisualSetup
+  modelResourcePath: Characters/character-archer
+  modelOffset: {x: 0, y: -1, z: 0}
+  modelScale: {x: 1, y: 1, z: 1}
 --- !u!143 &65158406
 CharacterController:
   m_ObjectHideFlags: 0

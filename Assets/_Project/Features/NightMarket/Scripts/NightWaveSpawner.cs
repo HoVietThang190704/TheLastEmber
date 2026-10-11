@@ -31,8 +31,9 @@ namespace TheLastEmber.Features.NightMarket
         [SerializeField] private float statScalePerNight = 0.15f;
 
         [Header("Placeholder Enemy")]
-        [SerializeField] private Vector3 enemyScale = new Vector3(0.8f, 1.4f, 0.8f);
-        [SerializeField] private Color enemyColor = new Color(0.24f, 0.55f, 0.62f, 1f);
+        [SerializeField] private string monsterResourcePath = "Monsters/character-oozi";
+        [SerializeField] private Vector3 enemyScale = new Vector3(1.1f, 1.1f, 1.1f);
+        [SerializeField] private Color enemyColor = new Color(0.12f, 0.18f, 0.28f, 1f);
 
         private readonly List<MistEnemy> aliveEnemies = new List<MistEnemy>();
         private float spawnTimer;
@@ -147,15 +148,38 @@ namespace TheLastEmber.Features.NightMarket
 
         private GameObject CreatePlaceholderEnemy(Vector3 spawnPosition)
         {
-            GameObject enemyObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            enemyObject.name = "MistEnemy";
-            enemyObject.transform.position = spawnPosition;
-            enemyObject.transform.localScale = enemyScale;
+            GameObject modelPrefab = Resources.Load<GameObject>(monsterResourcePath);
+            GameObject enemyObject;
 
-            Renderer enemyRenderer = enemyObject.GetComponent<Renderer>();
-            if (enemyRenderer != null)
+            if (modelPrefab != null)
             {
-                foreach (Material material in enemyRenderer.materials)
+                enemyObject = Instantiate(modelPrefab);
+                enemyObject.name = "MistEnemy";
+                enemyObject.transform.position = spawnPosition;
+                enemyObject.transform.localScale = enemyScale;
+
+                // Thêm CapsuleCollider cho model quái vật để có thể nhận đòn đánh
+                CapsuleCollider col = enemyObject.GetComponent<CapsuleCollider>();
+                if (col == null)
+                {
+                    col = enemyObject.AddComponent<CapsuleCollider>();
+                    col.height = 1.4f;
+                    col.radius = 0.5f;
+                    col.center = new Vector3(0f, 0.7f, 0f);
+                }
+            }
+            else
+            {
+                enemyObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                enemyObject.name = "MistEnemy";
+                enemyObject.transform.position = spawnPosition;
+                enemyObject.transform.localScale = enemyScale;
+            }
+
+            Renderer[] renderers = enemyObject.GetComponentsInChildren<Renderer>();
+            foreach (Renderer r in renderers)
+            {
+                foreach (Material material in r.materials)
                 {
                     if (material.HasProperty("_BaseColor"))
                     {
