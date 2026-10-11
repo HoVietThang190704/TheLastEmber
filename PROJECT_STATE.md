@@ -60,6 +60,9 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Mist Damage Over Time (DoT) MVP scripts: MistZoneDetector tự kết nối PlayerHealth (qua IDamageable), tick 5 HP/s mỗi giây khi ở ngoài sương mù, không gây giật knockback.
 - [x] Play test Mist Damage Over Time trong Play Mode: bước ra sương mù bị trừ máu thật, quay về vùng sáng an toàn dừng mất máu.
 - [x] Commit mốc Mist Damage Over Time MVP
+- [x] Enemy Attack Obstacles MVP: MistEnemy tự quét và tấn công vật cản (Fortified Fence/IDamageable) cản đường tới Player theo cooldown; phá vỡ vật cản rồi tiếp tục truy đuổi.
+- [x] Play test Enemy Attack Obstacles trong Play Mode: dựng hàng rào chắn đường quái, quái dừng lại tấn công hàng rào, hàng rào nháy đỏ và vỡ sau đó quái đi tiếp.
+- [x] Commit mốc Enemy Attack Obstacles MVP
 
 ---
 
@@ -172,7 +175,8 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test Mist Damage Over Time trong Unity Play Mode**:
-   - Bước ra khỏi vùng sáng Hỏa Lò / Đuốc vào sương mù: Kiểm tra thanh máu Player giảm đều đặn 5 HP mỗi giây, Console có log đỏ sương mù gây damage.
-   - Quay trở lại vùng sáng an toàn: Kiểm tra dừng mất máu ngay lập tức.
-2. Commit mốc Mist Damage Over Time sau khi test pass.
+1. **Play test Enemy Attack Obstacles trong Unity Play Mode**:
+   - Nhấn phím 3 đặt Hàng rào (Fortified Fence) giữa đường đi của quái và Player.
+   - Ban đêm quái spawn ra đuổi Player: Khi gặp hàng rào chắn phía trước, quái dừng lại tấn công hàng rào.
+   - Hàng rào nháy đỏ nhận sát thương, sau khi hết 120 HP thì biến mất và quái lập tức tiếp tục truy đuổi Player.
+2. Commit mốc Enemy Attack Obstacles sau khi test pass.

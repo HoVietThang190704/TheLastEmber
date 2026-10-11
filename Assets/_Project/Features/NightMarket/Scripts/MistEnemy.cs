@@ -16,6 +16,7 @@ namespace TheLastEmber.Features.NightMarket
         [SerializeField] private float attackRange = 1.3f;
         [SerializeField] private float contactDamage = 12f;
         [SerializeField] private float attackCooldown = 1.2f;
+        [SerializeField] private float obstacleDetectionRadius = 1.1f;
 
         [Header("Drop on Death")]
         [SerializeField] private int silverEmberDrop = 3;
@@ -52,13 +53,29 @@ namespace TheLastEmber.Features.NightMarket
             toTarget.y = 0f;
 
             float distance = toTarget.magnitude;
-            if (distance > attackRange)
+            if (distance <= attackRange)
             {
-                MoveTowardTarget(toTarget);
+                TickAttackTarget(targetDamageable, target.position);
                 return;
             }
 
-            TickContactAttack();
+            // Kiểm tra xem có vật cản (hàng rào, công trình có IDamageable) chặn đường tiến không
+            IDamageable obstacle = CheckForObstacleInPath(toTarget.normalized, out Vector3 obstaclePos);
+            if (obstacle != null)
+            {
+                // Hướng mặt về vật cản và tấn công phá hủy vật cản
+                Vector3 toObstacle = obstaclePos - transform.position;
+                toObstacle.y = 0f;
+                if (toObstacle.sqrMagnitude > 0.001f)
+                {
+                    transform.rotation = Quaternion.LookRotation(toObstacle);
+                }
+
+                TickAttackTarget(obstacle, obstaclePos);
+                return;
+            }
+
+            MoveTowardTarget(toTarget);
         }
 
         public void Initialize(Transform chaseTarget, Action<MistEnemy> onDied, ResourceWallet resourceWallet = null, float statMultiplier = 1f)
@@ -102,20 +119,42 @@ namespace TheLastEmber.Features.NightMarket
             }
         }
 
-        private void TickContactAttack()
+        private IDamageable CheckForObstacleInPath(Vector3 moveDir, out Vector3 obstaclePosition)
+        {
+            obstaclePosition = Vector3.zero;
+            Vector3 checkCenter = transform.position + moveDir * (obstacleDetectionRadius * 0.7f) + Vector3.up * 0.5f;
+            Collider[] colliders = Physics.OverlapSphere(checkCenter, obstacleDetectionRadius);
+
+            foreach (Collider col in colliders)
+            {
+                if (col.transform.IsChildOf(transform) || col.transform == transform) continue;
+                if (target != null && col.transform.IsChildOf(target)) continue;
+
+                IDamageable damageable = col.GetComponentInParent<IDamageable>();
+                if (damageable != null && !damageable.Equals(this))
+                {
+                    obstaclePosition = col.transform.position;
+                    return damageable;
+                }
+            }
+
+            return null;
+        }
+
+        private void TickAttackTarget(IDamageable damageableTarget, Vector3 targetPos)
         {
             attackTimer -= Time.deltaTime;
             if (attackTimer > 0f) return;
 
             attackTimer = attackCooldown;
 
-            if (targetDamageable == null)
+            if (damageableTarget == null)
             {
                 Debug.Log("<color=#9bd0ff>[Night Wave]</color> Mist enemy reached the target.");
                 return;
             }
 
-            Vector3 hitDirection = target.position - transform.position;
+            Vector3 hitDirection = targetPos - transform.position;
             hitDirection.y = 0f;
             if (hitDirection.sqrMagnitude > 0.001f)
             {
@@ -126,8 +165,8 @@ namespace TheLastEmber.Features.NightMarket
                 hitDirection = transform.forward;
             }
 
-            Vector3 hitPoint = target.position + Vector3.up * 0.75f;
-            targetDamageable.TakeDamage(new DamageInfo(contactDamage, gameObject, hitPoint, hitDirection));
+            Vector3 hitPoint = targetPos + Vector3.up * 0.75f;
+            damageableTarget.TakeDamage(new DamageInfo(contactDamage, gameObject, hitPoint, hitDirection));
         }
 
         private void Die()
