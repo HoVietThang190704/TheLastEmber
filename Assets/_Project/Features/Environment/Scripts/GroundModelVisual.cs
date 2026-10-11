@@ -24,6 +24,7 @@ namespace TheLastEmber.Features.Environment
         [SerializeField] private int decorationSeed = 190704;
         [SerializeField] private bool logsAreCollectible = true;
         [SerializeField] private int woodPerLog = 1;
+        [SerializeField] private bool rocksAreMineable = true;
 
         private Mesh generatedMesh;
         private Material[] generatedMaterials;
@@ -306,7 +307,16 @@ namespace TheLastEmber.Features.Environment
             rock.transform.localRotation = Quaternion.Euler(index * 23f, index * 61f, 0f);
             rock.transform.localScale = new Vector3(0.75f, 0.38f, 0.58f) * scale;
             SetRendererMaterial(rock, rockMaterial);
-            DestroyGeneratedObject(rock.GetComponent<Collider>());
+
+            if (rocksAreMineable && Application.isPlaying)
+            {
+                // Cho phép khai thác đá trong Play Mode
+                rock.AddComponent<StoneNode>();
+            }
+            else
+            {
+                DestroyGeneratedObject(rock.GetComponent<Collider>());
+            }
         }
 
         private void CreateLog(Transform parent, Vector3 localPosition, float scale, float yRotation, int index)

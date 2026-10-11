@@ -63,6 +63,9 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Enemy Attack Obstacles MVP: MistEnemy tự quét và tấn công vật cản (Fortified Fence/IDamageable) cản đường tới Player theo cooldown; phá vỡ vật cản rồi tiếp tục truy đuổi.
 - [x] Play test Enemy Attack Obstacles trong Play Mode: dựng hàng rào chắn đường quái, quái dừng lại tấn công hàng rào, hàng rào nháy đỏ và vỡ sau đó quái đi tiếp.
 - [x] Commit mốc Enemy Attack Obstacles MVP
+- [x] Stone Mining (StoneNode) MVP: Script StoneNode triển khai IDamageable, nhận sát thương từ PlayerCombat rơi Stone (+1/hit, +2 khi vỡ), nháy màu và co nhỏ khi vỡ; tích hợp vào đá môi trường GroundModelVisual.
+- [x] Play test Stone Mining trong Play Mode: dùng đòn đánh chém vào các tảng đá tự nhiên, nhận được Stone và quan sát mỏ đá co nhỏ dần rồi vỡ tan.
+- [x] Commit mốc Stone Mining MVP
 
 ---
 
@@ -175,8 +178,8 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test Enemy Attack Obstacles trong Unity Play Mode**:
-   - Nhấn phím 3 đặt Hàng rào (Fortified Fence) giữa đường đi của quái và Player.
-   - Ban đêm quái spawn ra đuổi Player: Khi gặp hàng rào chắn phía trước, quái dừng lại tấn công hàng rào.
-   - Hàng rào nháy đỏ nhận sát thương, sau khi hết 120 HP thì biến mất và quái lập tức tiếp tục truy đuổi Player.
-2. Commit mốc Enemy Attack Obstacles sau khi test pass.
+1. **Play test Stone Mining trong Unity Play Mode**:
+   - Di chuyển Player lại gần các tảng đá tự nhiên (Rock_xx sinh ra trên mặt đất).
+   - Nhấn chuột phải (Mouse1) để vung vũ khí chém vào tảng đá.
+   - Quan sát: Mỏ đá nháy sáng, máu giảm, ví tài nguyên Stone tăng lên (+1 mỗi hit), tảng đá co nhỏ dần và biến mất khi vỡ kèm thưởng thêm đá.
+2. Commit mốc Stone Mining sau khi test pass.
