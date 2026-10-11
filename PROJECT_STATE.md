@@ -78,6 +78,9 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Procedural SFX Audio System MVP: Tự sinh AudioClip qua thuật toán toán học (sine/noise/frequency modulation) dung lượng 0KB; tích hợp tiếng vung chém (Swing), trúng đòn (Hit), đốn cây (ChopWood), khai thác đá (MineStone), nhặt đồ (Pickup), nạp củi (Fuel), đặt công trình (Build) và tiếng chuông đêm (NightBell).
 - [x] Play test Procedural SFX Audio System trong Play Mode: bật loa nghe âm thanh tương tác sống động trong game.
 - [x] Commit mốc Procedural SFX Audio System MVP
+- [x] Floating Overhead HP Bar & Damage Numbers MVP: Script FloatingCombatFeedbackUI tự động hiển thị số sát thương nảy (-25 màu vàng cam khi đánh trúng quái/dummy, -12 màu đỏ khi Player nhận đòn) bay lên và mờ dần trong 0.75s; vẽ thanh máu nổi phía trên đầu quái sương mù (MistEnemy) và hàng rào (FortifiedFence) khi bị mất máu.
+- [x] Play test Floating Overhead HP Bar & Damage Numbers trong Play Mode: chém quái/dummy thấy số damage bay lên và thanh máu nổi co ngắn lại.
+- [x] Commit mốc Floating Overhead HP Bar & Damage Numbers MVP
 
 ---
 
@@ -190,14 +193,8 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test Procedural SFX Audio System trong Unity Play Mode**:
-   - Bật loa/tai nghe trong máy.
-   - Bấm chuột chém: Nghe tiếng vung kiếm út (Swing).
-   - Chém trúng quái: Nghe tiếng đánh chắc nịch ịch (Hit).
-   - Chém cây: Nghe tiếng gõ gỗ cốp (ChopWood).
-   - Chém đá: Nghe tiếng đục đá đanh thép keng (MineStone).
-   - Nhặt gỗ/đá: Nghe tiếng nốt nhạc thăng hoa 	ing (Pickup).
-   - Đến Hỏa Lò nạp củi: Nghe tiếng lửa bùng cháy phù (Fuel).
-   - Đặt hàng rào/đuốc: Nghe tiếng đóng cọc 	hình (Build).
-   - Khi ban đêm buông xuống: Nghe tiếng chuông trầm ngân vang cảnh báo sương mù (NightBell).
-2. Xác nhận kết quả test âm thanh để commit mốc!
+1. **Play test Floating Overhead HP Bar & Damage Numbers trong Unity Play Mode**:
+   - Chạy lại chém TrainingDummy: Nhìn thấy số -25 màu vàng cam nảy lên trên đầu và bay từ từ lên trời rồi mờ dần.
+   - Khi ban đêm quái sương mù xuất hiện: Chém quái, quan sát số sát thương nhảy lên và thanh máu nhỏ màu đỏ xuất hiện phía trên đầu quái vật co ngắn dần theo từng đòn đánh.
+   - Để quái cắn Player: Thấy số sát thương đỏ nảy trên đầu Player.
+2. Xác nhận kết quả test để commit mốc!

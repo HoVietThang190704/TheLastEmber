@@ -1,3 +1,5 @@
+using System.Collections;
+using TheLastEmber.UI.HUD;
 using UnityEngine;
 
 namespace TheLastEmber.Features.Combat
@@ -31,6 +33,7 @@ namespace TheLastEmber.Features.Combat
             currentHealth = Mathf.Max(0f, currentHealth - damageInfo.Amount);
             PlayHitFlash();
 
+            FloatingCombatFeedbackUI.SpawnDamageNumber(damageInfo.HitPoint != Vector3.zero ? damageInfo.HitPoint : transform.position + Vector3.up, damageInfo.Amount, new Color(1f, 0.85f, 0.3f));
             Debug.Log($"<color=red>[Combat]</color> {name} nhận {damageInfo.Amount:0} damage. HP: {currentHealth:0}/{maxHealth:0}");
 
             if (currentHealth > 0f) return;

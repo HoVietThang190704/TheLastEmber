@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TheLastEmber.Features.Combat;
 using TheLastEmber.Features.Economy;
+using TheLastEmber.UI.HUD;
 using UnityEngine;
 
 namespace TheLastEmber.Features.NightMarket
@@ -100,6 +101,7 @@ namespace TheLastEmber.Features.NightMarket
             currentHealth = Mathf.Max(0f, currentHealth - damageInfo.Amount);
             PlayHitFlash();
 
+            FloatingCombatFeedbackUI.SpawnDamageNumber(damageInfo.HitPoint != Vector3.zero ? damageInfo.HitPoint : transform.position + Vector3.up, damageInfo.Amount, new Color(1f, 0.85f, 0.3f));
             Debug.Log($"<color=#7ee7ff>[Night Wave]</color> {name} took {damageInfo.Amount:0} damage. HP: {currentHealth:0}/{maxHealth:0}");
 
             if (currentHealth <= 0f)
