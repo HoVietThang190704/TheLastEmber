@@ -57,6 +57,9 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 - [x] Play test Building Functionality MVP trong scene: đặt đuốc (vùng sáng mở rộng), đứng gần lửa trại (hồi máu), kiểm tra hàng rào.
 - [x] Play test Enemy Wave Scaling: chạy qua 2-3 đêm, xác nhận Console log đêm thứ N với quái căng hơn
 - [x] Commit mốc Building Functionality & Enemy Wave Scaling MVP
+- [x] Mist Damage Over Time (DoT) MVP scripts: MistZoneDetector tự kết nối PlayerHealth (qua IDamageable), tick 5 HP/s mỗi giây khi ở ngoài sương mù, không gây giật knockback.
+- [x] Play test Mist Damage Over Time trong Play Mode: bước ra sương mù bị trừ máu thật, quay về vùng sáng an toàn dừng mất máu.
+- [x] Commit mốc Mist Damage Over Time MVP
 
 ---
 
@@ -169,9 +172,7 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test Building Functionality MVP trong Unity Play Mode**:
-   - Nhấn phím `1` đặt Torch Post ra rìa ngoài -> bước lại gần kiểm tra Player không bị dính sương mù.
-   - Nhấn phím `2` đặt Campfire -> bị quái/sương rút máu rồi bước vào gần lửa trại kiểm tra hồi phục HP.
-   - Nhấn phím `3` đặt Fortified Fence -> kiểm tra vật cản chặn đường quái.
-2. **Play test Enemy Wave Scaling**: chạy qua 2-3 đêm trong Unity, xác nhận Console log `Đêm thứ N bắt đầu. Quái: X, Interval: Ys, Stat x1.XX`.
-3. Commit mốc Building Functionality & Enemy Wave Scaling sau khi test pass.
+1. **Play test Mist Damage Over Time trong Unity Play Mode**:
+   - Bước ra khỏi vùng sáng Hỏa Lò / Đuốc vào sương mù: Kiểm tra thanh máu Player giảm đều đặn 5 HP mỗi giây, Console có log đỏ sương mù gây damage.
+   - Quay trở lại vùng sáng an toàn: Kiểm tra dừng mất máu ngay lập tức.
+2. Commit mốc Mist Damage Over Time sau khi test pass.
