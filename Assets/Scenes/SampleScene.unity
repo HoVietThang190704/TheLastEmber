@@ -143,9 +143,10 @@ GameObject:
   - component: {fileID: 65158419}
   - component: {fileID: 65158420}
   - component: {fileID: 65158421}
+  - component: {fileID: 65158422}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -162,9 +163,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afcc247e4de7a9c4fa7168036946e7b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.Combat.PlayerVisualSetup
-  modelResourcePath: Characters/character-archer
-  modelOffset: {x: 0, y: -1, z: 0}
+  modelResourcePath: Characters/character_player
+  modelOffset: {x: 0, y: 0, z: 0}
   modelScale: {x: 1, y: 1, z: 1}
+--- !u!114 &65158422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65158405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d241ba28e8214300bb8829589d81617e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.Combat.PlayerContext
 --- !u!143 &65158406
 CharacterController:
   m_ObjectHideFlags: 0
@@ -752,8 +765,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.Combat.IsometricCameraFollow
   target: {fileID: 65158410}
-  offset: {x: 0, y: 12, z: -8}
-  smoothSpeed: 5
+  pitchAngle: 55
+  yawAngle: 0
+  distance: 17
+  minDistance: 10
+  maxDistance: 28
+  zoomSpeed: 4
+  smoothSpeed: 6
+  targetOffset: {x: 0, y: 1, z: 0}
 --- !u!1 &350809796
 GameObject:
   m_ObjectHideFlags: 0

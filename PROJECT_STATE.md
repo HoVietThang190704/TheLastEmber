@@ -97,6 +97,16 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
   - `DayNightBannerUI.cs`: Dải banner điện ảnh hiển thị giữa màn hình với fade in/out khi chuyển giao Đêm/Ngày.
 - [x] Play test Mist Golem & Day/Night Banner trong Unity Play Mode: Quan sát banner chuyển giao Đêm/Ngày và đối đầu Mist Golem khổng lồ ở Đêm thứ 2.
 - [x] Commit mốc Mist Golem & Day/Night Banner MVP
+- [x] Procedural 3D Model: Runic Greatsword (Cự Kiếm Tàn Lửa) & Weapon Animation:
+  - Tự tạo mô hình 3D `runic_greatsword.obj` (72 đỉnh, 108 tam giác) gồm chuôi kim cương, cán da, thanh chắn gai nhọn, lưỡi kiếm bản rộng có rãnh máu phát quang.
+  - Tạo script `PlayerWeaponVisual.cs` gắn kiếm lên tay phải Player, màu thép xanh xám pha tàn lửa cam phát sáng HDR Emission.
+  - Đồng bộ animation vung chém vật lý (Windup vung sau -> Strike chém chớp nhoáng -> Recover thu kiếm) mỗi khi nhấn `Mouse1` kết hợp vệt chém `SlashArcVisual` và âm thanh `AudioManager.PlaySwing()`.
+- [x] Integrate Character Model: Đã đổi tên `base.fbx` thành `character_player.fbx` và cấu hình `PlayerVisualSetup.cs` nạp `character_player` làm model chính của Player.
+- [x] Clean Code & Modular Weapon Socket:
+  - Tạo `PlayerContext.cs` đăng ký duy nhất tập trung (O(1)), dọn dẹp các lệnh FindAnyObjectByType trong `StorageChestInteractable`, `WorkbenchInteractable`, `IsometricCameraFollow`.
+  - Giải nén 2 gói zip chứa Kiếm (`weapon_sword.fbx`) và Vỏ kiếm (`weapon_sheath.fbx`) kèm đầy đủ texture PBR (diffuse, normal, metallic, roughness).
+  - Tái cấu trúc `PlayerWeaponVisual.cs` thành hệ thống Socket xương chuẩn Humanoid (`RightHand` và `Hips/Spine`), tự động gắn Kiếm vào tay phải và Vỏ kiếm vào hông trái, sẵn sàng tái sử dụng cho mọi nhân vật.
+- [ ] Play test Modular Weapon & Sheath trong Unity Play Mode.
 
 ---
 
@@ -221,10 +231,15 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
   - Tạo script `DayNightBannerUI.cs` gắn vào `CombatHUD` trong `SampleScene.unity` để hiện dải banner điện ảnh chuyển giao Đêm/Ngày với hiệu ứng fade mượt mà.
   - Play test trong Play Mode pass hoàn toàn.
 
+- **Runic Greatsword (Cự Kiếm 3D) & Slash Animation MVP:**
+  - Tự tạo mô hình 3D `runic_greatsword.obj` đặt tại `Assets/_Project/Resources/Weapons/runic_greatsword.obj` (72 đỉnh, 108 tam giác) với chuôi kim cương, quai bọc da, thanh chắn gai nhọn và lưỡi kiếm bản rộng có rãnh khuyết.
+  - Tạo script `PlayerWeaponVisual.cs` tự động gắn kiếm vào tay phải Player, tinh chỉnh màu thép Dark Fantasy và Emission cam tàn lửa.
+  - Đồng bộ chuyển động vung kiếm 3 giai đoạn mượt mà (Windup -> Strike -> Recover) mỗi khi Player nhấn chuột tấn công `Mouse1`.
+
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Tiếp tục mở rộng gameplay & trải nghiệm**:
-   - Compass / Mini-map / Radar định hướng Đại Hỏa Lò và phát hiện quái vật sương mù.
-   - Thêm vũ khí 3D cầm tay (Greatsword/Runic Battleaxe) cho Player.
-   - Hệ thống âm thanh nhạc nền Ambient u tối rùng rợn.
+1. **Play test Cự Kiếm 3D & Animation trong Unity Play Mode**:
+   - Nhìn vào nhân vật Player: Thấy thanh Cự Kiếm Runic Greatsword 3D cầm ở tư thế thủ bên hông.
+   - Bấm chuột `Mouse1` tấn công: Quan sát thanh kiếm vung chém chớp nhoáng về phía trước đồng bộ hoàn hảo với vệt chém lưỡi liềm phát sáng và âm thanh vung kiếm.
+2. Xác nhận kết quả test để commit mốc!

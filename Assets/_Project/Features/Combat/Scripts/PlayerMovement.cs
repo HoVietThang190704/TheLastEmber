@@ -14,11 +14,13 @@ namespace TheLastEmber.Features.Combat
         [SerializeField] private PlayerHealth health;
 
         private CharacterController characterController;
+        private Animator animator;
         private Vector3 velocity;
 
         private void Awake()
         {
             characterController = GetComponent<CharacterController>();
+            animator = GetComponentInChildren<Animator>();
             if (health == null)
             {
                 health = GetComponent<PlayerHealth>();
@@ -27,9 +29,18 @@ namespace TheLastEmber.Features.Combat
 
         private void Update()
         {
+            if (animator == null)
+            {
+                animator = GetComponentInChildren<Animator>();
+            }
+
             if (health == null || !health.IsDead)
             {
                 HandleMovement();
+            }
+            else
+            {
+                UpdateAnimation(0f, false);
             }
 
             ApplyGravity();
@@ -42,8 +53,9 @@ namespace TheLastEmber.Features.Combat
             float vertical = Input.GetAxisRaw("Vertical");
 
             Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+            bool isMoving = direction.magnitude >= 0.1f;
 
-            if (direction.magnitude >= 0.1f)
+            if (isMoving)
             {
                 // Xoay nhân vật theo hướng di chuyển
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
@@ -52,6 +64,15 @@ namespace TheLastEmber.Features.Combat
                 // Di chuyển nhân vật
                 characterController.Move(direction * (moveSpeed * Time.deltaTime));
             }
+
+            UpdateAnimation(direction.magnitude, isMoving);
+        }
+
+        private void UpdateAnimation(float speed, bool isMoving)
+        {
+            if (animator == null) return;
+            animator.SetFloat("Speed", speed);
+            animator.SetBool("IsMoving", isMoving);
         }
 
         private void ApplyGravity()

@@ -27,16 +27,12 @@ namespace TheLastEmber.Features.BuildingSystem
         public int StoredStone => storedStone;
         public int StoredEmber => storedEmber;
 
-        private void Start()
-        {
-            FindPlayer();
-        }
-
         private void Update()
         {
             if (playerTransform == null)
             {
-                FindPlayer();
+                playerTransform = PlayerContext.PlayerTransform;
+                playerWallet = PlayerContext.PlayerWallet;
                 if (playerTransform == null) return;
             }
 
@@ -46,25 +42,6 @@ namespace TheLastEmber.Features.BuildingSystem
             if (isPlayerInRange && playerWallet != null)
             {
                 HandleInput();
-            }
-        }
-
-        private void FindPlayer()
-        {
-            PlayerMovement pm = FindAnyObjectByType<PlayerMovement>();
-            if (pm != null)
-            {
-                playerTransform = pm.transform;
-                playerWallet = pm.GetComponent<ResourceWallet>();
-            }
-            else
-            {
-                GameObject player = GameObject.FindWithTag("Player");
-                if (player != null)
-                {
-                    playerTransform = player.transform;
-                    playerWallet = player.GetComponent<ResourceWallet>();
-                }
             }
         }
 

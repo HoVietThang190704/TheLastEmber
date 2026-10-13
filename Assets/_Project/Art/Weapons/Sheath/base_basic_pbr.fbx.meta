@@ -1,0 +1,68 @@
+fileFormatVersion: 2
+guid: 01038056eb67444db6c88074c534c66f
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingNotes: 0
+    animatedProperties: []
+    animationClipOrder: 0
+    defaultClipBinding: []
+    avatarSetup: 0
+    additionalBone: 0
+    userData: 
+    assetBundleName: 
+    assetBundleVariant: 
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    useFileUnits: 1
+    keepQuads: 0
+    indexFormat: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    meshCompression: 0
+    isReadable: 1
+    optimizeMeshEdges: 1
+    optimizeMeshVertices: 1
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    meshOptimizationFlags: -1
+    meshOptimizationSettings:
+      useDefaults: 1
+      vertexPositionError: 0.001
+      vertexNormalError: 0.001
+      vertexUVError: 0.001
+      targetTriangleCount: 0
+      targetTriangleCountError: 0.001
+      minTriangleCount: 0
+      minTriangleCountError: 0.001
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    blendShapeNormalImportMode: 1
+    normalGenerationOptions: 0
+  importAnimation: 0
+  copyAvatar: 0
+  humanoidNormalGroup: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

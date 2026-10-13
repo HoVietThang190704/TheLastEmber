@@ -131,6 +131,18 @@ namespace TheLastEmber.Features.Combat
             ChangeState(CombatState.Attack);
 
             SlashArcVisual.PlaySlash(transform.position, transform.forward, hitRange);
+            PlayerWeaponVisual weaponVisual = GetComponent<PlayerWeaponVisual>();
+            if (weaponVisual != null)
+            {
+                weaponVisual.PlaySlashAnimation(windupDuration + activeDuration + recoverDuration);
+            }
+
+            Animator anim = GetComponentInChildren<Animator>();
+            if (anim != null)
+            {
+                anim.SetTrigger("Attack");
+            }
+
             AudioManager.PlaySwing();
             Debug.Log("<color=cyan>[Combat]</color> Player bắt đầu tấn công.");
         }

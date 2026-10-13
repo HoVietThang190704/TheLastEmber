@@ -1,0 +1,115 @@
+fileFormatVersion: 2
+guid: cb355ed3ad5f4fb0aa6f6f7f182211a7
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingNotes: 0
+    animatedProperties: []
+    animationClipOrder: 0
+    defaultClipBinding: []
+    avatarSetup: 1
+    additionalBone: 0
+    userData: 
+    assetBundleName: 
+    assetBundleVariant: 
+  animationType: 3
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionCheckHash: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    useFileUnits: 1
+    keepQuads: 0
+    indexFormat: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    meshCompression: 0
+    isReadable: 0
+    optimizeMeshEdges: 1
+    optimizeMeshVertices: 1
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    meshOptimizationFlags: -1
+    meshOptimizationSettings:
+      useDefaults: 1
+      vertexPositionError: 0.001
+      vertexNormalError: 0.001
+      vertexUVError: 0.001
+      targetTriangleCount: 0
+      targetTriangleCountError: 0.001
+      minTriangleCount: 0
+      minTriangleCountError: 0.001
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    blendShapeNormalImportMode: 1
+    normalGenerationOptions: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanoidNormalGroup: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  clipAnimations:
+  - serializedVersion: 16
+    name: Idle
+    takeName: mixamo.com
+    internalID: 0
+    firstFrame: 0
+    lastFrame: 100
+    wrapMode: 0
+    orientationOffsetY: 0
+    level: 0
+    cycleOffset: 0
+    loop: 1
+    hasAdditiveReferencePose: 0
+    loopAdditiveReferencePose: 0
+    additiveReferencePoseFrame: 0
+    startTime: 0
+    stopTime: 0
+    exactClipSubLength: 0
+    keepOriginalOrientation: 1
+    keepOriginalPositionY: 1
+    keepOriginalPositionXZ: 0
+    heightFromFeet: 0
+    mirror: 0
+    bodyMask: []
+    curves: []
+    events: []
+    transformMask: []
+    maskType: 3
+    maskSource: {instanceID: 0}
+    additiveReferencePoseClip: {instanceID: 0}

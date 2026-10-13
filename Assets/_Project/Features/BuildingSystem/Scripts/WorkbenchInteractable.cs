@@ -231,13 +231,12 @@ namespace TheLastEmber.Features.BuildingSystem
 
         private void FindPlayer()
         {
-            PlayerMovement pm = FindAnyObjectByType<PlayerMovement>();
-            if (pm != null)
+            if (PlayerContext.Instance != null)
             {
-                playerTransform = pm.transform;
-                playerWallet = pm.GetComponent<ResourceWallet>();
-                playerCombat = pm.GetComponent<PlayerCombat>();
-                playerHealth = pm.GetComponent<PlayerHealth>();
+                playerTransform = PlayerContext.PlayerTransform;
+                playerWallet = PlayerContext.PlayerWallet;
+                playerCombat = PlayerContext.PlayerCombat;
+                playerHealth = PlayerContext.PlayerHealth;
             }
         }
     }
