@@ -130,6 +130,16 @@ namespace TheLastEmber.Features.Combat
             cooldownTimer = cooldown;
             ChangeState(CombatState.Attack);
 
+            if (Camera.main != null)
+            {
+                Vector3 aimDirection = Camera.main.transform.forward;
+                aimDirection.y = 0f;
+                if (aimDirection.sqrMagnitude > 0.01f)
+                {
+                    transform.rotation = Quaternion.LookRotation(aimDirection.normalized);
+                }
+            }
+
             SlashArcVisual.PlaySlash(transform.position, transform.forward, hitRange);
             PlayerWeaponVisual weaponVisual = GetComponent<PlayerWeaponVisual>();
             if (weaponVisual != null)

@@ -14,7 +14,7 @@ namespace TheLastEmber.Features.DayNightCycle
 
         [Header("Interaction")]
         [SerializeField] private KeyCode upgradeKey = KeyCode.U;
-        [SerializeField] private float interactionRange = 3f;
+        [SerializeField] private float interactionRange = 6.5f;
 
         public KeyCode UpgradeKey => upgradeKey;
         public bool IsInInteractionRange => furnace != null && Vector3.Distance(transform.position, furnace.Position) <= interactionRange;

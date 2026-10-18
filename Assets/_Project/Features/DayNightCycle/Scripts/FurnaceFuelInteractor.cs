@@ -12,7 +12,7 @@ namespace TheLastEmber.Features.DayNightCycle
 
         [Header("Interaction")]
         [SerializeField] private KeyCode fuelKey = KeyCode.E;
-        [SerializeField] private float interactionRange = 3f;
+        [SerializeField] private float interactionRange = 6.5f;
         [SerializeField] private int woodPerFuelAction = 1;
 
         public KeyCode FuelKey => fuelKey;
