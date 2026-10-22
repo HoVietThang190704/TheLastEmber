@@ -52,7 +52,16 @@ namespace TheLastEmber.Features.Combat
             float horizontal = Input.GetAxisRaw("Horizontal");
             float vertical = Input.GetAxisRaw("Vertical");
 
-            Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+            // Hướng di chuyển tương đối theo góc nhìn Camera (chuẩn PUBG)
+            Transform camTransform = Camera.main != null ? Camera.main.transform : null;
+            Vector3 camForward = camTransform != null ? camTransform.forward : Vector3.forward;
+            Vector3 camRight = camTransform != null ? camTransform.right : Vector3.right;
+            camForward.y = 0f;
+            camRight.y = 0f;
+            camForward.Normalize();
+            camRight.Normalize();
+
+            Vector3 direction = (camForward * vertical + camRight * horizontal).normalized;
             bool isMoving = direction.magnitude >= 0.1f;
 
             if (isMoving)

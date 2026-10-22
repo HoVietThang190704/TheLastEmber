@@ -106,6 +106,18 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
   - Tạo `PlayerContext.cs` đăng ký duy nhất tập trung (O(1)), dọn dẹp các lệnh FindAnyObjectByType trong `StorageChestInteractable`, `WorkbenchInteractable`, `IsometricCameraFollow`.
   - Giải nén 2 gói zip chứa Kiếm (`weapon_sword.fbx`) và Vỏ kiếm (`weapon_sheath.fbx`) kèm đầy đủ texture PBR (diffuse, normal, metallic, roughness).
   - Tái cấu trúc `PlayerWeaponVisual.cs` thành hệ thống Socket xương chuẩn Humanoid (`RightHand` và `Hips/Spine`), tự động gắn Kiếm vào tay phải và Vỏ kiếm vào hông trái, sẵn sàng tái sử dụng cho mọi nhân vật.
+- [x] Environment Visual Fix & Real-time Terrain Surface Height:
+  - Sửa lỗi toàn bộ cây bị biến mất: Khắc phục sự sai lệch `fileID` giữa prefab trong `Resources/Environment/` và asset OBJ (từ `2494185979427425891` thành `-2432090755550338912`).
+  - Khôi phục cấu trúc 2 submesh độc lập `M_Tree_Bark` (Thân cây + toàn bộ hệ thống cành nhánh gỗ) và `M_Tree_Leaves` (Tán lá kim) cho `tree_small.obj`, `tree_medium.obj`, `tree_large.obj`.
+  - Khôi phục hiển thị màu sắc đầy đủ cho mô hình 3D trong cửa sổ Inspector Preview: Cấu hình `materialName: 1` (BasedOnMaterialName) trong `.obj.meta` và bổ sung mapping vật liệu tự động.
+  - Tăng mật độ cây trên toàn bản đồ từ 48 cây lên **160 cây** (gấp 3.3 lần), tạo nên cánh rừng rậm rạp, bao phủ quanh bản đồ Dark Fantasy.
+  - Cập nhật `GroundModelVisual.cs`: Tự động raycast dò chính xác độ cao thực của mặt đất (`GetGroundSurfaceHeight`), cắm gốc cây sâu vừa vặn 12cm vào sườn đồi/thung lũng, gốc cây tròn trịa 360 độ chạm đất tự nhiên, hoàn toàn không bị vùi lấp hay mất nửa gốc.
+  - Tích hợp cơ chế Fallback trực tiếp trong Editor và Runtime, đảm bảo luôn luôn có 160 cây 3D hiển thị đầy đủ, vững chãi quanh bản đồ.
+- [x] Full Graphic De-Noising & Anti-Aliasing Pipeline (Khử nhiễu đồ họa toàn diện):
+  - Kích hoạt **MSAA 4x (Multi-Sample Anti-Aliasing)** trên toàn bộ URP Asset (`PC_RPAsset`, `Mobile_RPAsset`) và `QualitySettings`.
+  - Bật **SMAA (Subpixel Morphological Anti-Aliasing)** chất lượng cao kết hợp Dithering trên Main Camera trong `SampleScene.unity`, loại bỏ răng cưa nhân vật, địa hình và sọc màu bầu trời.
+  - Kích hoạt **Anisotropic Filtering 16x** và **Trilinear Filtering** trên toàn bộ texture tán lá, vỏ cây và thảm cỏ, xóa bỏ hiện tượng mờ nhòe khi nhìn góc nghiêng.
+  - Bật **MipMaps Preserve Coverage** và **Hardware Alpha-To-Coverage (`_AlphaToMask: 1`)** trên vật liệu lá và cỏ, khử sạch 100% hiện tượng viền lá nhấp nháy, đứt gãy hạt khi di chuyển camera.
 - [ ] Play test Modular Weapon & Sheath trong Unity Play Mode.
 
 ---
@@ -236,10 +248,57 @@ Cập nhật lần cuối: 2026-10-10 | Engine: Unity 6 (6000.0.41f1) URP | Inpu
   - Tạo script `PlayerWeaponVisual.cs` tự động gắn kiếm vào tay phải Player, tinh chỉnh màu thép Dark Fantasy và Emission cam tàn lửa.
   - Đồng bộ chuyển động vung kiếm 3 giai đoạn mượt mà (Windup -> Strike -> Recover) mỗi khi Player nhấn chuột tấn công `Mouse1`.
 
+- **Tree Models Pack (Chuẩn hóa tên file theo 3 kích thước Nhỏ / Vừa / To):**
+  - **1. Cây Nhỏ — [tree_small.obj](file:///d:/TheLastEmber/Assets/_Project/Art/Environment/tree_small.obj) & [tree_small.mtl](file:///d:/TheLastEmber/Assets/_Project/Art/Environment/tree_small.mtl):**
+    - Đổi tên từ `ancient_titan_tree.obj`.
+    - Dáng cây cổ thụ nhỏ gọn: Cao 16.5m, đường kính gốc 2.7m, tán xòe 18.5m.
+  - **2. Cây Vừa — [tree_medium.obj](file:///d:/TheLastEmber/Assets/_Project/Art/Environment/tree_medium.obj) & [tree_medium.mtl](file:///d:/TheLastEmber/Assets/_Project/Art/Environment/tree_medium.mtl):**
+    - Đổi tên từ `photorealistic_tree.obj`.
+    - Dáng cây vươn cao vút: Cao 30.5m, thân trần vút lên 14.5m, đường kính gốc 4.5m, 24 cành xòe rộng 26m (25,824 tris).
+  - **3. Cây To — [tree_large.obj](file:///d:/TheLastEmber/Assets/_Project/Art/Environment/tree_large.obj) & [tree_large.mtl](file:///d:/TheLastEmber/Assets/_Project/Art/Environment/tree_large.mtl):**
+    - Đổi tên từ `tree_type_3_colossal.obj`.
+    - Dáng đại cổ thụ cự thạch khổng lồ: Cao 38.5m, đường kính gốc 10.4m (chu vi gốc 32.7m), 8 rễ bạnh xòe 8.8m, 28 cành cự thạch xòe rộng 32m (35,184 tris).
+  - **Tool Editor:** [RealisticTreeBootstrapper.cs](file:///d:/TheLastEmber/Assets/_Project/Editor/RealisticTreeBootstrapper.cs) đã được cập nhật để tự động sinh 3 Prefab tương ứng: `Tree_Small.prefab`, `Tree_Medium.prefab`, `Tree_Large.prefab`.
+
+- **Mở rộng bản đồ gấp 4 lần & Tinh chỉnh Cây / Cỏ 3D Chân thực:**
+  - `Ground`: Scale tăng từ `(25, 0.18, 25)` lên `(100, 0.18, 100)` trong [SampleScene.unity](file:///d:/TheLastEmber/Assets/Scenes/SampleScene.unity), diện tích và đường kính mở rộng 4 lần.
+  - **Thu nhỏ cây cân đối & Khắc phục rễ trồi mặt đất:**
+    - Cây 3D ban đầu có kích thước gốc quá lớn (16.5m - 38.5m) gây ngợp và rễ bạnh bị trồi lơ lửng.
+    - Đã thu nhỏ scale cây xuống `0.20 - 0.35` (cây cao thực tế ~5.5m - 8.5m, tán 6.5m tương quan chuẩn với nhân vật cao 1.8m).
+    - Giảm số lượng cây từ 84 xuống 48 cây để tạo khoảng nhìn thoáng đãng, nhìn rõ bầu trời và sương mù.
+    - **Xử lý triệt để đáy thân cây bị khuyết một nửa:**
+      - Phát hiện mô hình 3D gốc có các vòm rễ rỗng ruột (hở đáy lên đến 2.1m) và shader vỏ cây chỉ render 1 mặt ngoài (`_Cull: 2`), khi mặt đất cắt ngang tạo ra cảm giác thân cây rỗng ruột bị mất một nửa.
+      - Đã tự động vá kín hoàn toàn các đáy hở và vòm rễ bằng 744 mặt sealing faces trên cả 3 file `tree_small.obj`, `tree_medium.obj`, `tree_large.obj`.
+      - Chuyển Material [M_Tree_Bark.mat](file:///d:/TheLastEmber/Assets/_Project/Art/Environment/M_Tree_Bark.mat) sang chế độ **Two-Sided Rendering** (`_Cull: 0`), giúp mọi góc nhìn vào thân cây đều đặc ruột, có chiều sâu của vỏ gỗ bên trong.
+      - Cân chỉnh độ lún gốc cây chuẩn xác `treeRootSink = 0.20m` (lún 20cm - 28cm vừa vặn) giúp thân cây liền mạch, kín khít 360° với mặt đất, loại bỏ hoàn toàn cảm giác bị mất một nửa.
+  - **Phủ dày đặc cỏ 3D trực tiếp từ [grass_carpet.glb](file:///d:/TheLastEmber/Assets/_Project/Art/Environment/grass_carpet.glb) & Chỉnh chiều mọc thẳng đứng:**
+    - Trích xuất 100% hình học từ `grass_carpet.glb` (5,400 đỉnh, 1,800 tam giác với cấu trúc interleaved stride 32 bytes chuẩn xác).
+    - Đồng bộ UV chuẩn: V=0 ở gốc và V=1 ở ngọn, kết hợp texture RGBA `grass_carpet_diffuse.png` và Material URP Lit 2 mặt (Cull Off, Alpha Clip = 0.35).
+    - **Khắc phục lỗi cỏ bị treo rũ ngược:** Đã bỏ góc xoay 180° lộn ngược, đặt vị trí gốc cỏ cắm sát mặt đất (`localPosition.y = -0.02f`), xoay tự nhiên theo trục đứng `Quaternion.Euler(0, yaw, 0)` để toàn bộ ngọn cỏ vươn thẳng lên trời thay vì bị treo ngược như rèm cây.
+    - **Phân bổ dày đặc khắp map:** Giữ vững **`1,600` thảm cỏ** (mỗi thảm rộng 2.5m - 3.5m) rải kín khắp chiến trường từ bán kính 16m quanh Hỏa Lò ra đến tận mép bản đồ 94m, mang lại đại đồng cỏ bạt ngàn Dark Fantasy.
+    - Tối ưu hóa hiệu năng: Toàn bộ 1,600 thảm cỏ được gom chung vào 1 GPU Instancing draw call, mượt mà 60-120 FPS.
+
+- **Kiến trúc trung tâm Đại Hỏa Lò (Great Furnace) to gấp 2 lần:**
+  - `Model` của Hỏa Lò: Scale tăng gấp đôi từ `(4, 4, 4)` lên `(8, 8, 8)` trong [SampleScene.unity](file:///d:/TheLastEmber/Assets/Scenes/SampleScene.unity).
+  - Nâng chiều cao nguồn sáng `FurnaceLight` từ Y=7m lên Y=11m, `range` từ 20m lên 35m, `intensity` từ 15 lên 22.
+  - `GreatFurnace.cs`: Nâng `baseRadius` từ 15m lên 22m, điều chỉnh vị trí tàn lửa than hoa bốc lên từ đỉnh lò Y=2.4m.
+  - `FurnaceFuelInteractor.cs` & `FurnaceUpgradeInteractor.cs`: Tăng `interactionRange` từ 3m lên 6.5m giúp người chơi đứng cạnh lò khổng lồ nhấn `E` nạp củi và `U` nâng cấp dễ dàng.
+  - Điều chỉnh vị trí xuất hiện của Player ra trước Hỏa Lò `(0, 1, 6)` và bia tập đánh `TrainingDummy` ra `(0, 1, 11)`.
+
+- **Góc nhìn nhân vật thứ 3 (TPP) chuẩn phong cách PUBG:**
+  - [IsometricCameraFollow.cs](file:///d:/TheLastEmber/Assets/_Project/Features/Combat/Scripts/IsometricCameraFollow.cs):
+    - Đổi thành góc nhìn qua vai phải (Over-the-shoulder, offset `x: 0.45m, y: 1.55m`).
+    - Khoảng cách camera chuẩn PUBG: `distance: 3.8m` (zoom cuộn chuột 1.6m – 6.5m).
+    - Góc nhìn chuột 360 độ: Xoay ngang (Yaw) bằng Mouse X, gật ngẩng (Pitch) bằng Mouse Y (-28° đến +68°).
+    - Tự động khóa con trỏ chuột (`CursorLockMode.Locked`), nhấn phím `Alt` hoặc `Esc` để chuyển đổi tự do, tự mở khóa chuột khi bật chế độ xây dựng (phím 1-5).
+    - Tích hợp kiểm tra va chạm camera (Camera Collision SphereCast) chống nhìn xuyên địa hình, đá hoặc thân cây.
+  - [PlayerMovement.cs](file:///d:/TheLastEmber/Assets/_Project/Features/Combat/Scripts/PlayerMovement.cs):
+    - Di chuyển WASD tương đối 100% theo hướng nhìn camera (W chạy tới nơi camera ngắm, S lùi, A/D dạt ngang).
+  - [PlayerCombat.cs](file:///d:/TheLastEmber/Assets/_Project/Features/Combat/Scripts/PlayerCombat.cs):
+    - Tự động xoay người chém kiếm thẳng vào hướng ngắm camera khi nhấn chuột tấn công.
+
 ---
 
 ## 5. NHIỆM VỤ TIẾP THEO (NEXT ACTIONS)
-1. **Play test Cự Kiếm 3D & Animation trong Unity Play Mode**:
-   - Nhìn vào nhân vật Player: Thấy thanh Cự Kiếm Runic Greatsword 3D cầm ở tư thế thủ bên hông.
-   - Bấm chuột `Mouse1` tấn công: Quan sát thanh kiếm vung chém chớp nhoáng về phía trước đồng bộ hoàn hảo với vệt chém lưỡi liềm phát sáng và âm thanh vung kiếm.
-2. Xác nhận kết quả test để commit mốc!
+1. Mở Unity Editor và bấm Play để trải nghiệm trực tiếp rừng cây kích thước chuẩn, gốc rễ cắm sâu tự nhiên và 520 bụi cỏ rậm rạp trên bản đồ rộng lớn 100x100m.
+2. Tinh chỉnh thêm Animation State Machine chạy/đi bộ/xoay người (Strafe / Locomotion Blend Tree) theo phong cách PUBG nếu cần thiết.

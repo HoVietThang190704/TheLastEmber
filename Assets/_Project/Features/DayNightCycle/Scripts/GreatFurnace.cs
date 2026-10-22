@@ -9,7 +9,7 @@ namespace TheLastEmber.Features.DayNightCycle
         [Header("Furnace Stats")]
         [SerializeField] private int furnaceLevel = 1;
         [SerializeField] private int maxLevel = 5;
-        [SerializeField] private float baseRadius = 15f;
+        [SerializeField] private float baseRadius = 22f;
         [SerializeField] private float maxHealth = 2000f;
         private float currentHealth;
 
@@ -22,7 +22,7 @@ namespace TheLastEmber.Features.DayNightCycle
         [SerializeField] private float secondsPerWood = 25f;
         [SerializeField] private float maxFuelSeconds = 180f;
         [SerializeField] private float minimumFueledTimeMultiplier = 0.85f;
-        [SerializeField] private float unfueledRadius = 1.8f;
+        [SerializeField] private float unfueledRadius = 3.6f;
 
         [Header("Light Component")]
         [SerializeField] private Light furnaceLight;
@@ -56,7 +56,7 @@ namespace TheLastEmber.Features.DayNightCycle
             {
                 GameObject emberObj = new GameObject("FurnaceEmbers");
                 emberObj.transform.SetParent(transform, false);
-                emberObj.transform.localPosition = new Vector3(0f, 1.2f, 0f);
+                emberObj.transform.localPosition = new Vector3(0f, 2.4f, 0f);
                 emberParticles = emberObj.AddComponent<FireEmberParticles>();
             }
 

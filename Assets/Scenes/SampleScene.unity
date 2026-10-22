@@ -292,7 +292,7 @@ Transform:
   m_GameObject: {fileID: 65158405}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -343,7 +343,7 @@ MonoBehaviour:
   furnace: {fileID: 1606474849}
   wallet: {fileID: 65158414}
   fuelKey: 101
-  interactionRange: 3
+  interactionRange: 6.5
   woodPerFuelAction: 1
 --- !u!114 &65158414
 MonoBehaviour:
@@ -485,7 +485,7 @@ MonoBehaviour:
   furnace: {fileID: 0}
   wallet: {fileID: 0}
   upgradeKey: 117
-  interactionRange: 3
+  interactionRange: 6.5
 --- !u!1 &123741061
 GameObject:
   m_ObjectHideFlags: 0
@@ -701,13 +701,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.12186934, y: 0, z: 0, w: 0.99254614}
+  m_LocalPosition: {x: 0.45, y: 2.5, z: -3.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 14, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -732,10 +732,10 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 2
   m_AntialiasingQuality: 2
-  m_StopNaN: 0
-  m_Dithering: 0
+  m_StopNaN: 1
+  m_Dithering: 1
   m_ClearDepth: 1
   m_AllowXRRendering: 1
   m_AllowHDROutput: 1
@@ -765,14 +765,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.Combat.IsometricCameraFollow
   target: {fileID: 65158410}
-  pitchAngle: 55
+  pitchAngle: 14
   yawAngle: 0
-  distance: 17
-  minDistance: 10
-  maxDistance: 28
-  zoomSpeed: 4
-  smoothSpeed: 6
-  targetOffset: {x: 0, y: 1, z: 0}
+  pitchMin: -28
+  pitchMax: 68
+  distance: 3.8
+  minDistance: 1.6
+  maxDistance: 6.5
+  zoomSpeed: 3.5
+  targetOffset: {x: 0.45, y: 1.55, z: 0}
+  enableMouseLook: 1
+  mouseSensitivityX: 2.2
+  mouseSensitivityY: 1.8
+  invertY: 0
+  smoothSpeed: 16
+  collisionRadius: 0.25
+  collisionLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &350809796
 GameObject:
   m_ObjectHideFlags: 0
@@ -1066,15 +1076,19 @@ MonoBehaviour:
   rebuildOnEnable: 1
   updateCollider: 1
   generateDecorations: 1
-  treeCount: 54
-  rockCount: 30
-  logCount: 12
-  innerClearRadius: 8
-  outerRadius: 23
+  treeCount: 160
+  treeRootSink: 0.2
+  grassCount: 1600
+  invertGrass: 0
+  rockCount: 38
+  logCount: 20
+  innerClearRadius: 16
+  outerRadius: 94
   decorationSeed: 190704
   logsAreCollectible: 1
   woodPerLog: 1
   rocksAreMineable: 1
+  treesAreChoppable: 1
 --- !u!4 &411114890
 Transform:
   m_ObjectHideFlags: 0
@@ -1085,7 +1099,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 25, y: 0.18, z: 25}
+  m_LocalScale: {x: 100, y: 0.18, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1296,7 +1310,7 @@ Transform:
   m_GameObject: {fileID: 806504944}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 7, z: 0}
+  m_LocalPosition: {x: 0, y: 11, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1342,8 +1356,8 @@ Light:
   serializedVersion: 13
   m_Type: 2
   m_Color: {r: 1, g: 0.3529412, b: 0, a: 1}
-  m_Intensity: 15
-  m_Range: 20
+  m_Intensity: 22
+  m_Range: 35
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -1475,7 +1489,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1606474848}
@@ -1627,7 +1641,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheLastEmber.Features.DayNightCycle.GreatFurnace
   furnaceLevel: 1
   maxLevel: 5
-  baseRadius: 15
+  baseRadius: 22
   maxHealth: 2000
   upgradeCosts: 050000000a0000001400000028000000i
   secondsPerWood: 15
@@ -1919,7 +1933,7 @@ Transform:
   m_GameObject: {fileID: 2000000001}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 6}
+  m_LocalPosition: {x: 0, y: 1, z: 11}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

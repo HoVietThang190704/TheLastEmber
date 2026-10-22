@@ -14,13 +14,24 @@ namespace TheLastEmber.Features.Environment
         [SerializeField] private bool rebuildOnEnable = true;
         [SerializeField] private bool updateCollider = true;
 
-        [Header("Decorations")]
+        [Header("3D Environment Models")]
+        [Tooltip("Các mẫu cây 3D. Tự nạp Tree_Small, Tree_Medium từ Resources/Environment nếu để trống.")]
+        [SerializeField] private GameObject[] treePrefabs;
+        [Tooltip("Các mẫu bụi cỏ 3D. Tự nạp TallGrass, Bush từ Resources/Environment nếu để trống.")]
+        [SerializeField] private GameObject[] grassPrefabs;
+
+        [Header("Decorations (Bản đồ mở rộng x4)")]
         [SerializeField] private bool generateDecorations = true;
-        [SerializeField] private int treeCount = 46;
-        [SerializeField] private int rockCount = 28;
-        [SerializeField] private int logCount = 12;
-        [SerializeField] private float innerClearRadius = 8f;
-        [SerializeField] private float outerRadius = 22f;
+        [SerializeField] private int treeCount = 160;
+        [Tooltip("Độ lún của gốc cây vào lòng đất để thân cây chạm đất tự nhiên, kín khít 360 độ")]
+        [SerializeField] private float treeRootSink = 0.20f;
+        [SerializeField] private int grassCount = 1600;
+        [Tooltip("Đảo ngược chiều cỏ (mặc định false: cỏ mọc thẳng đứng từ mặt đất lên trời)")]
+        [SerializeField] private bool invertGrass = false;
+        [SerializeField] private int rockCount = 38;
+        [SerializeField] private int logCount = 20;
+        [SerializeField] private float innerClearRadius = 18f;
+        [SerializeField] private float outerRadius = 92f;
         [SerializeField] private int decorationSeed = 190704;
         [SerializeField] private bool logsAreCollectible = true;
         [SerializeField] private int woodPerLog = 1;
@@ -34,6 +45,8 @@ namespace TheLastEmber.Features.Environment
         private Material trunkMaterial;
         private Material rockMaterial;
         private Material logMaterial;
+        private Mesh grassCarpetMesh;
+        private Material grassCarpetMaterial;
 
         private const string DecorationRootName = "__GeneratedTerrainDecor";
 
@@ -229,6 +242,12 @@ namespace TheLastEmber.Features.Environment
             DestroyGeneratedMaterial(ref trunkMaterial);
             DestroyGeneratedMaterial(ref rockMaterial);
             DestroyGeneratedMaterial(ref logMaterial);
+            DestroyGeneratedMaterial(ref grassCarpetMaterial);
+            if (grassCarpetMesh != null)
+            {
+                DestroyGeneratedObject(grassCarpetMesh);
+                grassCarpetMesh = null;
+            }
             ClearDecorationRoot();
         }
 
@@ -236,6 +255,7 @@ namespace TheLastEmber.Features.Environment
         {
             ClearDecorationRoot();
             CreateDecorationMaterials();
+            Resolve3DModelAssets();
 
             Transform root = new GameObject(DecorationRootName).transform;
             root.gameObject.hideFlags = HideFlags.DontSave;
@@ -246,43 +266,202 @@ namespace TheLastEmber.Features.Environment
 
             System.Random random = new System.Random(decorationSeed);
 
+            // 1. Phân bổ Cây 3D (kích thước chuẩn 5.5m - 8.5m, rễ cắm sâu vào lòng đất)
             for (int i = 0; i < treeCount; i++)
             {
-                Vector3 position = GetDecorPosition(random);
-                float scale = RandomRange(random, 0.85f, 1.45f);
-                CreateTree(root, position, scale, i);
+                Vector3 position = GetDecorPosition(random, innerClearRadius, outerRadius);
+                float variation = RandomRange(random, 0.88f, 1.15f);
+                CreateTree(root, position, variation, i);
             }
 
+            // 2. Phân bổ Bụi cỏ 3D từ grass_carpet.glb (thảm cỏ rộng 2.5m - 3.5m, cao 0.9m - 1.3m)
+            for (int i = 0; i < grassCount; i++)
+            {
+                Vector3 position = GetDecorPosition(random, innerClearRadius * 0.65f, outerRadius * 0.98f);
+                float scale = RandomRange(random, 0.92f, 1.35f);
+                CreateGrass(root, position, scale, i, random);
+            }
+
+            // 3. Phân bổ Mỏ đá (StoneNode)
             for (int i = 0; i < rockCount; i++)
             {
-                Vector3 position = GetDecorPosition(random);
-                float scale = RandomRange(random, 0.55f, 1.35f);
+                Vector3 position = GetDecorPosition(random, innerClearRadius, outerRadius);
+                float scale = RandomRange(random, 0.65f, 1.45f);
                 CreateRock(root, position, scale, i);
             }
 
+            // 4. Phân bổ Khúc gỗ nhặt củi (CollectibleResource)
             for (int i = 0; i < logCount; i++)
             {
-                Vector3 position = GetDecorPosition(random);
-                float scale = RandomRange(random, 0.65f, 1.15f);
+                Vector3 position = GetDecorPosition(random, innerClearRadius, outerRadius);
+                float scale = RandomRange(random, 0.75f, 1.25f);
                 CreateLog(root, position, scale, RandomRange(random, 0f, 360f), i);
             }
         }
 
-        private Vector3 GetDecorPosition(System.Random random)
+        private float GetGroundSurfaceHeight(float worldX, float worldZ)
+        {
+            Ray ray = new Ray(new Vector3(worldX, 30f, worldZ), Vector3.down);
+            if (TryGetComponent(out MeshCollider mc) && mc.sharedMesh != null && mc.Raycast(ray, out RaycastHit hit, 60f))
+            {
+                return hit.point.y;
+            }
+            return 0.12f;
+        }
+
+        private void Resolve3DModelAssets()
+        {
+            bool needReloadTrees = treePrefabs == null || treePrefabs.Length == 0;
+            if (!needReloadTrees)
+            {
+                for (int i = 0; i < treePrefabs.Length; i++)
+                {
+                    if (treePrefabs[i] == null) { needReloadTrees = true; break; }
+                    MeshFilter mf = treePrefabs[i].GetComponentInChildren<MeshFilter>();
+                    if (mf == null || mf.sharedMesh == null) { needReloadTrees = true; break; }
+                }
+            }
+
+            if (needReloadTrees)
+            {
+                List<GameObject> trees = new List<GameObject>();
+                GameObject tree1 = Resources.Load<GameObject>("Environment/Tree_Small");
+                GameObject tree2 = Resources.Load<GameObject>("Environment/Tree_Medium");
+                GameObject tree3 = Resources.Load<GameObject>("Environment/Tree_Large");
+                if (IsValidTreePrefab(tree1)) trees.Add(tree1);
+                if (IsValidTreePrefab(tree2)) trees.Add(tree2);
+                if (IsValidTreePrefab(tree3)) trees.Add(tree3);
+
+#if UNITY_EDITOR
+                if (trees.Count == 0)
+                {
+                    GameObject t1 = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Art/Environment/Tree_Small.prefab");
+                    GameObject t2 = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Art/Environment/Tree_Medium.prefab");
+                    GameObject t3 = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Art/Environment/Tree_Large.prefab");
+                    if (IsValidTreePrefab(t1)) trees.Add(t1);
+                    if (IsValidTreePrefab(t2)) trees.Add(t2);
+                    if (IsValidTreePrefab(t3)) trees.Add(t3);
+                }
+#endif
+                if (trees.Count > 0) treePrefabs = trees.ToArray();
+            }
+
+            if (grassPrefabs == null || grassPrefabs.Length == 0)
+            {
+                List<GameObject> grasses = new List<GameObject>();
+                GameObject g0 = Resources.Load<GameObject>("Environment/Grass_Carpet");
+                if (g0 != null) grasses.Add(g0);
+
+#if UNITY_EDITOR
+                if (grasses.Count == 0)
+                {
+                    GameObject gArt = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Art/Environment/Grass_Carpet.prefab");
+                    if (gArt != null) grasses.Add(gArt);
+                }
+#endif
+                if (grasses.Count > 0) grassPrefabs = grasses.ToArray();
+            }
+        }
+
+        private static bool IsValidTreePrefab(GameObject prefab)
+        {
+            if (prefab == null) return false;
+            MeshFilter mf = prefab.GetComponentInChildren<MeshFilter>();
+            return mf != null && mf.sharedMesh != null;
+        }
+
+        private static Vector3 GetDecorPosition(System.Random random, float minRadius, float maxRadius)
         {
             float angle = RandomRange(random, 0f, Mathf.PI * 2f);
-            float distance = Mathf.Sqrt(RandomRange(random, innerClearRadius * innerClearRadius, outerRadius * outerRadius));
+            float distance = Mathf.Sqrt(RandomRange(random, minRadius * minRadius, maxRadius * maxRadius));
             return new Vector3(Mathf.Cos(angle) * distance, 0.08f, Mathf.Sin(angle) * distance);
         }
 
-        private void CreateTree(Transform parent, Vector3 localPosition, float scale, int index)
+        private void CreateTree(Transform parent, Vector3 localPosition, float randomVariation, int index)
         {
+            float groundY = GetGroundSurfaceHeight(localPosition.x, localPosition.z);
+
+            // Sử dụng trực tiếp file 3D Model / Prefab của các mẫu cây
+            if (treePrefabs != null && treePrefabs.Length > 0)
+            {
+                GameObject prefab = treePrefabs[index % treePrefabs.Length];
+                if (prefab != null)
+                {
+                    // Thu nhỏ cây về kích thước cân đối chuẩn game 3D (cao ~5.5m - 8.5m)
+                    float baseScale = 0.28f;
+                    string pName = prefab.name.ToLower();
+                    if (pName.Contains("small"))
+                    {
+                        baseScale = 0.35f; // tree_small gốc 16.5m * 0.35 = ~5.8m tall, tán 6.5m
+                    }
+                    else if (pName.Contains("medium"))
+                    {
+                        baseScale = 0.25f; // tree_medium gốc 30.5m * 0.25 = ~7.6m tall, tán 6.5m
+                    }
+                    else if (pName.Contains("large"))
+                    {
+                        baseScale = 0.20f; // tree_large gốc 38.5m * 0.20 = ~7.7m tall, tán 6.4m
+                    }
+
+                    float finalScale = baseScale * randomVariation;
+
+                    GameObject treeInstance = Instantiate(prefab, parent);
+                    treeInstance.name = $"Tree_{index:00}_{prefab.name}";
+                    treeInstance.hideFlags = HideFlags.DontSave;
+
+                    MeshFilter mf = treeInstance.GetComponentInChildren<MeshFilter>();
+                    MeshRenderer mr = treeInstance.GetComponentInChildren<MeshRenderer>();
+
+#if UNITY_EDITOR
+                    // Tự phục hồi Mesh trực tiếp từ OBJ nếu prefab bị mất mesh trong Editor
+                    if (mf != null && mf.sharedMesh == null)
+                    {
+                        string objFileName = pName.Contains("large") ? "tree_large.obj" : (pName.Contains("medium") ? "tree_medium.obj" : "tree_small.obj");
+                        GameObject rawModel = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/_Project/Art/Environment/{objFileName}");
+                        if (rawModel != null)
+                        {
+                            MeshFilter rawMf = rawModel.GetComponentInChildren<MeshFilter>();
+                            if (rawMf != null) mf.sharedMesh = rawMf.sharedMesh;
+                        }
+                    }
+#endif
+
+                    // Nếu có Mesh hợp lệ thì đặt cây vào đúng mặt đất
+                    if (mf != null && mf.sharedMesh != null)
+                    {
+                        if (mr != null && (mr.sharedMaterials == null || mr.sharedMaterials.Length == 0 || mr.sharedMaterials[0] == null))
+                        {
+                            mr.sharedMaterials = new Material[] { trunkMaterial, treeLeafMaterial };
+                        }
+
+                        // Cắm gốc cây nhẹ 0.12m vào mặt đất để thân cây chạm đất 360 độ tự nhiên
+                        float sink = treeRootSink * (pName.Contains("large") ? 1.3f : 1.0f);
+                        treeInstance.transform.position = new Vector3(localPosition.x, groundY - sink, localPosition.z);
+                        treeInstance.transform.localRotation = Quaternion.Euler(0f, (index * 47f) % 360f, 0f);
+                        treeInstance.transform.localScale = Vector3.one * finalScale;
+
+                        if (treesAreChoppable && Application.isPlaying && treeInstance.GetComponent<TreeResourceNode>() == null)
+                        {
+                            treeInstance.AddComponent<TreeResourceNode>();
+                        }
+                        return;
+                    }
+                    else
+                    {
+                        // Nếu instance không có Mesh, huỷ để rơi xuống fallback đảm bảo luôn có cây hiển thị!
+                        DestroyGeneratedObject(treeInstance);
+                    }
+                }
+            }
+
+            // Fallback nếu chưa tải được asset 3D: Dựng cây thông 3D vững chãi, tán xanh 2 tầng
+            float fallbackScale = 0.35f * randomVariation;
             GameObject tree = new GameObject($"Tree_{index:00}");
             tree.hideFlags = HideFlags.DontSave;
             tree.transform.SetParent(parent, false);
-            tree.transform.localPosition = localPosition;
+            tree.transform.position = new Vector3(localPosition.x, groundY - 0.10f, localPosition.z);
             tree.transform.localRotation = Quaternion.Euler(0f, (index * 47f) % 360f, 0f);
-            tree.transform.localScale = Vector3.one * scale;
+            tree.transform.localScale = Vector3.one * fallbackScale;
 
             GameObject trunk = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             trunk.name = "Trunk";
@@ -293,10 +472,7 @@ namespace TheLastEmber.Features.Environment
             SetRendererMaterial(trunk, trunkMaterial);
             DestroyGeneratedObject(trunk.GetComponent<Collider>());
 
-            Color leafTint = index % 3 == 0 ? treeDarkLeafMaterial.color : treeLeafMaterial.color;
-            Material leafMaterial = index % 3 == 0 ? treeDarkLeafMaterial : treeLeafMaterial;
-            _ = leafTint;
-
+            Material leafMaterial = index % 2 == 0 ? treeDarkLeafMaterial : treeLeafMaterial;
             CreateCone(tree.transform, "CrownBottom", new Vector3(0f, 1.25f, 0f), 0.92f, 1.05f, leafMaterial);
             CreateCone(tree.transform, "CrownTop", new Vector3(0f, 1.95f, 0f), 0.68f, 0.95f, leafMaterial);
 
@@ -306,9 +482,153 @@ namespace TheLastEmber.Features.Environment
             }
         }
 
+        private void CreateGrass(Transform parent, Vector3 localPosition, float scale, int index, System.Random random)
+        {
+            float groundY = GetGroundSurfaceHeight(localPosition.x, localPosition.z);
+            float randomYaw = RandomRange(random, 0f, 360f);
+            Vector3 grassPos;
+            Quaternion grassRot;
+
+            if (invertGrass)
+            {
+                // Chiều ngược (nếu muốn lộn 180 độ)
+                float grassHeight = 0.95f * scale;
+                grassPos = new Vector3(localPosition.x, groundY + grassHeight - 0.02f, localPosition.z);
+                grassRot = Quaternion.Euler(180f, randomYaw, 0f);
+            }
+            else
+            {
+                // Mọc chuẩn từ mặt đất vươn thẳng lên trời
+                grassPos = new Vector3(localPosition.x, groundY - 0.02f, localPosition.z);
+                grassRot = Quaternion.Euler(0f, randomYaw, 0f);
+            }
+
+            // 1. Sử dụng trực tiếp Prefab Grass_Carpet nếu có
+            if (grassPrefabs != null && grassPrefabs.Length > 0)
+            {
+                GameObject prefab = grassPrefabs[index % grassPrefabs.Length];
+                if (prefab != null)
+                {
+                    GameObject grassInstance = Instantiate(prefab, parent);
+                    grassInstance.name = $"Grass_Carpet_{index:00}_{prefab.name}";
+                    grassInstance.hideFlags = HideFlags.DontSave;
+
+                    grassInstance.transform.position = grassPos;
+                    grassInstance.transform.localRotation = grassRot;
+                    grassInstance.transform.localScale = Vector3.one * scale;
+
+                    // Cho phép chạy qua cỏ mượt mà (Trigger Collider, không chặn di chuyển)
+                    Collider[] colliders = grassInstance.GetComponentsInChildren<Collider>();
+                    foreach (Collider c in colliders)
+                    {
+                        c.isTrigger = true;
+                    }
+                    return;
+                }
+            }
+
+            // 2. Sử dụng trực tiếp dữ liệu Mesh 3D và Texture từ grass_carpet.glb
+            if (grassCarpetMesh != null && grassCarpetMaterial != null)
+            {
+                GameObject grassInstance = new GameObject($"Grass_Carpet_{index:00}");
+                grassInstance.hideFlags = HideFlags.DontSave;
+                grassInstance.transform.SetParent(parent, false);
+                grassInstance.transform.position = grassPos;
+                grassInstance.transform.localRotation = grassRot;
+                grassInstance.transform.localScale = Vector3.one * scale;
+
+                MeshFilter mf = grassInstance.AddComponent<MeshFilter>();
+                MeshRenderer mr = grassInstance.AddComponent<MeshRenderer>();
+                mf.sharedMesh = grassCarpetMesh;
+                mr.sharedMaterial = grassCarpetMaterial;
+
+                BoxCollider col = grassInstance.AddComponent<BoxCollider>();
+                col.isTrigger = true;
+                col.center = new Vector3(0f, 0.48f, 0f);
+                col.size = new Vector3(2.75f, 0.95f, 2.45f);
+                return;
+            }
+
+            // Fallback tạo bụi cỏ 3D nếu chưa nạp được asset
+            CreateProceduralGrassTuft(parent, localPosition, scale, index, random);
+        }
+
+        private void CreateProceduralGrassTuft(Transform parent, Vector3 localPosition, float scale, int index, System.Random random)
+        {
+            float groundY = GetGroundSurfaceHeight(localPosition.x, localPosition.z);
+            GameObject grass = new GameObject($"GrassTuft_{index:00}");
+            grass.hideFlags = HideFlags.DontSave;
+            grass.transform.SetParent(parent, false);
+            grass.transform.position = new Vector3(localPosition.x, groundY - 0.02f, localPosition.z);
+            grass.transform.localRotation = Quaternion.Euler(0f, RandomRange(random, 0f, 360f), 0f);
+            grass.transform.localScale = Vector3.one * (scale * 0.35f);
+
+            MeshFilter mf = grass.AddComponent<MeshFilter>();
+            MeshRenderer mr = grass.AddComponent<MeshRenderer>();
+            mf.sharedMesh = GetOrCreateGrassMesh();
+            mr.sharedMaterial = index % 2 == 0 ? treeLeafMaterial : treeDarkLeafMaterial;
+        }
+
+        private static Mesh cachedGrassMesh;
+        private static Mesh GetOrCreateGrassMesh()
+        {
+            if (cachedGrassMesh != null) return cachedGrassMesh;
+
+            int bladeCount = 3;
+            Vector3[] vertices = new Vector3[bladeCount * 4];
+            int[] triangles = new int[bladeCount * 12];
+            Vector2[] uvs = new Vector2[bladeCount * 4];
+
+            int vertIdx = 0;
+            int triIdx = 0;
+
+            for (int b = 0; b < bladeCount; b++)
+            {
+                float angle = b * (Mathf.PI / bladeCount);
+                Vector3 dir = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * 0.6f;
+
+                int baseV = vertIdx;
+                vertices[vertIdx++] = -dir;
+                vertices[vertIdx++] = dir;
+                vertices[vertIdx++] = -dir * 0.7f + Vector3.up * 0.85f;
+                vertices[vertIdx++] = dir * 0.7f + Vector3.up * 0.85f;
+
+                uvs[baseV + 0] = new Vector2(0f, 0f);
+                uvs[baseV + 1] = new Vector2(1f, 0f);
+                uvs[baseV + 2] = new Vector2(0f, 1f);
+                uvs[baseV + 3] = new Vector2(1f, 1f);
+
+                triangles[triIdx++] = baseV + 0;
+                triangles[triIdx++] = baseV + 2;
+                triangles[triIdx++] = baseV + 1;
+                triangles[triIdx++] = baseV + 1;
+                triangles[triIdx++] = baseV + 2;
+                triangles[triIdx++] = baseV + 3;
+
+                triangles[triIdx++] = baseV + 0;
+                triangles[triIdx++] = baseV + 1;
+                triangles[triIdx++] = baseV + 2;
+                triangles[triIdx++] = baseV + 1;
+                triangles[triIdx++] = baseV + 3;
+                triangles[triIdx++] = baseV + 2;
+            }
+
+            cachedGrassMesh = new Mesh
+            {
+                name = "Procedural_3D_GrassCluster",
+                hideFlags = HideFlags.DontSave
+            };
+            cachedGrassMesh.SetVertices(vertices);
+            cachedGrassMesh.SetUVs(0, uvs);
+            cachedGrassMesh.SetTriangles(triangles, 0);
+            cachedGrassMesh.RecalculateNormals();
+            cachedGrassMesh.RecalculateBounds();
+            return cachedGrassMesh;
+        }
+
         private void CreateRock(Transform parent, Vector3 localPosition, float scale, int index)
         {
-            // Tải model Kenney Rock/Stone chất lượng nếu có, fallback về Primitive
+            float groundY = GetGroundSurfaceHeight(localPosition.x, localPosition.z);
             GameObject modelPrefab = Resources.Load<GameObject>("ThirdParty/Kenney/rock_largeA");
             GameObject rock;
 
@@ -317,7 +637,7 @@ namespace TheLastEmber.Features.Environment
                 rock = Instantiate(modelPrefab, parent);
                 rock.name = $"Rock_{index:00}";
                 rock.hideFlags = HideFlags.DontSave;
-                rock.transform.localPosition = localPosition;
+                rock.transform.position = new Vector3(localPosition.x, groundY, localPosition.z);
                 rock.transform.localRotation = Quaternion.Euler(0f, index * 67f, 0f);
                 rock.transform.localScale = Vector3.one * (scale * 0.85f);
             }
@@ -327,7 +647,7 @@ namespace TheLastEmber.Features.Environment
                 rock.name = $"Rock_{index:00}";
                 rock.hideFlags = HideFlags.DontSave;
                 rock.transform.SetParent(parent, false);
-                rock.transform.localPosition = localPosition + new Vector3(0f, 0.18f * scale, 0f);
+                rock.transform.position = new Vector3(localPosition.x, groundY + 0.12f * scale, localPosition.z);
                 rock.transform.localRotation = Quaternion.Euler(index * 23f, index * 61f, 0f);
                 rock.transform.localScale = new Vector3(0.75f, 0.38f, 0.58f) * scale;
                 SetRendererMaterial(rock, rockMaterial);
@@ -350,11 +670,12 @@ namespace TheLastEmber.Features.Environment
 
         private void CreateLog(Transform parent, Vector3 localPosition, float scale, float yRotation, int index)
         {
+            float groundY = GetGroundSurfaceHeight(localPosition.x, localPosition.z);
             GameObject log = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             log.name = $"Log_{index:00}";
             log.hideFlags = HideFlags.DontSave;
             log.transform.SetParent(parent, false);
-            log.transform.localPosition = localPosition + new Vector3(0f, 0.22f * scale, 0f);
+            log.transform.position = new Vector3(localPosition.x, groundY + 0.15f * scale, localPosition.z);
             log.transform.localRotation = Quaternion.Euler(0f, yRotation, 90f);
             log.transform.localScale = new Vector3(0.28f, 0.85f, 0.28f) * scale;
             SetRendererMaterial(log, logMaterial);
@@ -440,6 +761,47 @@ namespace TheLastEmber.Features.Environment
             trunkMaterial = CreateMaterial(shader, "Decor Trunk", new Color(0.31f, 0.19f, 0.12f));
             rockMaterial = CreateMaterial(shader, "Decor Rock", new Color(0.32f, 0.32f, 0.3f));
             logMaterial = CreateMaterial(shader, "Decor Fallen Log", new Color(0.36f, 0.21f, 0.13f));
+
+            // Load dữ liệu Mesh gốc từ grass_carpet.glb (dưới dạng binary resource)
+            TextAsset grassCarpetData = Resources.Load<TextAsset>("Environment/grass_carpet_mesh");
+            if (grassCarpetData != null && TryBuildMesh(grassCarpetData.bytes, out Mesh gMesh, out _))
+            {
+                gMesh.name = "Grass_Carpet_GLTF_Mesh";
+                grassCarpetMesh = gMesh;
+            }
+
+            // Load Texture và tạo Material URP Lit Alpha Clipping hai mặt cho Grass Carpet
+            Texture2D grassTex = Resources.Load<Texture2D>("Environment/grass_carpet_diffuse");
+#if UNITY_EDITOR
+            if (grassTex == null)
+            {
+                grassTex = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/_Project/Art/Environment/grass_carpet_diffuse.png");
+            }
+#endif
+            grassCarpetMaterial = new Material(shader)
+            {
+                name = "M_Grass_Carpet_Runtime",
+                hideFlags = HideFlags.DontSave
+            };
+            if (grassTex != null)
+            {
+                SetTexture(grassCarpetMaterial, "_BaseMap", grassTex);
+                SetTexture(grassCarpetMaterial, "_MainTex", grassTex);
+            }
+            else
+            {
+                SetColor(grassCarpetMaterial, "_BaseColor", new Color(0.24f, 0.38f, 0.19f));
+                SetColor(grassCarpetMaterial, "_Color", new Color(0.24f, 0.38f, 0.19f));
+            }
+
+            SetFloat(grassCarpetMaterial, "_AlphaClip", 1f);
+            SetFloat(grassCarpetMaterial, "_AlphaToMask", 1f); // Alpha-To-Coverage via hardware MSAA
+            SetFloat(grassCarpetMaterial, "_Cutoff", 0.35f);
+            SetFloat(grassCarpetMaterial, "_Cull", 0f); // Two-sided render
+            SetFloat(grassCarpetMaterial, "_Smoothness", 0.15f);
+            SetFloat(grassCarpetMaterial, "_Metallic", 0f);
+            grassCarpetMaterial.EnableKeyword("_ALPHATEST_ON");
+            grassCarpetMaterial.renderQueue = (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
         }
 
         private static Material CreateMaterial(Shader shader, string name, Color color)
@@ -527,6 +889,14 @@ namespace TheLastEmber.Features.Environment
             if (material.HasProperty(propertyName))
             {
                 material.SetFloat(propertyName, value);
+            }
+        }
+
+        private static void SetTexture(Material material, string propertyName, Texture texture)
+        {
+            if (material != null && material.HasProperty(propertyName))
+            {
+                material.SetTexture(propertyName, texture);
             }
         }
 

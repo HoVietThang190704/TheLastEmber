@@ -1,0 +1,9 @@
+# Material for grass_carpet
+newmtl M_Grass_Carpet
+Kd 1.0 1.0 1.0
+Ka 0.2 0.2 0.2
+Ks 0.0 0.0 0.0
+d 1.0
+illum 2
+map_Kd grass_carpet_diffuse.png
+map_d grass_carpet_diffuse.png
